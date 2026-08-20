@@ -1,0 +1,176 @@
+{
+  "metadata": {
+    "method_name": "founder_departure_authority_diffusion_vs_survival",
+    "description": "Reimplements Avelino et al. (ESEM 2019) DOA/TF/TFDD pipeline; tests whether pre-departure authority diffusion predicts 18mo post-TFDD survival beyond snapshot covariates.",
+    "n_repos_total": 3427,
+    "n_founder_tfdd_events": 6,
+    "error_breakdown": {
+      "no_tfdd": 6,
+      "not_founder_only_tfdd": 4,
+      "right_censored": 2,
+      "no_commits": 3409
+    },
+    "alias_qa": {
+      "median_collapse_rate": 0.0,
+      "n_repos_over_40pct_collapse": 0
+    },
+    "doa_approximation_used": false,
+    "extended_sample_used_TFle2": false,
+    "matched_pairs": {
+      "n_pairs": 0,
+      "survival_lift": null,
+      "ci_95": null,
+      "p_value": null,
+      "note": "no eligible matched pairs (relaxed matching not triggered: sample too small)"
+    },
+    "regression": {
+      "logistic": {
+        "error": "insufficient_n",
+        "n": 6
+      },
+      "ordinal": {
+        "error": "insufficient_n",
+        "n": 6
+      }
+    },
+    "placebo_check": {
+      "error": "true_effect_unavailable"
+    },
+    "runtime_seconds": 35.90184736251831,
+    "dataset_source": "github_founder_departure_corpus",
+    "num_cpus_used": 1
+  },
+  "datasets": [
+    {
+      "dataset": "github_founder_departure_corpus",
+      "examples": [
+        {
+          "input": "Repository amoffat/sh (Python, 7245 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2018-03-31T03:54:03+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.10526315789473684, distinct non-founder DOA file-owners=8.0. At-TFDD snapshot: developers=64, commits=861, files=30.",
+          "output": "survival_label=maintained; survived_binary=1",
+          "metadata_repo_id": "amoffat/sh",
+          "metadata_language": "Python",
+          "metadata_license": "MIT",
+          "metadata_stars": 7245.0,
+          "metadata_forks": 506.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.10526315789473684,
+          "metadata_n_diffuse_owners_pre": 8.0,
+          "metadata_diffusion_score": 1.9659377797218807,
+          "metadata_developers_at_tfdd": 64,
+          "metadata_commits_at_tfdd": 861,
+          "metadata_files_at_tfdd": 30,
+          "metadata_contributor_count": 113,
+          "metadata_survival_label": "maintained",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        },
+        {
+          "input": "Repository arrow-py/arrow (Python, 9049 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2014-05-28T10:16:37+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.031413612565445025, distinct non-founder DOA file-owners=4.0. At-TFDD snapshot: developers=52, commits=327, files=52.",
+          "output": "survival_label=thriving; survived_binary=1",
+          "metadata_repo_id": "arrow-py/arrow",
+          "metadata_language": "Python",
+          "metadata_license": "Apache-2.0",
+          "metadata_stars": 9049.0,
+          "metadata_forks": 773.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.031413612565445025,
+          "metadata_n_diffuse_owners_pre": 4.0,
+          "metadata_diffusion_score": 1.5588796534047569,
+          "metadata_developers_at_tfdd": 52,
+          "metadata_commits_at_tfdd": 327,
+          "metadata_files_at_tfdd": 52,
+          "metadata_contributor_count": 297,
+          "metadata_survival_label": "thriving",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        },
+        {
+          "input": "Repository Kludex/starlette (Python, 12552 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2023-02-14T21:05:14+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.010638297872340425, distinct non-founder DOA file-owners=13.0. At-TFDD snapshot: developers=233, commits=1037, files=174.",
+          "output": "survival_label=thriving; survived_binary=1",
+          "metadata_repo_id": "Kludex/starlette",
+          "metadata_language": "Python",
+          "metadata_license": "BSD-3-Clause",
+          "metadata_stars": 12552.0,
+          "metadata_forks": 1264.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.010638297872340425,
+          "metadata_n_diffuse_owners_pre": 13.0,
+          "metadata_diffusion_score": 2.6109822516406282,
+          "metadata_developers_at_tfdd": 233,
+          "metadata_commits_at_tfdd": 1037,
+          "metadata_files_at_tfdd": 174,
+          "metadata_contributor_count": 350,
+          "metadata_survival_label": "thriving",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        },
+        {
+          "input": "Repository jazzband/tablib (Python, 4755 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2015-05-27T22:52:57+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.021739130434782608, distinct non-founder DOA file-owners=7.0. At-TFDD snapshot: developers=59, commits=685, files=564.",
+          "output": "survival_label=thriving; survived_binary=1",
+          "metadata_repo_id": "jazzband/tablib",
+          "metadata_language": "Python",
+          "metadata_license": "MIT",
+          "metadata_stars": 4755.0,
+          "metadata_forks": 615.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.021739130434782608,
+          "metadata_n_diffuse_owners_pre": 7.0,
+          "metadata_diffusion_score": 2.0342362907737526,
+          "metadata_developers_at_tfdd": 59,
+          "metadata_commits_at_tfdd": 685,
+          "metadata_files_at_tfdd": 564,
+          "metadata_contributor_count": 142,
+          "metadata_survival_label": "thriving",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        },
+        {
+          "input": "Repository pallets/click (Python, 17629 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2019-12-20T22:37:33+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.015384615384615385, distinct non-founder DOA file-owners=18.0. At-TFDD snapshot: developers=244, commits=1014, files=151.",
+          "output": "survival_label=thriving; survived_binary=1",
+          "metadata_repo_id": "pallets/click",
+          "metadata_language": "Python",
+          "metadata_license": "BSD-3-Clause",
+          "metadata_stars": 17629.0,
+          "metadata_forks": 1938.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.015384615384615385,
+          "metadata_n_diffuse_owners_pre": 18.0,
+          "metadata_diffusion_score": 2.8991399179484953,
+          "metadata_developers_at_tfdd": 244,
+          "metadata_commits_at_tfdd": 1014,
+          "metadata_files_at_tfdd": 151,
+          "metadata_contributor_count": 467,
+          "metadata_survival_label": "thriving",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        },
+        {
+          "input": "Repository amoffat/sh (Python, 7245 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2018-03-31T03:54:03+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.10526315789473684, distinct non-founder DOA file-owners=8.0. At-TFDD snapshot: developers=64, commits=861, files=30.",
+          "output": "survival_label=maintained; survived_binary=1",
+          "metadata_repo_id": "amoffat/sh",
+          "metadata_language": "Python",
+          "metadata_license": "MIT",
+          "metadata_stars": 7245.0,
+          "metadata_forks": 506.0,
+          "metadata_alias_collapse_rate": 0.0,
+          "metadata_founder_share_pre": 0.10526315789473684,
+          "metadata_n_diffuse_owners_pre": 8.0,
+          "metadata_diffusion_score": 1.9659377797218807,
+          "metadata_developers_at_tfdd": 64,
+          "metadata_commits_at_tfdd": 861,
+          "metadata_files_at_tfdd": 30,
+          "metadata_contributor_count": 113,
+          "metadata_survival_label": "maintained",
+          "metadata_survived_binary": 1,
+          "predict_baseline": "{\"survived_prob\": null}",
+          "predict_ourmethod": "{\"survived_prob\": null}"
+        }
+      ]
+    }
+  ]
+}

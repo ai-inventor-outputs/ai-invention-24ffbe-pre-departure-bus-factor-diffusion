@@ -1,0 +1,489 @@
+{
+  "metadata": {
+    "evaluation_name": "founder_departure_diffusion_calibration_and_robustness",
+    "description": "Stage A: reproduce Avelino et al. (ESEM 2019) headline aggregate statistics on the reimplemented DOA/TF/TFDD pipeline. Stage B: robustness/confound checks on the founder-TFDD diffusion-vs-survival result.",
+    "n_dataset_repo_records": 15,
+    "n_experiment_repos_total": 3427,
+    "n_experiment_founder_tfdd_events": 6,
+    "experiment_error_breakdown": {
+      "no_tfdd": 6,
+      "not_founder_only_tfdd": 4,
+      "right_censored": 2,
+      "no_commits": 3409
+    },
+    "experiment_alias_qa": {
+      "median_collapse_rate": 0.0,
+      "n_repos_over_40pct_collapse": 0
+    },
+    "runtime_seconds": 164.99155640602112,
+    "stage_a_calibration": {
+      "n_corpus": 15,
+      "n_tfdd_all": 8,
+      "check1_tfdd_incidence": {
+        "metric": "tfdd_incidence_rate",
+        "reimplemented_rate": 0.5333333333333333,
+        "ci_95": [
+          0.301169800210302,
+          0.7519046463822293
+        ],
+        "n_corpus": 15,
+        "n_tfdd": 8,
+        "avelino_reference": 0.16304347826086957,
+        "avelino_n": "315/1932",
+        "abs_deviation": 0.37028985507246376,
+        "rel_deviation": 2.271111111111111,
+        "status": "FLAG_DEVIATION"
+      },
+      "check2_tf1_share": {
+        "metric": "tf1_share_of_tfdd",
+        "reimplemented_rate": 0.875,
+        "ci_95": [
+          0.5291118177025582,
+          0.9775825085573836
+        ],
+        "n_tfdd": 8,
+        "n_tf1": 7,
+        "avelino_reference": 0.66,
+        "abs_deviation": 0.21499999999999997,
+        "rel_deviation": 0.3257575757575757,
+        "status": "PASS"
+      },
+      "check3_overall_survival": {
+        "metric": "overall_18mo_survival_rate",
+        "reimplemented_rate": 1.0,
+        "ci_95": [
+          0.6755924350132556,
+          1.0
+        ],
+        "n_tfdd": 8,
+        "n_survived": 8,
+        "avelino_reference": 0.40634920634920635,
+        "avelino_n": "128/315",
+        "abs_deviation": 0.5936507936507937,
+        "rel_deviation": 1.4609375,
+        "status": "FLAG_DEVIATION"
+      },
+      "check4_snapshot_null_cohens_d": {
+        "metric": "snapshot_null_cohens_d",
+        "cohens_d_per_feature": {
+          "developers_at_tfdd": null,
+          "commits_at_tfdd": null,
+          "files_at_tfdd": null
+        },
+        "avelino_reference_range": [
+          0.13,
+          0.26
+        ],
+        "n_survivors": 8,
+        "n_nonsurvivors": 0,
+        "status": "UNAVAILABLE_INSUFFICIENT_N"
+      },
+      "diagnostic_protocol": {
+        "ran": true,
+        "steps": {
+          "a_strata_composition": {
+            "language_counts": {
+              "Python": 14,
+              "Shell": 1
+            },
+            "avelino_design": "6 languages, top-500-starred repos per language",
+            "note": "SAMPLING_MISMATCH: corpus is a small opportunistic sample (candidate list), not a top-500-per-language stratified sample; n_corpus is far below Avelino's 1932, so incidence-rate CIs are wide."
+          },
+          "b_abandoner_threshold": {
+            "silence_months_used": 12,
+            "avelino_validated_best": 12,
+            "status": "PASS"
+          },
+          "c_doa_hand_trace": {
+            "n_traced": 5,
+            "traces": [
+              {
+                "repo_id": "Textualize/rich",
+                "top_commit_count_author": "willmcgugan@gmail.com",
+                "top_doa_file_owner": "willmcgugan@gmail.com",
+                "matches_intuition": true
+              },
+              {
+                "repo_id": "amoffat/sh",
+                "top_commit_count_author": "andrew.robert.moffat@gmail.com",
+                "top_doa_file_owner": "arwmoffat@gmail.com",
+                "matches_intuition": false
+              },
+              {
+                "repo_id": "benoitc/gunicorn",
+                "top_commit_count_author": "bchesneau@gmail.com",
+                "top_doa_file_owner": "bchesneau@gmail.com",
+                "matches_intuition": true
+              },
+              {
+                "repo_id": "cookiecutter/cookiecutter",
+                "top_commit_count_author": "raphael@hackebrot.de",
+                "top_doa_file_owner": "audreyr@gmail.com",
+                "matches_intuition": false
+              },
+              {
+                "repo_id": "arrow-py/arrow",
+                "top_commit_count_author": "github:jadchaar",
+                "top_doa_file_owner": "chris@cir.ca",
+                "matches_intuition": false
+              }
+            ],
+            "n_matching_intuition": 2
+          },
+          "d_alias_resolution": {
+            "median_collapse_rate": 0.0,
+            "avelino_reference_median": 0.11,
+            "n_over_40pct": 0
+          }
+        }
+      },
+      "gate_status": "FLAG_DEVIATION",
+      "all_tfdd_events_detail": [
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2018-03-31T03:54:03+00:00",
+          "survival_label": "maintained",
+          "survived_binary": 1,
+          "developers_at_tfdd": 64,
+          "commits_at_tfdd": 861,
+          "files_at_tfdd": 30,
+          "repo_id": "amoffat/sh",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 2,
+          "censored": false,
+          "tfdd_date": "2020-09-02T15:18:35+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 249,
+          "commits_at_tfdd": 2151,
+          "files_at_tfdd": 380,
+          "repo_id": "cookiecutter/cookiecutter",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2014-05-28T10:16:37+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 52,
+          "commits_at_tfdd": 327,
+          "files_at_tfdd": 52,
+          "repo_id": "arrow-py/arrow",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2023-02-14T21:05:14+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 233,
+          "commits_at_tfdd": 1037,
+          "files_at_tfdd": 174,
+          "repo_id": "Kludex/starlette",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2015-05-27T22:52:57+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 59,
+          "commits_at_tfdd": 685,
+          "files_at_tfdd": 564,
+          "repo_id": "jazzband/tablib",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2019-12-20T22:37:33+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 244,
+          "commits_at_tfdd": 1014,
+          "files_at_tfdd": 151,
+          "repo_id": "pallets/click",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2015-08-11T07:40:56+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 119,
+          "commits_at_tfdd": 970,
+          "files_at_tfdd": 547,
+          "repo_id": "pyenv/pyenv",
+          "alias_collapse_rate": 0.0
+        },
+        {
+          "has_tfdd": true,
+          "tf_size": 1,
+          "censored": false,
+          "tfdd_date": "2022-03-05T00:28:54+00:00",
+          "survival_label": "thriving",
+          "survived_binary": 1,
+          "developers_at_tfdd": 115,
+          "commits_at_tfdd": 1633,
+          "files_at_tfdd": 175,
+          "repo_id": "tqdm/tqdm",
+          "alias_collapse_rate": 0.0
+        }
+      ]
+    },
+    "stage_b_robustness": {
+      "n_founder_tfdd_events": 5,
+      "check6_window_boundary_sensitivity": {
+        "status": "COMPUTED",
+        "grid_used": "reduced (n<15)",
+        "reduction_reason": "small n_founder_tfdd_events; reduced grid to keep >=8 obs per fit",
+        "n_variants": 4,
+        "variants": [
+          {
+            "variant": "near6mo_end0mo",
+            "near_months": 6,
+            "far_months": 12,
+            "end_offset_months": 0,
+            "fit": {
+              "error": "insufficient_n_for_fit",
+              "n": 5,
+              "logistic": {
+                "p_bh": null
+              }
+            }
+          },
+          {
+            "variant": "near6mo_end1mo",
+            "near_months": 6,
+            "far_months": 12,
+            "end_offset_months": 1,
+            "fit": {
+              "error": "insufficient_n_for_fit",
+              "n": 5,
+              "logistic": {
+                "p_bh": null
+              }
+            }
+          },
+          {
+            "variant": "near12mo_end0mo",
+            "near_months": 12,
+            "far_months": 18,
+            "end_offset_months": 0,
+            "fit": {
+              "error": "insufficient_n_for_fit",
+              "n": 5,
+              "logistic": {
+                "p_bh": null
+              }
+            }
+          },
+          {
+            "variant": "near12mo_end1mo",
+            "near_months": 12,
+            "far_months": 18,
+            "end_offset_months": 1,
+            "fit": {
+              "error": "insufficient_n_for_fit",
+              "n": 5,
+              "logistic": {
+                "p_bh": null
+              }
+            }
+          }
+        ],
+        "sign_stable_across_variants": null
+      },
+      "check7_founder_id_sensitivity": {
+        "status": "COMPUTED",
+        "n_repos": 5,
+        "n_disagreements_with_primary_heuristic": 0,
+        "disagreement_rate": 0.0,
+        "avelino_reference_median_alias_rate": 0.11,
+        "fits_by_founder_heuristic": {
+          "primary_first_commit_author": {
+            "error": "insufficient_n_for_fit",
+            "n": 5
+          },
+          "alt_year1_plurality": {
+            "error": "insufficient_n_for_fit",
+            "n": 5
+          },
+          "alt_highest_lifetime_doa": {
+            "error": "insufficient_n_for_fit",
+            "n": 5
+          }
+        }
+      },
+      "check8_age_confound": {
+        "status": "UNAVAILABLE",
+        "reason": "insufficient_n",
+        "n": 6
+      },
+      "check9_matched_pairs_bucket_sensitivity": {
+        "status": "COMPUTED",
+        "n": 6,
+        "bucket_definitions": {
+          "quartile_stars": {
+            "point": null,
+            "ci_95": [
+              null,
+              null
+            ],
+            "n_buckets_used": 0
+          },
+          "log_scale_stars": {
+            "point": null,
+            "ci_95": [
+              null,
+              null
+            ],
+            "n_buckets_used": 0
+          }
+        },
+        "lift_consistently_gte_1_5x": null,
+        "n_bucket_defs_excluding_1x": 0,
+        "n_bucket_defs_total": 2
+      },
+      "check10_placebo_permutation": {
+        "status": "COMPUTED",
+        "n_repos": 5,
+        "n_permutations_requested": 60,
+        "n_permutations_used": 60,
+        "true_mean_effect": 2.213835178697903,
+        "null_mean": 1.1873183795950963,
+        "null_std": 0.3746075464278095,
+        "permutation_p_value_pooled": 0.01639344262295082,
+        "survivors_only": {
+          "status": "COMPUTED",
+          "n": 5,
+          "true_mean_effect": 2.213835178697903,
+          "n_perms_used": 40,
+          "permutation_p_value": 0.024390243902439025
+        },
+        "nonsurvivors_only": {
+          "status": "UNAVAILABLE",
+          "n": 0
+        }
+      }
+    },
+    "final_scoring": {
+      "success_criterion_1": {
+        "text": "PASS: pre-departure diffusion (lower founder-share / more distinct DOA owners) is associated with higher 18mo survival, beyond size/popularity",
+        "status": "FAIL",
+        "evidence": "Stage A calibration gate did not pass; downstream diffusion result is not trustworthy on its own terms."
+      },
+      "success_criterion_2": {
+        "text": "Diffusion predictors' coefficients and significance survive an explicit age-at-TFDD covariate (Avelino confound control).",
+        "status": "FAIL",
+        "evidence": "insufficient data"
+      },
+      "success_criterion_3": {
+        "text": "The true pre-departure-window effect is significantly more extreme than randomly-placed-window placebo draws (permutation test).",
+        "status": "PASS",
+        "evidence": "pooled permutation p-value for true pre-departure window effect vs random window placement = 0.0164"
+      },
+      "overall_verdict": "DOES_NOT_SUPPORT_PIPELINE_UNCALIBRATED",
+      "n_founder_tfdd_events_available": 5,
+      "power_caveat": "Corpus size is far smaller than Avelino et al.'s 1932-repo corpus (unauthenticated GitHub API rate limits + time budget); all CIs/p-values above must be read as low-power estimates, not as evidence of a null effect where they are non-significant."
+    }
+  },
+  "metrics_agg": {
+    "n_dataset_repo_records": 15.0,
+    "n_corpus_stage_a": 15.0,
+    "n_tfdd_all_stage_a": 8.0,
+    "tfdd_incidence_rate": 0.5333333333333333,
+    "tf1_share": 0.875,
+    "overall_survival_rate": 1.0,
+    "stage_a_gate_pass": 0.0,
+    "n_founder_tfdd_events": 5.0,
+    "window_sensitivity_sign_stable": 0.0,
+    "founder_id_disagreement_rate": 0.0,
+    "age_confound_diffusion_survives": -1.0,
+    "permutation_p_value_pooled": 0.01639344262295082,
+    "success_criterion_1_pass": 0.0,
+    "success_criterion_2_pass": 0.0,
+    "success_criterion_3_pass": 1.0
+  },
+  "datasets": [
+    {
+      "dataset": "founder_diffusion_evaluation_checks",
+      "examples": [
+        {
+          "input": "Stage A check 1: TFDD incidence rate vs Avelino et al. 16%",
+          "output": "FLAG_DEVIATION",
+          "metadata_detail": "{\"metric\": \"tfdd_incidence_rate\", \"reimplemented_rate\": 0.5333333333333333, \"ci_95\": [0.301169800210302, 0.7519046463822293], \"n_corpus\": 15, \"n_tfdd\": 8, \"avelino_reference\": 0.16304347826086957, \"avelino_n\": \"315/1932\", \"abs_deviation\": 0.37028985507246376, \"rel_deviation\": 2.271111111111111, \"status\": \"FLAG_DEVIATION\"}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage A check 2: TF=1 share of TFDDs vs Avelino et al. 66%",
+          "output": "PASS",
+          "metadata_detail": "{\"metric\": \"tf1_share_of_tfdd\", \"reimplemented_rate\": 0.875, \"ci_95\": [0.5291118177025582, 0.9775825085573836], \"n_tfdd\": 8, \"n_tf1\": 7, \"avelino_reference\": 0.66, \"abs_deviation\": 0.21499999999999997, \"rel_deviation\": 0.3257575757575757, \"status\": \"PASS\"}",
+          "eval_pass": 1.0
+        },
+        {
+          "input": "Stage A check 3: overall 18mo survival rate vs Avelino et al. 41%",
+          "output": "FLAG_DEVIATION",
+          "metadata_detail": "{\"metric\": \"overall_18mo_survival_rate\", \"reimplemented_rate\": 1.0, \"ci_95\": [0.6755924350132556, 1.0], \"n_tfdd\": 8, \"n_survived\": 8, \"avelino_reference\": 0.40634920634920635, \"avelino_n\": \"128/315\", \"abs_deviation\": 0.5936507936507937, \"rel_deviation\": 1.4609375, \"status\": \"FLAG_DEVIATION\"}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage A check 4: snapshot-null Cohen's d replication",
+          "output": "UNAVAILABLE_INSUFFICIENT_N",
+          "metadata_detail": "{\"metric\": \"snapshot_null_cohens_d\", \"cohens_d_per_feature\": {\"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null}, \"avelino_reference_range\": [0.13, 0.26], \"n_survivors\": 8, \"n_nonsurvivors\": 0, \"status\": \"UNAVAILABLE_INSUFFICIENT_N\"}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage B check 6: window-boundary sensitivity (6/9/12mo x 0/1/2mo end offset)",
+          "output": "COMPUTED",
+          "metadata_detail": "{\"status\": \"COMPUTED\", \"grid_used\": \"reduced (n<15)\", \"reduction_reason\": \"small n_founder_tfdd_events; reduced grid to keep >=8 obs per fit\", \"n_variants\": 4, \"variants\": [{\"variant\": \"near6mo_end0mo\", \"near_months\": 6, \"far_months\": 12, \"end_offset_months\": 0, \"fit\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5, \"logistic\": {\"p_bh\": null}}}, {\"variant\": \"near6mo_end1mo\", \"near_months\": 6, \"far_months\": 12, \"end_offset_months\": 1, \"fit\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5, \"logistic\": {\"p_bh\": null}}}, {\"variant\": \"near12mo_end0mo\", \"near_months\": 12, \"far_months\": 18, \"end_offset_months\": 0, \"fit\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5, \"logistic\": {\"p_bh\": null}}}, {\"variant\": \"near12mo_end1mo\", \"near_months\": 12, \"far_months\": 18, \"end_offset_months\": 1, \"fit\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5, \"logistic\": {\"p_bh\": null}}}], \"sign_stable_across_variants\": null}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage B check 7: founder-identification-heuristic sensitivity",
+          "output": "COMPUTED",
+          "metadata_detail": "{\"status\": \"COMPUTED\", \"n_repos\": 5, \"n_disagreements_with_primary_heuristic\": 0, \"disagreement_rate\": 0.0, \"avelino_reference_median_alias_rate\": 0.11, \"fits_by_founder_heuristic\": {\"primary_first_commit_author\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5}, \"alt_year1_plurality\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5}, \"alt_highest_lifetime_doa\": {\"error\": \"insufficient_n_for_fit\", \"n\": 5}}}",
+          "eval_pass": 1.0
+        },
+        {
+          "input": "Stage B check 8: age-at-TFDD confound control",
+          "output": "UNAVAILABLE",
+          "metadata_detail": "{\"status\": \"UNAVAILABLE\", \"reason\": \"insufficient_n\", \"n\": 6}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage B check 9: matched-pairs bucket-definition sensitivity",
+          "output": "COMPUTED",
+          "metadata_detail": "{\"status\": \"COMPUTED\", \"n\": 6, \"bucket_definitions\": {\"quartile_stars\": {\"point\": null, \"ci_95\": [null, null], \"n_buckets_used\": 0}, \"log_scale_stars\": {\"point\": null, \"ci_95\": [null, null], \"n_buckets_used\": 0}}, \"lift_consistently_gte_1_5x\": null, \"n_bucket_defs_excluding_1x\": 0, \"n_bucket_defs_total\": 2}",
+          "eval_pass": 0.0
+        },
+        {
+          "input": "Stage B check 10: placebo/shuffle permutation test",
+          "output": "COMPUTED",
+          "metadata_detail": "{\"status\": \"COMPUTED\", \"n_repos\": 5, \"n_permutations_requested\": 60, \"n_permutations_used\": 60, \"true_mean_effect\": 2.213835178697903, \"null_mean\": 1.1873183795950963, \"null_std\": 0.3746075464278095, \"permutation_p_value_pooled\": 0.01639344262295082, \"survivors_only\": {\"status\": \"COMPUTED\", \"n\": 5, \"true_mean_effect\": 2.213835178697903, \"n_perms_used\": 40, \"permutation_p_value\": 0.024390243902439025}, \"nonsurvivors_only\": {\"status\": \"UNAVAILABLE\", \"n\": 0}}",
+          "eval_pass": 1.0
+        },
+        {
+          "input": "Final scoring: success criteria 1-3 and overall verdict",
+          "output": "DOES_NOT_SUPPORT_PIPELINE_UNCALIBRATED",
+          "metadata_detail": "{\"success_criterion_1\": {\"text\": \"PASS: pre-departure diffusion (lower founder-share / more distinct DOA owners) is associated with higher 18mo survival, beyond size/popularity\", \"status\": \"FAIL\", \"evidence\": \"Stage A calibration gate did not pass; downstream diffusion result is not trustworthy on its own terms.\"}, \"success_criterion_2\": {\"text\": \"Diffusion predictors' coefficients and significance survive an explicit age-at-TFDD covariate (Avelino confound control).\", \"status\": \"FAIL\", \"evidence\": \"insufficient data\"}, \"success_criterion_3\": {\"text\": \"The true pre-departure-window effect is significantly more extreme than randomly-placed-window placebo draws (permutation test).\", \"status\": \"PASS\", \"evidence\": \"pooled permutation p-value for true pre-departure window effect vs random window placement = 0.0164\"}, \"overall_verdict\": \"DOES_NOT_SUPPORT_PIPELINE_UNCALIBRATED\", \"n_founder_tfdd_events_available\": 5, \"power_caveat\": \"Corpus size is far smaller than Avelino et al.'s 1932-repo corpus (unauthenticated GitHub API rate limits + time budget); all CIs/p-values above must be read as low-power estimates, not as evidence of a null effect where they are non-significant.\"}",
+          "eval_pass": 0.0
+        }
+      ]
+    }
+  ]
+}
