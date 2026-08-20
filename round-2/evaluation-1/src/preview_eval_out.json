@@ -1,0 +1,153 @@
+{
+  "metadata": {
+    "evaluation_name": "rigor_gap_evaluation",
+    "artifact_id": "gen_plan_evaluation_1_idx3",
+    "title": "Closing the Rigor Gaps in the Diffusion Pipeline",
+    "dependency_source_note": "The declared dependency workspace paths (iter_1/gen_art/gen_art_dataset_1 and gen_art_experiment_1) did not exist in this run's live 3_invention_loop data tree (verified by direct path checks and an e...",
+    "overall_verdict": "All five parts EXECUTED against the real DATASET and EXPERIMENT dependency outputs (both found under this run's paper-repo deployment snapshot after the declared iter_1 dependency workspace paths were..."
+  },
+  "metrics_agg": {
+    "avelino_tf1_wilson_ci_low": 0.6063655753964894,
+    "avelino_tf1_wilson_ci_high": 0.7104062784093925,
+    "this_study_tf1_fraction": 0.45454545454545453,
+    "this_study_tf1_wilson_ci_low": 0.21271271487637833,
+    "this_study_tf1_wilson_ci_high": 0.7199084642140241,
+    "this_study_n_repos_with_any_tfdd": 11,
+    "this_study_n_founder_only_tf1": 5,
+    "tfdd_incidence_this_corpus": 0.7333333333333333,
+    "tfdd_incidence_avelino_et_al": 0.163,
+    "tfdd_incidence_two_prop_z": 5.892878743830606,
+    "tfdd_incidence_two_prop_p_value": 3.795249100209862e-09,
+    "founder_only_survival_rate_this_corpus": 1.0,
+    "founder_only_survival_rate_avelino_et_al": 0.4063,
+    "founder_only_survival_two_prop_z": 2.6723891339056642,
+    "founder_only_survival_two_prop_p_value": 0.007531325629934851,
+    "placebo_per_repo_hard_cap_draws": 20,
+    "placebo_theoretical_floor_at_hard_cap": 0.047619,
+    "placebo_theoretical_floor_at_claimed_500": 0.001996,
+    "qualitative_conclusion_stable_across_budgets": 1,
+    "n_repos_alias_spotchecked": 3,
+    "n_repos_in_corpus": 15,
+    "n_repos_in_full_table": 15,
+    "n_total_eval_examples": 52
+  },
+  "datasets": [
+    {
+      "dataset": "D_full_repo_table",
+      "examples": [
+        {
+          "input": "Repo-table row for Textualize/rich: verify TFDD/survival status against the two source JSON files exactly.",
+          "output": "tfdd_detected=False, founder_only_tf1=False, error_code=no_tfdd, survival_grade=None",
+          "metadata_part": "D_repo_table",
+          "metadata_repo_id": "Textualize/rich",
+          "metadata_language": "Python",
+          "metadata_process_repo_error_code": "no_tfdd",
+          "predict_pipeline_classification": "{\"tfdd_detected\": false, \"founder_only_tf1\": false, \"survival_grade\": null}",
+          "eval_tfdd_detected": 0.0,
+          "eval_founder_only_tf1": 0.0,
+          "eval_stars": 57099.0,
+          "eval_history_span_years": 6.61,
+          "eval_field_missing_flag": 0.0
+        },
+        {
+          "input": "Repo-table row for amoffat/sh: verify TFDD/survival status against the two source JSON files exactly.",
+          "output": "tfdd_detected=True, founder_only_tf1=True, error_code=None, survival_grade=maintained",
+          "metadata_part": "D_repo_table",
+          "metadata_repo_id": "amoffat/sh",
+          "metadata_language": "Python",
+          "metadata_process_repo_error_code": null,
+          "predict_pipeline_classification": "{\"tfdd_detected\": true, \"founder_only_tf1\": true, \"survival_grade\": \"maintained\"}",
+          "eval_tfdd_detected": 1.0,
+          "eval_founder_only_tf1": 1.0,
+          "eval_stars": 7245.0,
+          "eval_history_span_years": 14.52,
+          "eval_field_missing_flag": 1.0
+        },
+        {
+          "input": "Repo-table row for benoitc/gunicorn: verify TFDD/survival status against the two source JSON files exactly.",
+          "output": "tfdd_detected=False, founder_only_tf1=False, error_code=no_tfdd, survival_grade=None",
+          "metadata_part": "D_repo_table",
+          "metadata_repo_id": "benoitc/gunicorn",
+          "metadata_language": "Python",
+          "metadata_process_repo_error_code": "no_tfdd",
+          "predict_pipeline_classification": "{\"tfdd_detected\": false, \"founder_only_tf1\": false, \"survival_grade\": null}",
+          "eval_tfdd_detected": 0.0,
+          "eval_founder_only_tf1": 0.0,
+          "eval_stars": 10655.0,
+          "eval_history_span_years": 16.71,
+          "eval_field_missing_flag": 0.0
+        }
+      ]
+    },
+    {
+      "dataset": "A_permutation_budget_convergence",
+      "examples": [
+        {
+          "input": "Re-run the placebo/window-shuffle check for amoffat/sh at N_PLACEBO_DRAWS=10 and report the achieved draw count and aggregate placebo-check status.",
+          "output": "10 draws actually generated for amoffat/sh at budget=10 (feasible combinatorial space: 168 distinct month-start positions over 174.3 months of history); aggregate placebo_check status at this budget: ...",
+          "metadata_part": "A_permutation_disclosure",
+          "metadata_repo_id": "amoffat/sh",
+          "metadata_budget_setting": 10,
+          "predict_placebo_check_status": "{\"error\": \"true_effect_unavailable\"}",
+          "eval_n_placebo_draws_achieved": 10.0,
+          "eval_feasible_window_space_size": 168.0,
+          "eval_history_months": 174.3,
+          "eval_placebo_check_blocked": 1.0,
+          "eval_wall_clock_seconds": 52.918
+        },
+        {
+          "input": "Re-run the placebo/window-shuffle check for arrow-py/arrow at N_PLACEBO_DRAWS=10 and report the achieved draw count and aggregate placebo-check status.",
+          "output": "0 draws actually generated for arrow-py/arrow at budget=10 (feasible combinatorial space: 155 distinct month-start positions over 161.3 months of history); aggregate placebo_check status at this budge...",
+          "metadata_part": "A_permutation_disclosure",
+          "metadata_repo_id": "arrow-py/arrow",
+          "metadata_budget_setting": 10,
+          "predict_placebo_check_status": "{\"error\": \"true_effect_unavailable\"}",
+          "eval_n_placebo_draws_achieved": 0.0,
+          "eval_feasible_window_space_size": 155.0,
+          "eval_history_months": 161.3,
+          "eval_placebo_check_blocked": 1.0,
+          "eval_wall_clock_seconds": 52.918
+        },
+        {
+          "input": "Re-run the placebo/window-shuffle check for Kludex/starlette at N_PLACEBO_DRAWS=10 and report the achieved draw count and aggregate placebo-check status.",
+          "output": "10 draws actually generated for Kludex/starlette at budget=10 (feasible combinatorial space: 91 distinct month-start positions over 97.5 months of history); aggregate placebo_check status at this budg...",
+          "metadata_part": "A_permutation_disclosure",
+          "metadata_repo_id": "Kludex/starlette",
+          "metadata_budget_setting": 10,
+          "predict_placebo_check_status": "{\"error\": \"true_effect_unavailable\"}",
+          "eval_n_placebo_draws_achieved": 10.0,
+          "eval_feasible_window_space_size": 91.0,
+          "eval_history_months": 97.5,
+          "eval_placebo_check_blocked": 1.0,
+          "eval_wall_clock_seconds": 52.918
+        }
+      ]
+    },
+    {
+      "dataset": "B_tf1_wilson_ci_comparison",
+      "examples": [
+        {
+          "input": "Compute the Wilson 95% CI for Avelino et al.'s published 66% TF=1 rate (n=315, numerator round(0.66*315)=208).",
+          "output": "Wilson 95% CI: [0.6064, 0.7104] (n=315, 208/315).",
+          "metadata_part": "B_tf1_wilson_ci",
+          "metadata_source": "avelino_et_al_2019",
+          "eval_wilson_ci_low": 0.6063655753964894,
+          "eval_wilson_ci_high": 0.7104062784093925,
+          "eval_phat": 0.6603174603174603,
+          "eval_n": 315.0
+        },
+        {
+          "input": "Compute the Wilson 95% CI for this study's own TF=1 founder-only fraction among all TFDD events actually detected in the 15-repo corpus, and determine overlap with Avelino et al.'s interval.",
+          "output": "Wilson 95% CI: [0.2127, 0.7199] (n=11, 5/11). Intervals overlap: True. n=11 is extremely small (versus Avelino et al.'s n=315). With a denominator this small the Wilson interval is very wide and could...",
+          "metadata_part": "B_tf1_wilson_ci",
+          "metadata_source": "this_study",
+          "eval_wilson_ci_low": 0.21271271487637833,
+          "eval_wilson_ci_high": 0.7199084642140241,
+          "eval_phat": 0.45454545454545453,
+          "eval_n": 11.0,
+          "eval_intervals_overlap": 1.0
+        }
+      ]
+    }
+  ]
+}
