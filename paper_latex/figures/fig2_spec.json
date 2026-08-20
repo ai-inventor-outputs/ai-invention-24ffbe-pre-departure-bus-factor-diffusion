@@ -1,0 +1,31 @@
+{
+  "type": "panel",
+  "note": "Custom two-panel figure (see make_fig2.py) — Panel B needed asymmetric CI whiskers, which the catalogue's single-series 'forest' renderer does not support (only a symmetric magnitude per point). This JSON records the exact source data; make_fig2.py is the reproducible renderer.",
+  "title": "Corpus vs Published Reference Rates",
+  "aspect": "16:9",
+  "caption": "This study's 15-repository corpus deviates sharply from Avelino et al.'s published reference rates in TFDD incidence and 18-month survival, in the direction consistent with survivorship bias, while the founder-only-detachment share (Truck Factor = 1) reproduces closely within overlapping confidence intervals.",
+  "panels": [
+    {
+      "type": "bar",
+      "title": "TFDD Incidence and Survival Rate",
+      "ylabel": "Rate (%)",
+      "y_range": [0, 100],
+      "categories": ["TFDD Incidence", "18-Month Survival"],
+      "series": [
+        {"label": "This Study (n=15)", "values": [73.3, 100.0]},
+        {"label": "Avelino et al. (n=1,932)", "values": [16.3, 40.6]}
+      ]
+    },
+    {
+      "type": "forest_asymmetric",
+      "title": "Truck-Factor-1 Share of TFDDs",
+      "xlabel": "Proportion of TFDDs at Truck Factor 1",
+      "x_range": [0.0, 1.0],
+      "reference_line": 0.66,
+      "rows": [
+        {"label": "This Study", "value": 0.636, "ci_low": 0.354, "ci_high": 0.848},
+        {"label": "Avelino et al.", "value": 0.660, "ci_low": 0.606, "ci_high": 0.710}
+      ]
+    }
+  ]
+}

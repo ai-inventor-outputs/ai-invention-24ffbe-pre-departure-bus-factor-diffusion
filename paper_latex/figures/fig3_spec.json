@@ -1,0 +1,45 @@
+{
+  "type": "panel",
+  "panel_labels": true,
+  "title": "Permutation Test Convergence",
+  "aspect": "16:9",
+  "ncols": 2,
+  "panels": [
+    {
+      "type": "line",
+      "title": "Null Distribution Convergence",
+      "xlabel": "Permutation Budget (draws per repository)",
+      "ylabel": "Founder Commit-Share (null mean)",
+      "ylim": [0, 0.5],
+      "series": [
+        {
+          "label": "Null mean",
+          "x": [20, 100, 300],
+          "values": [0.189, 0.328, 0.369],
+          "band": [0.056, 0.112, 0.108]
+        }
+      ]
+    },
+    {
+      "type": "bar_sig",
+      "title": "True Window vs Pooled Null (60-draw budget)",
+      "ylabel": "Composite Diffusion Score",
+      "ylim": [0, 3],
+      "categories": ["True Pre-Departure Window", "Pooled Null Mean"],
+      "comparisons": [
+        {
+          "a": 0,
+          "b": 1,
+          "label": "p = 0.016"
+        }
+      ],
+      "series": [
+        {
+          "label": "Composite diffusion score",
+          "values": [2.214, 1.187],
+          "errors": [0, 0.375]
+        }
+      ]
+    }
+  ]
+}
