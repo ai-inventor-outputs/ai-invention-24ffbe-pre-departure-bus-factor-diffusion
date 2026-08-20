@@ -1,73 +1,48 @@
 {
   "metadata": {
-    "source": "GitHub Search API (unauthenticated, 10 req/min search endpoint) for candidate discovery via archived-or-stale x historical-creation-window x language queries (code/find_candidates.py) + GitHub REST AP...",
-    "description": "Companion/superset corpus to iter_1's github_founder_departure_commits: per-repo full commit history + founder-dominance signal, POOLING two explicit sampling frames (liveness_conditioned vs liveness_...",
-    "primary_dataset": "github_founder_departure_commits_non_conditioned",
-    "founder_share_threshold": 0.7,
-    "n_examples_total": 11,
-    "n_liveness_non_conditioned": 1,
-    "n_liveness_conditioned": 10,
-    "yield_report": {
-      "candidates_discovered_non_conditioned": 700,
-      "candidates_attempted_non_conditioned": 25,
-      "candidates_succeeded_non_conditioned": 1,
-      "candidates_skipped_non_conditioned": 24,
-      "skip_reason_breakdown_non_conditioned": {
-        "insufficient_history": 24
-      },
-      "founder_dominant_repos_in_non_conditioned_subset": 0,
-      "note": "Yield is low and reported honestly per the gen_plan: the majority of archived/long-stale GitHub repos discovered by creation-date + archived/stale search queries turn out to have been abandoned WITHIN..."
-    },
-    "rate_limit_note": "Unauthenticated GitHub Search API is capped at 10 requests/minute; unauthenticated REST API (repo/readme fetch) at 60 requests/hour. No GITHUB_TOKEN was present in this environment (verified via `curl..."
+    "source": "GitHub REST API, authenticated (GH_TOKEN), liveness-non-conditioned historical search",
+    "description": "Repo-level founder-departure survival-prediction view of the liveness_non_conditioned GitHub corpus built for this artifact: one example per repo, leakage-safe pre-departure features only, label = sur...",
+    "n_source_repos": 67
   },
   "datasets": [
     {
-      "dataset": "github_founder_departure_commits_non_conditioned",
+      "dataset": "repo_level_founder_departure_survival",
       "examples": [
         {
-          "input": "{\"repo_metadata\": {\"full_name\": \"jquery-archive/jquery-metadata\", \"stars\": 216, \"forks\": 107, \"language\": \"JavaScript\", \"license\": null, \"created_at\": \"2009-07-25T16:43:34Z\", \"pushed_at\": \"2010-10-28T...",
-          "output": "not_founder_dominant",
-          "metadata_full_name": "jquery-archive/jquery-metadata",
-          "metadata_stars": 216,
-          "metadata_language": "JavaScript",
-          "metadata_history_years": 3.97,
-          "metadata_n_commits": 40,
-          "metadata_truncated": false,
-          "metadata_year1_top_author_share": 0.5455,
-          "metadata_task_type": "founder_dominance_classification",
+          "input": "{\"dominant_early_author_fraction\": 1.0, \"early_window_commit_count\": 18, \"founder_last_commit_date\": \"2024-01-03T09:50:01Z\", \"language\": \"Python\", \"n_commits_pre_departure\": 92, \"n_contributors_pre_de...",
+          "output": "unknown_insufficient_post_departure_window",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 3,
+          "metadata_repo_full_name": "tarix/mcdsupport",
           "metadata_sampling_frame": "liveness_non_conditioned",
-          "metadata_frame_construction_method": "github_search_archived",
-          "metadata_archived": true
+          "metadata_frame_construction_method": "github_search_created_pushed_range_no_archive_filter",
+          "metadata_post_departure_days": 0,
+          "metadata_history_span_years": 12.32,
+          "metadata_archived": false
         },
         {
-          "input": "{\"repo_metadata\": {\"full_name\": \"pallets/click\", \"stars\": 17629, \"forks\": 1938, \"language\": \"Python\", \"license\": \"BSD-3-Clause\", \"created_at\": \"2014-04-24T09:52:19Z\", \"pushed_at\": \"2026-08-20T16:12:11...",
-          "output": "founder_dominant",
-          "metadata_full_name": "pallets/click",
-          "metadata_stars": 17629,
-          "metadata_language": "Python",
-          "metadata_history_years": 12.32,
-          "metadata_n_commits": 3329,
-          "metadata_truncated": false,
-          "metadata_year1_top_author_share": 0.7771,
-          "metadata_task_type": "founder_dominance_classification",
-          "metadata_sampling_frame": "liveness_conditioned",
-          "metadata_frame_construction_method": "currently_prominent_handcurated",
-          "metadata_archived": null
+          "input": "{\"dominant_early_author_fraction\": 0.8667, \"early_window_commit_count\": 15, \"founder_last_commit_date\": \"2011-01-25T22:21:54Z\", \"language\": \"Python\", \"n_commits_pre_departure\": 13, \"n_contributors_pre...",
+          "output": "non_surviving",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 3,
+          "metadata_repo_full_name": "UbiCastTeam/gst-gtklaunch-1.0",
+          "metadata_sampling_frame": "liveness_non_conditioned",
+          "metadata_frame_construction_method": "github_search_created_pushed_range_no_archive_filter",
+          "metadata_post_departure_days": 1815,
+          "metadata_history_span_years": 4.97,
+          "metadata_archived": false
         },
         {
-          "input": "{\"repo_metadata\": {\"full_name\": \"Textualize/rich\", \"stars\": 57099, \"forks\": 2295, \"language\": \"Python\", \"license\": \"MIT\", \"created_at\": \"2019-11-10T15:28:09Z\", \"pushed_at\": \"2026-06-23T03:10:19Z\", \"de...",
-          "output": "founder_dominant",
-          "metadata_full_name": "Textualize/rich",
-          "metadata_stars": 57099,
-          "metadata_language": "Python",
-          "metadata_history_years": 6.61,
-          "metadata_n_commits": 4460,
-          "metadata_truncated": false,
-          "metadata_year1_top_author_share": 0.8158,
-          "metadata_task_type": "founder_dominance_classification",
-          "metadata_sampling_frame": "liveness_conditioned",
-          "metadata_frame_construction_method": "currently_prominent_handcurated",
-          "metadata_archived": null
+          "input": "{\"dominant_early_author_fraction\": 0.7333, \"early_window_commit_count\": 15, \"founder_last_commit_date\": \"2012-01-04T11:36:22Z\", \"language\": \"Python\", \"n_commits_pre_departure\": 43, \"n_contributors_pre...",
+          "output": "non_surviving",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 3,
+          "metadata_repo_full_name": "pbs/django-cms-pagetags",
+          "metadata_sampling_frame": "liveness_non_conditioned",
+          "metadata_frame_construction_method": "github_search_created_pushed_range_no_archive_filter",
+          "metadata_post_departure_days": 2830,
+          "metadata_history_span_years": 7.88,
+          "metadata_archived": false
         }
       ]
     }
