@@ -1,0 +1,320 @@
+{
+  "repo_table_rows": [
+    {
+      "repo_full_name": "Textualize/rich",
+      "primary_language": "Python",
+      "stars": 57099,
+      "forks": 2295,
+      "total_commit_history_span_years": 6.61,
+      "tfdd_detected": false,
+      "tf_equals_1_at_detachment": null,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "no_tfdd_detected"
+    },
+    {
+      "repo_full_name": "amoffat/sh",
+      "primary_language": "Python",
+      "stars": 7245,
+      "forks": 506,
+      "total_commit_history_span_years": 14.52,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": 0.10526315789473684,
+      "n_distinct_non_founder_doa_owners_pre": 8.0,
+      "survival_grade_18mo_post_tfdd": "maintained",
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_complete"
+    },
+    {
+      "repo_full_name": "benoitc/gunicorn",
+      "primary_language": "Python",
+      "stars": 10655,
+      "forks": 1856,
+      "total_commit_history_span_years": 16.72,
+      "tfdd_detected": false,
+      "tf_equals_1_at_detachment": null,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "no_tfdd_detected"
+    },
+    {
+      "repo_full_name": "cookiecutter/cookiecutter",
+      "primary_language": "Python",
+      "stars": 25059,
+      "forks": 2273,
+      "total_commit_history_span_years": 12.71,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": false,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
+    },
+    {
+      "repo_full_name": "arrow-py/arrow",
+      "primary_language": "Python",
+      "stars": 9049,
+      "forks": 773,
+      "total_commit_history_span_years": 13.59,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": 0.031413612565445025,
+      "n_distinct_non_founder_doa_owners_pre": 4.0,
+      "survival_grade_18mo_post_tfdd": "thriving",
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_complete"
+    },
+    {
+      "repo_full_name": "encode/httpx",
+      "primary_language": "Python",
+      "stars": 15427,
+      "forks": 1254,
+      "total_commit_history_span_years": 6.98,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_right_censored"
+    },
+    {
+      "repo_full_name": "Kludex/starlette",
+      "primary_language": "Python",
+      "stars": 12552,
+      "forks": 1264,
+      "total_commit_history_span_years": 8.13,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": 0.010638297872340425,
+      "n_distinct_non_founder_doa_owners_pre": 13.0,
+      "survival_grade_18mo_post_tfdd": "thriving",
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_complete"
+    },
+    {
+      "repo_full_name": "Kludex/uvicorn",
+      "primary_language": "Python",
+      "stars": 10915,
+      "forks": 1015,
+      "total_commit_history_span_years": 9.22,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_right_censored"
+    },
+    {
+      "repo_full_name": "jazzband/tablib",
+      "primary_language": "Python",
+      "stars": 4755,
+      "forks": 615,
+      "total_commit_history_span_years": 15.34,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": 0.021739130434782608,
+      "n_distinct_non_founder_doa_owners_pre": 7.0,
+      "survival_grade_18mo_post_tfdd": "thriving",
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_complete"
+    },
+    {
+      "repo_full_name": "joke2k/faker",
+      "primary_language": "Python",
+      "stars": 19370,
+      "forks": 2109,
+      "total_commit_history_span_years": 13.72,
+      "tfdd_detected": false,
+      "tf_equals_1_at_detachment": null,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "no_tfdd_detected"
+    },
+    {
+      "repo_full_name": "kennethreitz/records",
+      "primary_language": "Python",
+      "stars": 7221,
+      "forks": 564,
+      "total_commit_history_span_years": 11.13,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": false,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
+    },
+    {
+      "repo_full_name": "pallets/click",
+      "primary_language": "Python",
+      "stars": 17629,
+      "forks": 1938,
+      "total_commit_history_span_years": 12.32,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": true,
+      "founder_share_pre_departure": 0.015384615384615385,
+      "n_distinct_non_founder_doa_owners_pre": 18.0,
+      "survival_grade_18mo_post_tfdd": "thriving",
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "founder_only_tfdd_complete"
+    },
+    {
+      "repo_full_name": "pyenv/pyenv",
+      "primary_language": "Shell",
+      "stars": 45036,
+      "forks": 3260,
+      "total_commit_history_span_years": 13.96,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": false,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
+    },
+    {
+      "repo_full_name": "fastapi/typer",
+      "primary_language": "Python",
+      "stars": 19911,
+      "forks": 972,
+      "total_commit_history_span_years": 6.63,
+      "tfdd_detected": false,
+      "tf_equals_1_at_detachment": null,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "no_tfdd_detected"
+    },
+    {
+      "repo_full_name": "tqdm/tqdm",
+      "primary_language": "Python",
+      "stars": 31276,
+      "forks": 1486,
+      "total_commit_history_span_years": 11.21,
+      "tfdd_detected": true,
+      "tf_equals_1_at_detachment": false,
+      "founder_share_pre_departure": null,
+      "n_distinct_non_founder_doa_owners_pre": null,
+      "survival_grade_18mo_post_tfdd": null,
+      "usable_in_tfdd_analysis": true,
+      "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
+    }
+  ],
+  "tf1_avelino": {
+    "k": 208,
+    "n": 315
+  },
+  "tf1_this_study": {
+    "k": 7,
+    "n": 11
+  },
+  "alias_spotcheck_per_repo": [
+    {
+      "repo_id": "amoffat/sh",
+      "n_identities_checked": 90,
+      "n_found_bots": 0,
+      "bot_logins": [],
+      "n_found_split_identities_of_same_human": 1,
+      "split_identity_detail": [
+        {
+          "human_guess": "amoffat",
+          "logins": [
+            "amoffat",
+            "amoffatgmi"
+          ],
+          "note": "near-identical login stems (amoffat vs amoffatgmi, 366 vs 6 contribs); plausible same-human alt account, NOT merged by the pipeline's email/login alias resolver"
+        }
+      ],
+      "pipeline_reported_n_diffuse_owners_pre": 8.0,
+      "would_change_founder_only_tfdd_classification": false,
+      "would_change_diffusion_score_materially": false,
+      "note": "dependabot/Copilot not present among amoffat/sh's top contributors in this snapshot, so no bot-inflation risk observed here specifically; the amoffat/amoffatgmi pair is an UNDER-merging risk (would, if corrected, SHRINK the distinct-owner count by 1, i.e. make diffusion look slightly weaker, not stronger -- so correcting it would not flip this repo's founder-only-TFDD classification, only shave a small amount off its diffusion_score)."
+    },
+    {
+      "repo_id": "arrow-py/arrow",
+      "n_identities_checked": 100,
+      "n_found_bots": 1,
+      "bot_logins": [
+        "dependabot[bot]"
+      ],
+      "n_found_split_identities_of_same_human": 0,
+      "split_identity_detail": [],
+      "pipeline_reported_n_diffuse_owners_pre": 4.0,
+      "would_change_founder_only_tfdd_classification": false,
+      "would_change_diffusion_score_materially": false,
+      "note": "dependabot[bot] appears with 9 contributions among top committers; if the pipeline's DOA computation counted dependabot commits as a human file-owner this would inflate n_diffuse_owners_pre, but dependabot commits are typically confined to lockfile/CI config files unlikely to reach DOA-owner status on core source files -- flagged as UNVERIFIED without file-level attribution, which this spot-check (contributor list only) cannot resolve."
+    },
+    {
+      "repo_id": "Kludex/starlette",
+      "n_identities_checked": 100,
+      "n_found_bots": 1,
+      "bot_logins": [
+        "dependabot[bot]"
+      ],
+      "n_found_split_identities_of_same_human": 0,
+      "split_identity_detail": [],
+      "pipeline_reported_n_diffuse_owners_pre": 13.0,
+      "would_change_founder_only_tfdd_classification": false,
+      "would_change_diffusion_score_materially": false,
+      "note": "dependabot[bot] present with 159 contributions (2nd-highest contributor by raw count) -- the single largest bot-inflation risk found in this spot-check. Same caveat as arrow-py/arrow: confirming actual DOA-owner impact requires per-file attribution beyond what a contributor list shows."
+    }
+  ],
+  "survivorship_this_corpus": {
+    "n_usable_repos": 15,
+    "n_tfdd_events": 11,
+    "tfdd_incidence_rate": 0.7333333333333333,
+    "n_repos_with_known_survival_outcome": 5,
+    "n_survived": 5,
+    "survival_rate": 1.0
+  },
+  "survivorship_avelino": {
+    "n_projects": 1932,
+    "tfdd_incidence_rate": 0.163,
+    "n_tfdd_projects": 315,
+    "survival_rate": 0.406,
+    "source": "arXiv:1906.08058, ESEM 2019: '315 projects (16%) were abandoned and 128 of these projects (41%) survived'"
+  },
+  "permutation_combinatorial_per_repo": [
+    {
+      "repo_id": "amoffat/sh",
+      "history_months": 174.29,
+      "window_width_months": 6,
+      "feasible_distinct_start_month_positions": 168
+    },
+    {
+      "repo_id": "arrow-py/arrow",
+      "history_months": 161.31,
+      "window_width_months": 6,
+      "feasible_distinct_start_month_positions": 155
+    },
+    {
+      "repo_id": "Kludex/starlette",
+      "history_months": 97.48,
+      "window_width_months": 6,
+      "feasible_distinct_start_month_positions": 91
+    },
+    {
+      "repo_id": "jazzband/tablib",
+      "history_months": 192.59,
+      "window_width_months": 6,
+      "feasible_distinct_start_month_positions": 186
+    },
+    {
+      "repo_id": "pallets/click",
+      "history_months": 147.81,
+      "window_width_months": 6,
+      "feasible_distinct_start_month_positions": 141
+    }
+  ]
+}
