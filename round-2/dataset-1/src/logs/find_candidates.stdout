@@ -1,0 +1,17 @@
+[2026-08-20T20:14:10.950540+00:00] rate limited; sleeping 22s
+[2026-08-20T20:14:35.508789+00:00] q='archived:true created:2009-01-01..2011-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=1006)
+[2026-08-20T20:14:42.175956+00:00] running total unique candidates: 100
+[2026-08-20T20:14:44.209441+00:00] q='archived:false pushed:<2020-01-01 created:2009-01-01..2011-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=3786)
+[2026-08-20T20:14:50.800172+00:00] running total unique candidates: 200
+[2026-08-20T20:14:53.130370+00:00] q='archived:true created:2012-01-01..2014-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=2957)
+[2026-08-20T20:14:59.757402+00:00] running total unique candidates: 300
+[2026-08-20T20:15:01.950648+00:00] q='archived:false pushed:<2020-01-01 created:2012-01-01..2014-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=10968)
+[2026-08-20T20:15:08.542984+00:00] running total unique candidates: 400
+[2026-08-20T20:15:08.595064+00:00] rate limited; sleeping 25s
+[2026-08-20T20:15:36.543132+00:00] q='archived:true created:2015-01-01..2016-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=2995)
+[2026-08-20T20:15:43.150672+00:00] running total unique candidates: 500
+[2026-08-20T20:15:45.205053+00:00] q='archived:false pushed:<2020-01-01 created:2015-01-01..2016-12-31 language:Python stars:>=15' page=1 -> 100 items (total_count=12886)
+[2026-08-20T20:15:51.830166+00:00] running total unique candidates: 600
+[2026-08-20T20:15:54.038292+00:00] q='archived:true created:2009-01-01..2011-12-31 language:JavaScript stars:>=15' page=1 -> 100 items (total_count=1360)
+[2026-08-20T20:16:00.695814+00:00] running total unique candidates: 700
+[2026-08-20T20:16:00.759019+00:00] rate limited; sleeping 35s

@@ -1,0 +1,33 @@
+[2026-08-20T20:16:13.257444+00:00] loaded 700 liveness_non_conditioned candidates
+[2026-08-20T20:16:13.337582+00:00] processing jimmyxu/chnroutes
+[2026-08-20T20:16:18.364757+00:00] processing dcneiner/Downloadify
+[2026-08-20T20:16:23.129281+00:00] processing byt3bl33d3r/pth-toolkit
+[2026-08-20T20:16:29.971969+00:00] processing jacobian/django-deployment-workshop
+[2026-08-20T20:16:35.079235+00:00] processing exPHAT/twitter-sort
+[2026-08-20T20:16:39.664769+00:00] processing github/pycon2011
+[2026-08-20T20:16:44.930587+00:00] processing nytimes/document-viewer
+[2026-08-20T20:16:50.069611+00:00] processing benjamn/kix-standalone
+[2026-08-20T20:16:54.695328+00:00] processing amoffat/focus
+[2026-08-20T20:16:59.266026+00:00] processing hmarr/django-mumblr
+[2026-08-20T20:17:04.374914+00:00] processing nmcspadden/ProfileSigner
+[2026-08-20T20:17:08.732254+00:00] processing jquery-archive/jquery-metadata
+[2026-08-20T20:17:13.662914+00:00] done jquery-archive/jquery-metadata: 40 commits, 4.0y history, archived=True, year1 top-author share=0.5454545454545454
+[2026-08-20T20:17:13.686415+00:00] processing mvccontrib/MvcContrib-2
+[2026-08-20T20:17:20.496982+00:00] processing DIYgod/EasyGoAgent
+[2026-08-20T20:17:26.390433+00:00] processing broofa/jslitmus
+[2026-08-20T20:17:30.861643+00:00] processing sdiehl/minichat
+[2026-08-20T20:17:35.382239+00:00] processing Doist/redis_graph
+[2026-08-20T20:17:39.938839+00:00] processing buke/openerp-taobao
+[2026-08-20T20:17:44.672231+00:00] processing shawphy/jquery-api
+[2026-08-20T20:17:50.422042+00:00] processing FormulaMonks/python-obfuscation
+[2026-08-20T20:17:55.530823+00:00] processing langalex/boom_amazing
+[2026-08-20T20:18:00.630557+00:00] processing simonw/djangopeople.net
+[2026-08-20T20:18:06.768589+00:00] processing laanwj/decuda
+[2026-08-20T20:18:11.583106+00:00] processing facebookarchive/Instadrop
+[2026-08-20T20:18:16.159000+00:00] processing viticci/pythonista-scripts
+[2026-08-20T20:18:20.870155+00:00] processing opendata/lmgtdfy
+[2026-08-20T20:18:25.965857+00:00] processing firefart/HashCollision-DOS-POC
+[2026-08-20T20:18:30.936918+00:00] processing masuidrive/TiStoreKit
+[2026-08-20T20:18:35.759782+00:00] processing peterbe/django-sockjs-tornado
+[2026-08-20T20:18:40.437871+00:00] processing google/cluster-insight
+[2026-08-20T20:18:40.709095+00:00] remaining<=1 after /repos/google/cluster-insight; sleeping 3454s
