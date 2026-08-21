@@ -1,0 +1,39 @@
+{
+  "type": "panel",
+  "panel_labels": true,
+  "title": "Unified corpus construction (n=216 screened candidates)",
+  "aspect": "21:9",
+  "width_in": 12,
+  "ncols": 2,
+  "panels": [
+    {
+      "type": "funnel",
+      "title": "Corpus construction funnel",
+      "xlabel": "Number of repositories",
+      "categories": [
+        "Screened candidates",
+        "Qualified (any founder-only TFDD with history)",
+        "Qualified for regression/placebo test"
+      ],
+      "series": [
+        {"values": [216, 62, 32]}
+      ]
+    },
+    {
+      "type": "barh",
+      "title": "Exclusion reasons (174 non-qualifying candidates)",
+      "xlabel": "Number of repositories",
+      "categories": [
+        "No qualifying founder-only TFDD",
+        "Non-software / low code fraction",
+        "Too few commits",
+        "Right-censored (insufficient post-TFDD history)",
+        "Mining artifact (migration/squash)",
+        "Too-large history"
+      ],
+      "series": [
+        {"label": "Excluded repositories", "values": [120, 24, 15, 11, 11, 3]}
+      ]
+    }
+  ]
+}

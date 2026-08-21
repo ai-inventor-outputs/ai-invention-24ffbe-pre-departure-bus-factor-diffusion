@@ -1,0 +1,24 @@
+{
+  "figure_id": "fig_covariate_cis",
+  "title": "Bootstrap 95% Confidence Intervals on Snapshot-Covariate Cohen's d",
+  "caption": "Nonparametric bootstrap (B=10,000) 95% confidence intervals on Cohen's d for the three computable snapshot covariates, compared against Avelino et al.'s reported reference range; only files at TFDD excludes both zero and the reference range.",
+  "xlabel": "Cohen's d",
+  "xlim": [-1.5, 1.0],
+  "null_line": 0.0,
+  "reference_band": {
+    "low": 0.13,
+    "high": 0.26,
+    "label": "Avelino et al. reference range"
+  },
+  "categories": ["Developers at TFDD", "Commits at TFDD", "Files at TFDD"],
+  "point": [-0.226, -0.558, -0.625],
+  "ci_low": [-1.052, -1.369, -1.071],
+  "ci_high": [0.532, 0.147, -0.141],
+  "row_annotations": [
+    "CI includes 0 and reference range",
+    "CI includes 0, excludes reference range",
+    "CI excludes both 0 and reference range"
+  ],
+  "note": "Stars and forks Cohen's d not computable (raw values absent from dataset artifact for all TFDD repos).",
+  "aspect": "21:9"
+}

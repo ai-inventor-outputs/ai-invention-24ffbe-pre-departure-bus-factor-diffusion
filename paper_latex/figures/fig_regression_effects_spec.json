@@ -1,0 +1,32 @@
+{
+  "type": "barh",
+  "title": "Standardized Regression Coefficients: Diffusion vs. Control Predictors",
+  "xlabel": "Standardized coefficient",
+  "aspect": "21:9",
+  "width_in": 9.0,
+  "xlim": [-1.0, 1.0],
+  "categories": [
+    "project_age_days: -0.880 (BH p=0.04)*",
+    "lang_Java: 0.655 (BH p=0.04)*",
+    "lang_Rust: 0.530 (BH p=0.24)",
+    "history_span_years: 0.378 (BH p=0.24)",
+    "lang_Ruby: 0.358 (BH p=0.55)",
+    "n_commits_total: 0.278 (BH p=0.24)",
+    "stars: 0.271 (BH p=0.55)",
+    "forks: 0.202 (BH p=0.76)",
+    "n_distinct_new_primary_owners_pre_tfdd: 0.133 (BH p=0.84) [DIFFUSION]",
+    "n_files_total: -0.142 (BH p=0.86)",
+    "lang_JavaScript: 0.096 (BH p=0.86)",
+    "total_contributors: -0.003 (BH p=0.95)"
+  ],
+  "series": [
+    {
+      "label": "Control covariate",
+      "values": [-0.880, 0.655, 0.530, 0.378, 0.358, 0.278, 0.271, 0.202, 0.0, -0.142, 0.096, -0.003]
+    },
+    {
+      "label": "Diffusion covariate",
+      "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.133, 0.0, 0.0, 0.0]
+    }
+  ]
+}

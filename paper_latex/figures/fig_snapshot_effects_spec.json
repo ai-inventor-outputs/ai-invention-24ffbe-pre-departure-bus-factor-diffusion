@@ -1,0 +1,20 @@
+{
+  "type": "forest_band_custom",
+  "note": "Rendered by fig_snapshot_effects_render.py (hand-written, house style) because the built-in 'forest' renderer has no reference-band support. This file is the numeric source of truth for that script.",
+  "title": "Snapshot Covariate Effect Sizes: Unified Corpus vs. Avelino et al. (2019)",
+  "caption": "Cohen's d effect sizes of snapshot covariates (measured at the TFDD date) on survival in the 32-repository unified corpus, compared to the range reported by Avelino et al. (2019) on a 1,932-project corpus.",
+  "xlabel": "Cohen's d effect size on survival",
+  "x_range": [-0.1, 0.6],
+  "null_line": 0.0,
+  "categories": ["Total contributors", "Files at TFDD", "Commits at TFDD", "Stars", "Forks"],
+  "series": {
+    "label": "Unified corpus (n=32)",
+    "values": [0.297, 0.144, 0.487, 0.403, 0.441]
+  },
+  "reference_band": {
+    "label": "Avelino et al. (2019) reported range",
+    "low": 0.13,
+    "high": 0.26
+  },
+  "footnote": "All five values fall within or near the original reported range, a closer replication than the prior iteration."
+}

@@ -1,0 +1,61 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Avelino et~al.(2016)Avelino, Passos, Hora, and Valente]{Avelino2016}
+G.~Avelino, L.~Passos, André~C. Hora, and M.~T. Valente.
+\newblock A novel approach for estimating truck factors.
+\newblock In \emph{IEEE International Conference on Program Comprehension},
+  pages 1--10, 2016.
+\newblock \doi{10.1109/ICPC.2016.7503718}.
+
+\bibitem[Avelino et~al.(2019)Avelino, Constantinou, Valente, and
+  Serebrenik]{Avelino2019}
+G.~Avelino, Eleni Constantinou, M.~T. Valente, and A.~Serebrenik.
+\newblock On the abandonment and survival of open source projects: An empirical
+  investigation.
+\newblock In \emph{International Symposium on Empirical Software Engineering
+  and Measurement}, pages 1--12, 2019.
+\newblock \doi{10.1109/ESEM.2019.8870181}.
+
+\bibitem[Coelho and Valente(2017)]{Coelho2017}
+Jailton Coelho and M.~T. Valente.
+\newblock Why modern open source projects fail.
+\newblock In \emph{ESEC/SIGSOFT FSE}, 2017.
+\newblock \doi{10.1145/3106237.3106246}.
+
+\bibitem[Constantinou and Mens(2017)]{Constantinou2017}
+Eleni Constantinou and T.~Mens.
+\newblock An empirical comparison of developer retention in the rubygems and
+  npm software ecosystems.
+\newblock In \emph{Innovations in Systems and Software Engineering}, volume~13,
+  pages 101 -- 115, 2017.
+\newblock \doi{10.1007/s11334-017-0303-4}.
+
+\bibitem[Fan et~al.(2025)Fan, Zhang, Stol, and Liu]{Fan2025}
+Meng Fan, Yuxia Zhang, Klaas-Jan Stol, and Hui Liu.
+\newblock Core developer turnover in the rust package ecosystem: Prevalence,
+  impact, and awareness.
+\newblock In \emph{Proc. ACM Softw. Eng.}, volume~2, pages 2759 -- 2781, 2025.
+\newblock \doi{10.1145/3729392}.
+
+\bibitem[Fritz et~al.(2010)Fritz, Ou, Murphy, and Murphy-Hill]{Fritz2010}
+Thomas Fritz, Jingwen Ou, G.~Murphy, and E.~Murphy-Hill.
+\newblock A degree-of-knowledge model to capture source code familiarity.
+\newblock In \emph{2010 ACM/IEEE 32nd International Conference on Software
+  Engineering}, volume~1, pages 385--394, 2010.
+\newblock \doi{10.1145/1806799.1806856}.
+
+\bibitem[Jabrayilzade et~al.(2022)Jabrayilzade, Evtikhiev, Tüzün, and
+  Kovalenko]{Jabrayilzade2022}
+E.~Jabrayilzade, Mikhail Evtikhiev, Eray Tüzün, and V.~Kovalenko.
+\newblock Bus factor in practice.
+\newblock In \emph{2022 IEEE/ACM 44th International Conference on Software
+  Engineering: Software Engineering in Practice (ICSE-SEIP)}, pages 97--106,
+  2022.
+\newblock \doi{10.1145/3510457.3513082}.
+
+\end{thebibliography}

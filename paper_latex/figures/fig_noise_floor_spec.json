@@ -1,0 +1,34 @@
+{
+  "type": "panel",
+  "panel_labels": true,
+  "title": "Placebo Result vs. Window-Boundary Measurement-Noise Floor",
+  "aspect": "21:9",
+  "ncols": 2,
+  "panels": [
+    {
+      "type": "bar",
+      "title": "Placebo null vs. noise floor (~67x larger)",
+      "ylabel": "Standard deviation (SD units)",
+      "annotate": true,
+      "categories": [
+        "Placebo null\n(SD = 0.176)",
+        "Noise floor (13 repos)\n(SD = 3.43)"
+      ],
+      "series": [
+        {"values": [0.176, 3.43]}
+      ]
+    },
+    {
+      "type": "forest",
+      "title": "True effect vs. pre-registered 2-SD threshold",
+      "xlabel": "Effect (SD units)",
+      "null_line": 2.0,
+      "categories": [
+        "True window effect (r = -0.246)"
+      ],
+      "series": [
+        {"values": [1.4]}
+      ]
+    }
+  ]
+}
