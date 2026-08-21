@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "title": "Closing the Rigor Gaps in the Diffusion Pipeline",
+    "evaluation_name": "rigor_gap_evaluation"
+  },
+  "part_D_repo_table": [
+    {
+      "repo_id": "Textualize/rich",
+      "language": "Python",
+      "error_code": "no_tfdd",
+      "tfdd_detected": false,
+      "founder_only_tf1": false,
+      "stars": 57099.0,
+      "history_span_years": 6.61,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "amoffat/sh",
+      "language": "Python",
+      "error_code": null,
+      "tfdd_detected": true,
+      "founder_only_tf1": true,
+      "stars": 7245.0,
+      "history_span_years": 14.52,
+      "alias_collapse_flag": true
+    },
+    {
+      "repo_id": "benoitc/gunicorn",
+      "language": "Python",
+      "error_code": "no_tfdd",
+      "tfdd_detected": false,
+      "founder_only_tf1": false,
+      "stars": 10655.0,
+      "history_span_years": 16.71,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "cookiecutter/cookiecutter",
+      "language": "Python",
+      "error_code": "not_founder_only_tfdd",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 25059.0,
+      "history_span_years": 12.64,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "arrow-py/arrow",
+      "language": "Python",
+      "error_code": null,
+      "tfdd_detected": true,
+      "founder_only_tf1": true,
+      "stars": 9049.0,
+      "history_span_years": 13.44,
+      "alias_collapse_flag": true
+    },
+    {
+      "repo_id": "encode/httpx",
+      "language": "Python",
+      "error_code": "right_censored",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 15427.0,
+      "history_span_years": 6.89,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "Kludex/starlette",
+      "language": "Python",
+      "error_code": null,
+      "tfdd_detected": true,
+      "founder_only_tf1": true,
+      "stars": 12552.0,
+      "history_span_years": 8.12,
+      "alias_collapse_flag": true
+    },
+    {
+      "repo_id": "Kludex/uvicorn",
+      "language": "Python",
+      "error_code": "right_censored",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 10915.0,
+      "history_span_years": 9.22,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "jazzband/tablib",
+      "language": "Python",
+      "error_code": null,
+      "tfdd_detected": true,
+      "founder_only_tf1": true,
+      "stars": 4755.0,
+      "history_span_years": 16.05,
+      "alias_collapse_flag": true
+    },
+    {
+      "repo_id": "joke2k/faker",
+      "language": "Python",
+      "error_code": "no_tfdd",
+      "tfdd_detected": false,
+      "founder_only_tf1": false,
+      "stars": 19370.0,
+      "history_span_years": 13.72,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "kennethreitz/records",
+      "language": "Python",
+      "error_code": "not_founder_only_tfdd",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 7221.0,
+      "history_span_years": 11.13,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "pallets/click",
+      "language": "Python",
+      "error_code": null,
+      "tfdd_detected": true,
+      "founder_only_tf1": true,
+      "stars": 17629.0,
+      "history_span_years": 12.32,
+      "alias_collapse_flag": true
+    },
+    {
+      "repo_id": "pyenv/pyenv",
+      "language": "Shell",
+      "error_code": "not_founder_only_tfdd",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 45036.0,
+      "history_span_years": 15.04,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "fastapi/typer",
+      "language": "Python",
+      "error_code": "no_tfdd",
+      "tfdd_detected": false,
+      "founder_only_tf1": false,
+      "stars": 19911.0,
+      "history_span_years": 6.64,
+      "alias_collapse_flag": false
+    },
+    {
+      "repo_id": "tqdm/tqdm",
+      "language": "Python",
+      "error_code": "not_founder_only_tfdd",
+      "tfdd_detected": true,
+      "founder_only_tf1": false,
+      "stars": 31276.0,
+      "history_span_years": 12.75,
+      "alias_collapse_flag": false
+    }
+  ],
+  "part_B_wilson_inputs": {
+    "avelino_et_al_2019": {
+      "n": 315,
+      "numerator": 208,
+      "reported_proportion": 0.66
+    },
+    "this_study": {
+      "n": 11,
+      "numerator": 5
+    }
+  },
+  "part_E_two_proportion_inputs": {
+    "avelino_incidence": {
+      "x": 315,
+      "n": 1932
+    },
+    "avelino_survival": {
+      "x": 128,
+      "n": 315
+    },
+    "this_corpus_incidence": {
+      "x": 11,
+      "n": 15
+    },
+    "this_corpus_survival": {
+      "x": 5,
+      "n": 5
+    }
+  },
+  "part_A_placebo_disclosure": {
+    "N_PLACEBO_DRAWS_constant": 500,
+    "per_repo_hard_cap": 20,
+    "theoretical_floor_at_claimed_500": 0.001996,
+    "theoretical_floor_at_actual_cap_20": 0.047619
+  }
+}
