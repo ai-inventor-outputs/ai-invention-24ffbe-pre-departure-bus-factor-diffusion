@@ -1,0 +1,16 @@
+{
+  "type": "line",
+  "title": "Monte Carlo power curve for the founder-share effect",
+  "xlabel": "Sample size (n)",
+  "ylabel": "Statistical power",
+  "aspect": "21:9",
+  "caption": "Power to detect the founder-share effect at the observed coefficient (-5.56), by sample size, from the 25x200-draw Monte Carlo audit. Power rises from 0.00 at n=16 to 0.89 at n=120, crossing the conventional 0.80 threshold between n=80 and n=120.",
+  "x": [16, 20, 40, 60, 80, 120, 160],
+  "series": [
+    {
+      "label": "Power to detect -5.56 coefficient",
+      "x": [16, 20, 40, 60, 80, 120, 160],
+      "values": [0.00, 0.02, 0.05, 0.31, 0.57, 0.89, 0.99]
+    }
+  ]
+}
