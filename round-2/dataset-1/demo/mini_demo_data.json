@@ -1,1 +1,3877 @@
-{"metadata": {"source": "GitHub Search API (unauthenticated, 10 req/min search endpoint) for candidate discovery via archived-or-stale x historical-creation-window x language queries (code/find_candidates.py) + GitHub REST API (unauthenticated, 60 req/hour) for repo metadata + `git clone --bare` / `git log --numstat` for full local commit history (code/build_dataset.py). iter_1's liveness_conditioned repos (currently-prominent hand-curated list) are pooled in unmodified for direct comparison.", "description": "Companion/superset corpus to iter_1's github_founder_departure_commits: per-repo full commit history + founder-dominance signal, POOLING two explicit sampling frames (liveness_conditioned vs liveness_non_conditioned) tagged per-example via metadata_sampling_frame so downstream code can filter or stratify honestly instead of silently mixing a survivorship-biased sample with an unbiased one.", "primary_dataset": "github_founder_departure_commits_non_conditioned", "founder_share_threshold": 0.7, "n_examples_total": 11, "n_liveness_non_conditioned": 1, "n_liveness_conditioned": 10, "yield_report": {"candidates_discovered_non_conditioned": 700, "candidates_attempted_non_conditioned": 25, "candidates_succeeded_non_conditioned": 1, "candidates_skipped_non_conditioned": 24, "skip_reason_breakdown_non_conditioned": {"insufficient_history": 24}, "founder_dominant_repos_in_non_conditioned_subset": 0, "note": "Yield is low and reported honestly per the gen_plan: the majority of archived/long-stale GitHub repos discovered by creation-date + archived/stale search queries turn out to have been abandoned WITHIN 1-2 years of creation (insufficient_history skip, <3.0y total commit span), i.e. they never had enough history to run a year-by-year DOA/Truck-Factor pipeline on in the first place. This is itself informative: repos that are prominent enough to survive multiple years AND still end up archived/abandoned are a genuinely rare intersection relative to the much larger population of small repos that simply die early. No liveness_non_conditioned repo in this batch was found to have a NON-surviving founder-only TFDD event with enough post-departure history to score the 18-month survival window -- that specific gap this artifact targets remains OPEN, and the downstream eval/experiment artifacts should treat power for that specific claim as unproven rather than assume it from this corpus alone."}, "rate_limit_note": "Unauthenticated GitHub Search API is capped at 10 requests/minute; unauthenticated REST API (repo/readme fetch) at 60 requests/hour. No GITHUB_TOKEN was present in this environment (verified via `curl -s https://api.github.com/rate_limit` before writing find_candidates.py). This makes the gen_plan's full historical-window sweep infeasible within a single artifact's wall-clock budget; find_candidates.py and build_dataset.py both checkpoint to disk and are resumable to extend this corpus in a follow-up run."}, "records": [{"repo_metadata": {"full_name": "jquery-archive/jquery-metadata", "stars": 216, "forks": 107, "language": "JavaScript", "license": null, "created_at": "2009-07-25T16:43:34Z", "pushed_at": "2010-10-28T14:10:52Z", "default_branch": "master", "open_issues": 2, "archived": true, "readme_excerpt": "jQuery Metadata Plugin\n\nBy John Resig\n\nThis plugin is capable of silently, and automatically, extracting metadata \nfrom classes, random attributes, and child elements.\n\nFor example, you can do:\n<li class=\"someclass {some: 'data'} anotherclass\">...</li>\nOR\n<li data=\"{some:'random', json: 'data'}\">...</li>\nOR\n<li><script type=\"data\">{some:\"json\",data:true}</script> ...</li>\n\nThe default is the first method, but you can always change it by twiddling \nthe options. This means that there is at least one option here that can \nappease you.\n\nThere's also a bunch of options (like loading data into a single property \nand the ability to ignore braces {}).\n", "total_commit_count": 40, "history_years": 3.97}, "founder_signal": {"year1_top_author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "year1_top_author_share": 0.5455}, "sampling_frame": "liveness_non_conditioned", "frame_construction_method": "github_search_archived", "discovery_query": "archived:true created:2009-01-01..2011-12-31 language:JavaScript stars:>=15", "truncated": false, "commit_cap": 5000, "commits": [{"sha": "e5a9e4315675bf4d68716872ca754e858088f8ab", "author_email": "joern.zaefferer@gmail.com", "author_name": "jzaefferer", "date": "2010-10-28T16:09:41+02:00", "files": []}, {"sha": "a1ce863f7b8e67da8fc4a5f76da1d1322fe89b7d", "author_email": "john_firebaugh@bigfix.com", "author_name": "John Firebaugh", "date": "2010-09-02T14:43:24-07:00", "files": [{"path": "META.json", "insertions": 1, "deletions": 1}, {"path": "jquery.metadata.js", "insertions": 1, "deletions": 3}]}, {"sha": "050278aa3a5a0c84d90e79052ed86f67c6bb1ee9", "author_email": "john_firebaugh@bigfix.com", "author_name": "John Firebaugh", "date": "2010-09-02T14:36:47-07:00", "files": [{"path": "jquery.metadata.min.js", "insertions": 0, "deletions": 13}, {"path": "jquery.metadata.pack.js", "insertions": 0, "deletions": 13}]}, {"sha": "0dbb5ec89ce8f493e33b83433b03d6feaec867fc", "author_email": "jeresig@gmail.com", "author_name": "John Resig", "date": "2009-07-25T12:49:50-04:00", "files": [{"path": "META.json", "insertions": 33, "deletions": 0}, {"path": "README", "insertions": 20, "deletions": 0}, {"path": "jquery.metadata.js", "insertions": 122, "deletions": 0}, {"path": "test/index.html", "insertions": 58, "deletions": 0}, {"path": "test/jquery.js", "insertions": 3363, "deletions": 0}, {"path": "test/test.js", "insertions": 79, "deletions": 0}, {"path": "test/testrunner.js", "insertions": 299, "deletions": 0}, {"path": "test/testsuite.css", "insertions": 12, "deletions": 0}]}, {"sha": "f6b4dbae94d7c315068fd6a451e5af009d6a7d3f", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2008-05-08T19:51:04+00:00", "files": [{"path": "test/index.html", "insertions": 3, "deletions": 0}]}, {"sha": "52a1c53f5f9793ae1c228ba0f87165d465673aeb", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-12-20T18:11:55+00:00", "files": [{"path": "test/jquery.js", "insertions": 166, "deletions": 81}]}, {"sha": "d6e07655aa18e75002ac76f7f05f40bbdb403792", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-12-16T17:15:27+00:00", "files": [{"path": "jquery.metadata.js", "insertions": 2, "deletions": 1}, {"path": "test/jquery.js", "insertions": 582, "deletions": 455}]}, {"sha": "9e2b2f52a9b3a9bff3fc2861a7a8ebc23719c957", "author_email": "pmclanahan@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "pmclanahan", "date": "2007-10-11T18:34:38+00:00", "files": [{"path": "test/index.html", "insertions": 0, "deletions": 1}]}, {"sha": "f4af8c17d5bd08e96e2b6c3363201aac134908b4", "author_email": "pmclanahan@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "pmclanahan", "date": "2007-10-11T18:30:36+00:00", "files": [{"path": "test/index.html", "insertions": 1, "deletions": 0}]}, {"sha": "46d9b280e0e1f22294c4443b9bc9ee26f24d29d9", "author_email": "pmclanahan@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "pmclanahan", "date": "2007-10-11T18:28:12+00:00", "files": [{"path": "META.json", "insertions": 6, "deletions": 5}, {"path": "jquery.metadata.js", "insertions": 72, "deletions": 71}, {"path": "jquery.metadata.min.js", "insertions": 3, "deletions": 4}, {"path": "jquery.metadata.pack.js", "insertions": 3, "deletions": 3}, {"path": "test/jquery.js", "insertions": 3151, "deletions": 3151}, {"path": "test/test.js", "insertions": 78, "deletions": 79}, {"path": "test/testrunner.js", "insertions": 299, "deletions": 299}]}, {"sha": "748899df44b0b960273b5a605cb27a08c9d8f5f5", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-10-04T20:49:16+00:00", "files": [{"path": "README", "insertions": 2, "deletions": 2}, {"path": "jquery.metadata.js", "insertions": 120, "deletions": 0}, {"path": "jquery.metadata.min.js", "insertions": 14, "deletions": 0}, {"path": "jquery.metadata.pack.js", "insertions": 13, "deletions": 0}, {"path": "metadata.js", "insertions": 0, "deletions": 120}, {"path": "test/index.html", "insertions": 55, "deletions": 0}, {"path": "test/jquery.js", "insertions": 3151, "deletions": 0}, {"path": "test/test.js", "insertions": 80, "deletions": 0}, {"path": "test/testrunner.js", "insertions": 299, "deletions": 0}, {"path": "test/testsuite.css", "insertions": 12, "deletions": 0}, {"path": "tests/index.html", "insertions": 0, "deletions": 136}]}, {"sha": "1fef84c77b7823b179b193dd4becb331ce49941e", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-10-04T20:34:19+00:00", "files": [{"path": "lib/jQuery/metadata.js", "insertions": 0, "deletions": 120}, {"path": "metadata.js", "insertions": 120, "deletions": 0}]}, {"sha": "a4f00cc87b6064bd3a391ebfc3ebf8836f3468a2", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-09-23T21:15:52+00:00", "files": [{"path": "lib/jQuery/metadata.js", "insertions": 2, "deletions": 2}]}, {"sha": "4a1e8a3244156ccd1b2bd7d22e653ffea8f898a2", "author_email": "joern.zaefferer@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern.zaefferer", "date": "2007-05-18T14:25:48+00:00", "files": [{"path": "lib/jQuery/metadata.js", "insertions": 4, "deletions": 4}]}, {"sha": "93857026b86f5dd28260ad096d7f2f626cce313c", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2007-04-05T16:02:19+00:00", "files": [{"path": "lib/jQuery/metadata.js", "insertions": 1, "deletions": 1}]}, {"sha": "e8fdefe526042774363484d5cd7c233df68ea401", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2007-02-19T19:33:33+00:00", "files": [{"path": "tests/index.html", "insertions": 6, "deletions": 0}]}, {"sha": "0f2abcb14b79c9edf8e0fb96790c40c804ee9b69", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2007-02-18T12:03:42+00:00", "files": [{"path": "META.json", "insertions": 1, "deletions": 1}]}, {"sha": "f460cebd2f2fa8fe5f16163527b00df3c80b02fc", "author_email": "yehuda@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "yehuda", "date": "2007-02-17T05:00:24+00:00", "files": [{"path": "META.json", "insertions": 1, "deletions": 1}]}, {"sha": "5cde93e54e796eabed34f16a3be7bdff09bfa862", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2007-02-17T04:31:39+00:00", "files": [{"path": "META.json", "insertions": 6, "deletions": 0}, {"path": "tests/index.html", "insertions": 2, "deletions": 2}]}, {"sha": "95da522379f150c53540e0960264f60a5b5acfd7", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2007-02-17T03:53:08+00:00", "files": [{"path": "META.json", "insertions": 14, "deletions": 14}]}, {"sha": "e744522f1a6bbe2300899251aa2e8616ee9b9c13", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2007-02-17T03:48:49+00:00", "files": [{"path": "META.json", "insertions": 26, "deletions": 0}, {"path": "META.yml", "insertions": 0, "deletions": 19}]}, {"sha": "ff1f4cd700b420d51772d64d5837b653217e460c", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2007-02-10T22:59:59+00:00", "files": [{"path": "tests/index.html", "insertions": 27, "deletions": 34}]}, {"sha": "ac67964a8c2ec4eecd2213dfeba45c941d6ffeaf", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2007-02-10T22:53:06+00:00", "files": [{"path": "META.yml", "insertions": 19, "deletions": 0}, {"path": "README", "insertions": 20, "deletions": 0}, {"path": "lib/jQuery/metadata.js", "insertions": 120, "deletions": 0}, {"path": "metadata.js", "insertions": 0, "deletions": 120}, {"path": "metadataTest.html", "insertions": 0, "deletions": 137}, {"path": "tests/index.html", "insertions": 137, "deletions": 0}]}, {"sha": "876d9072f6111137257de6c824452cc56a1854f3", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2007-01-16T21:04:48+00:00", "files": [{"path": "metadata.js", "insertions": 1, "deletions": 0}, {"path": "metadataTest.html", "insertions": 5, "deletions": 0}]}, {"sha": "27c7ecf20521f4c5fbcf62b4511cea16c183a752", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2007-01-11T22:08:22+00:00", "files": [{"path": "metadata.js", "insertions": 5, "deletions": 5}, {"path": "metadataTest.html", "insertions": 5, "deletions": 5}]}, {"sha": "c7ef91188f36e99fc1472d065e7c7be27cfc9fd1", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-21T10:50:22+00:00", "files": [{"path": "metadata.js", "insertions": 32, "deletions": 19}, {"path": "metadataTest.html", "insertions": 4, "deletions": 3}]}, {"sha": "7392e8ddab5ef297fdf38366bd88bcb0a2b1f147", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-21T10:21:33+00:00", "files": [{"path": "metadata.js", "insertions": 9, "deletions": 8}, {"path": "metadataTest.html", "insertions": 8, "deletions": 8}]}, {"sha": "67edff2ad5c2cbfdc51a27d1ccb69222249d3ec0", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-21T09:31:46+00:00", "files": [{"path": "metadata.js", "insertions": 15, "deletions": 14}, {"path": "metadataTest.html", "insertions": 14, "deletions": 0}]}, {"sha": "66d0a531beea2796ddc619064f12c82ecd558600", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-20T11:14:26+00:00", "files": [{"path": "metadata.js", "insertions": 62, "deletions": 59}, {"path": "metadataTest.html", "insertions": 1, "deletions": 0}]}, {"sha": "4bc1dd90183f876d414cdaa1cec544373a8bef6a", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-14T18:34:28+00:00", "files": [{"path": "metadata.js", "insertions": 2, "deletions": 0}]}, {"sha": "9f29e7f005393eb811a84390957f03c9b19d8f60", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-14T18:26:27+00:00", "files": [{"path": "metadata.js", "insertions": 4, "deletions": 7}]}, {"sha": "e1fa368746e1defe0b5219ce03544555e6faf965", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-12-13T19:03:47+00:00", "files": [{"path": "metadata.js", "insertions": 2, "deletions": 0}]}, {"sha": "3182e08e568518d5f1bc0076e0f2cd547ae60e96", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-29T20:58:09+00:00", "files": [{"path": "metadataTest.html", "insertions": 1, "deletions": 0}]}, {"sha": "fd451a863ae2e369e729a53e2bcdceb359b5c41f", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-27T12:30:45+00:00", "files": [{"path": "metadata.js", "insertions": 1, "deletions": 1}, {"path": "metadataTest.html", "insertions": 14, "deletions": 5}]}, {"sha": "e9d21536136b697d421c6f5a7c1d274b4f7972e8", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-16T11:00:43+00:00", "files": [{"path": "metadataTest.html", "insertions": 1, "deletions": 1}]}, {"sha": "099efc49fe69c3e7a1fc273ffa06965abd0d1ed3", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-16T10:52:07+00:00", "files": [{"path": "metadataTest.html", "insertions": 9, "deletions": 7}]}, {"sha": "613764cf3500ddb2ccedaed024b0d1d48ee39cc0", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-15T13:21:03+00:00", "files": [{"path": "metadata.js", "insertions": 3, "deletions": 3}, {"path": "metadataTest.html", "insertions": 17, "deletions": 9}]}, {"sha": "d44a319a459daece5b80296225293bcd9e5020f0", "author_email": "joern@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "joern", "date": "2006-11-13T12:08:42+00:00", "files": [{"path": "metadataTest.html", "insertions": 96, "deletions": 0}]}, {"sha": "084cb13a01ac7f96ea377afc9462ab86f0eab6ee", "author_email": "john@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "john", "date": "2006-11-11T05:23:34+00:00", "files": [{"path": "metadata.js", "insertions": 7, "deletions": 5}]}, {"sha": "ab6bf0c0756a8f970d5ab2cfddad6e5ecf88bf4b", "author_email": "yehuda@c715fcbe-d12f-0410-84c4-316a508785bb", "author_name": "yehuda", "date": "2006-11-07T03:34:47+00:00", "files": [{"path": "metadata.js", "insertions": 98, "deletions": 0}]}]}, {"repo_metadata": {"full_name": "kennethreitz/records", "stars": 7221, "forks": 564, "language": "Python", "license": "ISC", "created_at": "2014-12-24T15:20:23Z", "pushed_at": "2026-02-09T03:57:09Z", "default_branch": "master", "open_issues": 49, "readme_excerpt": "# Records: SQL for Humans\u2122\n\n[![image](https://img.shields.io/pypi/v/records.svg)](https://pypi.python.org/pypi/records)\n\n**Records is a very simple, but powerful, library for making raw SQL\nqueries to most relational databases.**\n\n![image](https://farm1.staticflickr.com/569/33085227621_7e8da49b90_k_d.jpg)\n\nJust write SQL. No bells, no whistles. This common task can be\nsurprisingly difficult with the standard tools available. This library\nstrives to make this workflow as simple as possible, while providing an\nelegant interface to work with your query results.\n\n*Database support includes RedShift, Postgres, MySQL, SQLite, Oracle,\nand MS-SQL (drivers not included).*\n\n## \u2624 The Basics\n\nWe know how to write SQL, so let's send some to our database:\n\n``` python\nimport records\n\ndb = records.Database('postgres://...')\nrows = db.query('select * from active_users')    # or db.query_file('sqls/active-users.sql')\n```\n\nGrab one row at a time:\n\n``` python\n>>> rows[0]\n<Record {\"username\": \"model-t\", \"active\": true, \"name\": \"Henry Ford\", \"user_email\": \"model-t@gmail.com\", \"timezone\": \"2016-02-06 22:28:23.894202\"}>\n```\n\nOr iterate over them:\n\n``` python\nfor r in rows:\n    print(r.name, r.user_email)\n```\n\nValues can be accessed many ways: `row.user_email`, `row['user_email']`,\nor `row[3]`.\n\nFields with non-alphanumeric characters (like spaces) are also fully\nsupported.\n\nOr store a copy of your record collection for later reference:\n\n``` python\n>>> rows.all()\n[<Record {\"username\": ...}>, <Record ", "total_commit_count": 378, "history_years": 11.13}, "founder_signal": {"year1_top_author_email": "me@kennethreitz.org", "year1_top_author_share": 0.6}, "truncated": false, "commit_cap": 5000, "commits": [{"sha": "ea4273695cee6da42edf1cb294d1f2a4505470fc", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T19:57:09-08:00", "files": []}, {"sha": "5df61d335f559e52feab2aa493a29c5c307a8fde", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T19:46:24-08:00", "files": [{"path": "examples/randomuser-sqlite.py", "insertions": 22, "deletions": 21}, {"path": "records.py", "insertions": 0, "deletions": 1}]}, {"sha": "c925575bbf2eb7ce8b7b239cfaad72b387332b75", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T19:34:58-08:00", "files": []}, {"sha": "91019db0bfc462f6bf4060394d51407a544ee6ff", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T19:34:01-08:00", "files": [{"path": "examples/randomuser-sqlite.py", "insertions": 21, "deletions": 22}]}, {"sha": "a2c07855e9bdf1f4b7aa4aed53835a0f3ca83262", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T14:36:11-08:00", "files": []}, {"sha": "a1ebddef8a9e8c19771a2544fdd0da6a7f3dd3ca", "author_email": "jgleoj23@gmail.com", "author_name": "Joseph Gardi", "date": "2026-02-08T12:56:11-08:00", "files": [{"path": "records.py", "insertions": 1, "deletions": 0}]}, {"sha": "5941ab2798cb91455b6424a9564c9cd680475fbe", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-07-09T07:26:42-04:00", "files": []}, {"sha": "0ba5df1bd910bb5b77f4c193aa52323236247899", "author_email": "imranimtiaz48@hotmail.com", "author_name": "Imran Imtiaz", "date": "2024-07-07T22:12:21+04:00", "files": [{"path": "examples/randomuser-sqlite.py", "insertions": 22, "deletions": 21}]}, {"sha": "ed1e5ad41fccfef1797b798652735e09ac435d08", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T20:01:36-04:00", "files": [{"path": "README.md", "insertions": 4, "deletions": 0}]}, {"sha": "72efce67874d1b40ac2a35542127e8830da49707", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:50:46-04:00", "files": [{"path": "setup.py", "insertions": 1, "deletions": 3}]}, {"sha": "35846e1eb0f4617da8a10b3dd0520cf8119efdb7", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:50:40-04:00", "files": [{"path": "HISTORY.rst", "insertions": 7, "deletions": 0}]}, {"sha": "2421cb5f15a75912f862467b73c21a4be0794968", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:45:21-04:00", "files": [{"path": ".github/workflows/ci.yml", "insertions": 34, "deletions": 0}]}, {"sha": "9e0d8bc24410769590d8e998f51fb72ebf2d9066", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:37:25-04:00", "files": [{"path": "records.py", "insertions": 54, "deletions": 40}, {"path": "setup.py", "insertions": 1, "deletions": 1}, {"path": "tests/conftest.py", "insertions": 12, "deletions": 10}]}, {"sha": "08845f792acd946b075c71011aa9ffc2f03887d1", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:23:13-04:00", "files": [{"path": "setup.py", "insertions": 53, "deletions": 44}]}, {"sha": "d9c6fea783889a3bdf0120589504b19a1fd76760", "author_email": "me@kennethreitz.org", "author_name": "Kenneth Reitz", "date": "2024-03-29T19:23:03-04:00", "files": [{"path": "requirements.txt", "insertions": 2, "deletions": 0}]}], "sampling_frame": "liveness_conditioned", "frame_construction_method": "currently_prominent_handcurated"}, {"repo_metadata": {"full_name": "amoffat/sh", "stars": 7245, "forks": 506, "language": "Python", "license": "MIT", "created_at": "2012-01-15T05:52:06Z", "pushed_at": "2026-07-25T21:44:20Z", "default_branch": "develop", "open_issues": 2, "readme_excerpt": ".. image:: https://raw.githubusercontent.com/amoffat/sh/master/images/logo-230.png\n    :target: https://amoffat.github.com/sh\n    :alt: Logo\n\n.. image:: https://img.shields.io/pypi/v/sh.svg?style=flat-square\n    :target: https://pypi.python.org/pypi/sh\n    :alt: Version\n.. image:: https://img.shields.io/pypi/dm/sh.svg?style=flat-square\n    :target: https://pypi.python.org/pypi/sh\n    :alt: Downloads Status\n.. image:: https://img.shields.io/pypi/pyversions/sh.svg?style=flat-square\n    :target: https://pypi.python.org/pypi/sh\n    :alt: Python Versions\n.. image:: https://img.shields.io/coveralls/amoffat/sh.svg?style=flat-square\n    :target: https://coveralls.io/r/amoffat/sh?branch=master\n    :alt: Coverage Status\n\n|\n\nsh is a full-fledged subprocess replacement for Python 3.10 - 3.14, and PyPy\nthat allows you to call *any* program as if it were a function:\n\n.. code:: python\n\n    from sh import git\n    print(git(\"status\", \"--short\"))\n\nsh is *not* a collection of system commands implemented in Python.\n\nsh relies on various Unix system calls and only works on Unix-like operating\nsystems - Linux, macOS, BSDs etc. Specifically, Windows is not supported.\n\n`Complete documentation here <https://sh.readthedocs.io/>`_\n\n`Full documentation on a single page for LLM-assisted coding here <https://sh.readthedocs.io/en/latest/fulldoc.html>`_\n\nInstallation\n============\n\n::\n\n    $> pip install sh\n\nSupport\n=======\n* `Andrew Moffat <https://github.com/amoffat>`_ - author/maintainer\n\nDevelopers\n=====", "total_commit_count": 1604, "history_years": 14.52}, "founder_signal": {"year1_top_author_email": "andrew.robert.moffat@gmail.com", "year1_top_author_share": 0.9278}, "truncated": false, "commit_cap": 5000, "commits": [{"sha": "5e1c810236225ab9a41280cc1a7d9d38ef575086", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-25T14:39:10-07:00", "files": [{"path": "pyproject.toml", "insertions": 1, "deletions": 1}]}, {"sha": "6e913e5be7c13675c87c55fe47c53ede515ad773", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-25T04:04:20-07:00", "files": []}, {"sha": "f2aa48bdcfc21481d9558e3a8d565d8c85b1aeef", "author_email": "198982749+Copilot@users.noreply.github.com", "author_name": "copilot-swe-agent[bot]", "date": "2026-07-25T11:01:36+00:00", "files": [{"path": "CHANGELOG.md", "insertions": 5, "deletions": 1}]}, {"sha": "7e1600670f63e2d23a58ffb0a0c53007e7e63213", "author_email": "198982749+Copilot@users.noreply.github.com", "author_name": "copilot-swe-agent[bot]", "date": "2026-07-25T10:58:45+00:00", "files": []}, {"sha": "823ac7f9d24c91cc3d98c643be1d8bb43167b7be", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-23T15:26:36-07:00", "files": []}, {"sha": "7c41eb9d09616537585ec9c875c72fca0f261907", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-24T00:02:19+02:00", "files": [{"path": ".github/workflows/main.yml", "insertions": 1, "deletions": 0}, {"path": "tox.ini", "insertions": 1, "deletions": 0}]}, {"sha": "9161e26b077cbdbd4eb049cfc4edd5450f9866a6", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-24T00:01:49+02:00", "files": [{"path": "pyproject.toml", "insertions": 1, "deletions": 0}, {"path": "uv.lock", "insertions": 21, "deletions": 0}]}, {"sha": "1c814561878512fc39c4ebfd7fa0b6ccbabd0bda", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-23T23:36:13+02:00", "files": [{"path": "tox.ini", "insertions": 1, "deletions": 0}]}, {"sha": "dce9f629fe1b91193555d5dfecbc0107a6cad1e4", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-23T23:35:57+02:00", "files": [{"path": ".github/workflows/main.yml", "insertions": 1, "deletions": 0}]}, {"sha": "b37d6647b8e7e27b523c55c7451afaf7238377bd", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-23T14:29:20-07:00", "files": []}, {"sha": "04f6541b35b8091a78c5a64c05a164e2ecafa568", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-23T14:27:03-07:00", "files": []}, {"sha": "000e66fb7ad60a821274baa6cee694e5da23280f", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-23T23:05:20+02:00", "files": [{"path": "src/sh/__init__.py", "insertions": 4, "deletions": 4}]}, {"sha": "a0b2d5d0a607ec43e260ba29d603d84236f9da52", "author_email": "jhammudoglu@gmail.com", "author_name": "jorenham", "date": "2026-07-23T12:28:22+02:00", "files": [{"path": "src/sh/__init__.pyi", "insertions": 39, "deletions": 9}]}, {"sha": "9b61fdc829c38d8fbc6a9783d9f660c915b3eb37", "author_email": "arwmoffat@gmail.com", "author_name": "Andrew", "date": "2026-07-23T13:55:17-07:00", "files": []}, {"sha": "78d8159d995872e9cca369149e8c5eae86988ec2", "author_email": "198982749+Copilot@users.noreply.github.com", "author_name": "copilot-swe-agent[bot]", "date": "2026-07-23T20:49:01+00:00", "files": [{"path": "src/sh/__init__.py", "insertions": 1, "deletions": 1}, {"path": "tests/sh_test.py", "insertions": 10, "deletions": 0}]}], "sampling_frame": "liveness_conditioned", "frame_construction_method": "currently_prominent_handcurated"}, {"repo_metadata": {"full_name": "arrow-py/arrow", "stars": 9049, "forks": 773, "language": "Python", "license": "Apache-2.0", "created_at": "2012-11-18T20:23:27Z", "pushed_at": "2026-06-22T02:12:59Z", "default_branch": "master", "open_issues": 187, "readme_excerpt": "Arrow: Better dates & times for Python\n======================================\n\n.. start-inclusion-marker-do-not-remove\n\n.. image:: https://github.com/arrow-py/arrow/workflows/tests/badge.svg?branch=master\n   :alt: Build Status\n   :target: https://github.com/arrow-py/arrow/actions?query=workflow%3Atests+branch%3Amaster\n\n.. image:: https://codecov.io/gh/arrow-py/arrow/branch/master/graph/badge.svg\n   :alt: Coverage\n   :target: https://codecov.io/gh/arrow-py/arrow\n\n.. image:: https://img.shields.io/pypi/v/arrow.svg\n   :alt: PyPI Version\n   :target: https://pypi.python.org/pypi/arrow\n\n.. image:: https://img.shields.io/pypi/pyversions/arrow.svg\n   :alt: Supported Python Versions\n   :target: https://pypi.python.org/pypi/arrow\n\n.. image:: https://img.shields.io/pypi/l/arrow.svg\n   :alt: License\n   :target: https://pypi.python.org/pypi/arrow\n\n.. image:: https://img.shields.io/badge/code%20style-black-000000.svg\n   :alt: Code Style: Black\n   :target: https://github.com/psf/black\n\n\n**Arrow** is a Python library that offers a sensible and human-friendly approach to creating, manipulating, formatting and converting dates, times and timestamps. It implements and updates the datetime type, plugging gaps in functionality and providing an intelligent module API that supports many common creation scenarios. Simply put, it helps you work with dates and times with fewer imports and a lot less code.\n\nArrow is named after the `arrow of time <https://en.wikipedia.org/wiki/Arrow_of_time>`_ and is h", "total_commit_count": 1449, "history_years": 13.44}, "founder_signal": {"year1_top_author_email": "crsmithdev@gmail.com", "year1_top_author_share": 0.4835}, "truncated": false, "commit_cap": 5000, "commits": [{"sha": "2224255c4acc594d734cef0bbc83360452a67983", "author_email": "me@krisfremen.com", "author_name": "Kristijan \"Fremen\" Velkovski", "date": "2026-04-30T03:13:11-05:00", "files": [{"path": "arrow/arrow.py", "insertions": 9, "deletions": 11}]}, {"sha": "b423717da81aaf8117313b4b377efaa6413a9639", "author_email": "34209028+veeceey@users.noreply.github.com", "author_name": "Varun Chawla", "date": "2026-02-19T07:24:45-08:00", "files": [{"path": "arrow/arrow.py", "insertions": 11, "deletions": 9}]}, {"sha": "67ca577fb248ce9d803a9a85584b90a77ca989f0", "author_email": "me@krisfremen.com", "author_name": "Kristijan \"Fremen\" Velkovski", "date": "2026-02-18T21:17:06-06:00", "files": [{"path": ".github/workflows/continuous_integration.yml", "insertions": 3, "deletions": 1}]}, {"sha": "b247ad073d4c350270528edb5afff8e7f4f7d9e4", "author_email": "jason.d.mitchell03@gmail.com", "author_name": "Jason Mitchell", "date": "2025-12-15T20:41:26-08:00", "files": [{"path": "arrow/locales.py", "insertions": 2, "deletions": 0}, {"path": "tests/test_locales.py", "insertions": 5, "deletions": 0}]}, {"sha": "9da15b8fd2159c3b5c74ed6c505c22a6ec062332", "author_email": "49699333+dependabot[bot]@users.noreply.github.com", "author_name": "dependabot[bot]", "date": "2025-12-14T21:43:28-08:00", "files": [{"path": ".github/workflows/continuous_integration.yml", "insertions": 3, "deletions": 3}, {"path": ".github/workflows/release.yml", "insertions": 1, "deletions": 1}]}, {"sha": "598b72a3019baf58f29200087addcfc1a35648c9", "author_email": "70592529+ABolouk@users.noreply.github.com", "author_name": "Amirhosein Bolouk Asli", "date": "2025-12-15T09:08:12+03:30", "files": [{"path": "tests/test_locales.py", "insertions": 375, "deletions": 0}]}, {"sha": "53274f91fea4fad0c496c43ff2c1e64da8abda3d", "author_email": "49699333+dependabot[bot]@users.noreply.github.com", "author_name": "dependabot[bot]", "date": "2025-12-14T21:36:45-08:00", "files": [{"path": ".github/workflows/continuous_integration.yml", "insertions": 2, "deletions": 2}, {"path": ".github/workflows/release.yml", "insertions": 1, "deletions": 1}]}, {"sha": "edfff3c095999cdb40d14f9f218cb8d12a621b87", "author_email": "jadchaar@users.noreply.github.com", "author_name": "Jad Chaar", "date": "2025-12-14T21:21:45-08:00", "files": []}, {"sha": "6c4e0db81922f23d316d8a5f2d0b192c62766186", "author_email": "jad.chaar@gmail.com", "author_name": "Jad Chaar", "date": "2025-12-14T21:09:58-08:00", "files": [{"path": ".gitignore", "insertions": 3, "deletions": 0}, {"path": ".pre-commit-config.yaml", "insertions": 4, "deletions": 3}, {"path": "arrow/arrow.py", "insertions": 3, "deletions": 3}, {"path": "arrow/parser.py", "insertions": 1, "deletions": 1}, {"path": "arrow/util.py", "insertions": 2, "deletions": 5}]}, {"sha": "edebda47ff1220112585197124aabb340a49fecc", "author_email": "jad.chaar@gmail.com", "author_name": "Jad Chaar", "date": "2025-10-25T09:18:35-07:00", "files": [{"path": "junit.xml", "insertions": 0, "deletions": 1}]}, {"sha": "2c1f5185ad66bf3b1cf8c0812f4b4fe65ac46656", "author_email": "jad.chaar@gmail.com", "author_name": "Jad Chaar", "date": "2025-10-18T10:40:28-07:00", "files": [{"path": ".github/workflows/release.yml", "insertions": 1, "deletions": 1}]}, {"sha": "2483bfea4ec8a4da609036aba3ce1b32cb571875", "author_email": "jad.chaar@gmail.com", "author_name": "Jad Chaar", "date": "2025-10-18T10:38:35-07:00", "files": [{"path": "CHANGELOG.rst", "insertions": 1, "deletions": 1}]}, {"sha": "c61de9299733da6d4a7e8badabae43684a3f9da2", "author_email": "me@krisfremen.com", "author_name": "Kristijan \"Fremen\" Velkovski", "date": "2025-10-18T12:38:11-05:00", "files": [{"path": "CHANGELOG.rst", "insertions": 25, "deletions": 0}, {"path": "arrow/_version.py", "insertions": 1, "deletions": 1}]}, {"sha": "c3bb589536b283e3e3886d1d6bc01a6374c8e656", "author_email": "jad.chaar@gmail.com", "author_name": "Jad Chaar", "date": "2025-10-18T10:24:37-07:00", "files": [{"path": ".github/workflows/continuous_integration.yml", "insertions": 1, "deletions": 5}, {"path": ".gitignore", "insertions": 1, "deletions": 0}, {"path": ".pre-commit-config.yaml", "insertions": 6, "deletions": 8}, {"path": "arrow/api.py", "insertions": 5, "deletions": 10}, {"path": "arrow/factory.py", "insertions": 4, "deletions": 8}, {"path": "arrow/parser.py", "insertions": 5, "deletions": 10}, {"path": "junit.xml", "insertions": 1, "deletions": 0}, {"path": "pyproject.toml", "insertions": 1, "deletions": 0}, {"path": "tox.ini", "insertions": 3, "deletions": 3}]}, {"sha": "85cd905332d108303da1cbd0f2336fcae058147f", "author_email": "klaus.rettinghaus@gmail.com", "author_name": "Klaus Rettinghaus", "date": "2025-10-18T18:48:59+02:00", "files": [{"path": ".github/workflows/continuous_integration.yml", "insertions": 1, "deletions": 1}, {"path": "Makefile", "insertions": 2, "deletions": 1}, {"path": "tox.ini", "insertions": 1, "deletions": 0}]}], "sampling_frame": "liveness_conditioned", "frame_construction_method": "currently_prominent_handcurated"}]}
+[
+  {
+    "full_name": "mholt/PapaParse",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 13545,
+      "forks": 1185,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2013-10-07T20:33:21Z",
+      "html_url": "https://github.com/mholt/PapaParse"
+    },
+    "n_commits": 609,
+    "n_developers": 160,
+    "n_files": 160,
+    "repo_first_commit": "2013-10-07T20:33:21+00:00",
+    "repo_last_commit": "2026-08-13T12:36:21+00:00",
+    "history_span_years": 12.85,
+    "founder": "mail:matthew.holt+git@gmail.com",
+    "founder_early_authorship_share": 0.8,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 8,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 30,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 30,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 30,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 56,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 57,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 57,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 58,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 59,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 59,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "name:matthew holt",
+          "mail:matthew.holt+git@gmail.com"
+        ],
+        "n_files": 59,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:david@flatfile.com"
+        ],
+        "n_files": 159,
+        "n_active_authors_in_doa": 14
+      }
+    ],
+    "tfdd": {
+      "year": 2016,
+      "date": "2016-12-31T00:00:00+00:00",
+      "developer": "mail:matthew.holt+git@gmail.com",
+      "last_commit_date": "2015-08-05T23:20:19+00:00",
+      "silence_years": 1.4
+    },
+    "pre_tfdd_window": {
+      "window_start": "2015-12-31T00:00:00+00:00",
+      "window_end": "2016-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 20,
+      "n_distinct_new_primary_owners": 6
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 13545,
+      "forks": 1185,
+      "total_contributors": 160,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 1180
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      6,
+      4,
+      5,
+      6,
+      4,
+      6,
+      4,
+      2,
+      3,
+      0,
+      1,
+      2,
+      1,
+      4,
+      4,
+      17,
+      7
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 9.62,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  {
+    "full_name": "kaelzhang/node-ignore",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 499,
+      "forks": 52,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "created_at": "2013-09-01T10:52:11Z",
+      "html_url": "https://github.com/kaelzhang/node-ignore"
+    },
+    "n_commits": 360,
+    "n_developers": 22,
+    "n_files": 41,
+    "repo_first_commit": "2013-09-01T10:55:04+00:00",
+    "repo_last_commit": "2026-07-10T12:41:17+00:00",
+    "history_span_years": 12.85,
+    "founder": "mail:i@kael.me",
+    "founder_early_authorship_share": 0.98,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 10,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 12,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 12,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 19,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 20,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 27,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 29,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 30,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 31,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i@kael.me"
+        ],
+        "n_files": 31,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i+github@kael.me"
+        ],
+        "n_files": 35,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:i+github@kael.me"
+        ],
+        "n_files": 41,
+        "n_active_authors_in_doa": 4
+      }
+    ],
+    "tfdd": {
+      "year": 2018,
+      "date": "2018-12-31T00:00:00+00:00",
+      "developer": "mail:i@kael.me",
+      "last_commit_date": "2017-02-20T04:20:50+00:00",
+      "silence_years": 1.86
+    },
+    "pre_tfdd_window": {
+      "window_start": "2017-12-31T00:00:00+00:00",
+      "window_end": "2018-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 57,
+      "n_distinct_new_primary_owners": 2
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 499,
+      "forks": 52,
+      "total_contributors": 22,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "project_age_days": 1946
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      4,
+      0,
+      4,
+      7,
+      3,
+      0,
+      0,
+      5,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      11
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 7.52,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  {
+    "full_name": "hapijs/boom",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2923,
+      "forks": 192,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "created_at": "2013-01-12T20:07:28Z",
+      "html_url": "https://github.com/hapijs/boom"
+    },
+    "n_commits": 356,
+    "n_developers": 58,
+    "n_files": 30,
+    "repo_first_commit": "2013-01-12T20:07:28+00:00",
+    "repo_last_commit": "2026-08-02T11:59:29+00:00",
+    "history_span_years": 13.55,
+    "founder": "mail:eran@hueniverse.com",
+    "founder_early_authorship_share": 0.76,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 11,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 12,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 14,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 14,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 15,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 22,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:eran@hammer.io",
+          "mail:eran@hueniverse.com"
+        ],
+        "n_files": 23,
+        "n_active_authors_in_doa": 5
+      }
+    ],
+    "tfdd": {
+      "year": 2016,
+      "date": "2016-12-31T00:00:00+00:00",
+      "developer": "mail:eran@hueniverse.com",
+      "last_commit_date": "2015-05-29T05:21:49+00:00",
+      "silence_years": 1.59
+    },
+    "pre_tfdd_window": {
+      "window_start": "2015-12-31T00:00:00+00:00",
+      "window_end": "2016-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 28,
+      "n_distinct_new_primary_owners": 2
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2923,
+      "forks": 192,
+      "total_contributors": 58,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "project_age_days": 1448
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      7,
+      0,
+      6,
+      1,
+      1,
+      0,
+      1,
+      1,
+      11,
+      3,
+      0,
+      3,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 9.59,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  {
+    "full_name": "qbittorrent/qBittorrent",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 39609,
+      "forks": 4828,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "created_at": "2012-02-04T09:37:46Z",
+      "html_url": "https://github.com/qbittorrent/qBittorrent"
+    },
+    "n_commits": 19267,
+    "n_developers": 500,
+    "n_files": 5232,
+    "repo_first_commit": "2006-09-30T16:02:39+00:00",
+    "repo_last_commit": "2026-08-17T06:10:48+00:00",
+    "history_span_years": 19.88,
+    "founder": "mail:chris@qbittorrent.org",
+    "founder_early_authorship_share": 0.966,
+    "yearly_tables": [
+      {
+        "year": 2006,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 210,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2007,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 325,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2008,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 385,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2009,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 624,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 1200,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 1277,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 1346,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 1443,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org"
+        ],
+        "n_files": 1590,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2015,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 2667,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2016,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 2943,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2017,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 3523,
+        "n_active_authors_in_doa": 37
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 3780,
+        "n_active_authors_in_doa": 40
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 3849,
+        "n_active_authors_in_doa": 44
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 4113,
+        "n_active_authors_in_doa": 48
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 4226,
+        "n_active_authors_in_doa": 49
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 4630,
+        "n_active_authors_in_doa": 51
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 4826,
+        "n_active_authors_in_doa": 56
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 4964,
+        "n_active_authors_in_doa": 60
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:chris@qbittorrent.org",
+          "mail:glassez@yandex.ru"
+        ],
+        "n_files": 5038,
+        "n_active_authors_in_doa": 66
+      }
+    ],
+    "tfdd": {
+      "year": 2014,
+      "date": "2014-12-31T00:00:00+00:00",
+      "developer": "mail:chris@qbittorrent.org",
+      "last_commit_date": "2013-07-06T17:01:32+00:00",
+      "silence_years": 1.48
+    },
+    "pre_tfdd_window": {
+      "window_start": "2013-12-31T00:00:00+00:00",
+      "window_end": "2014-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 848,
+      "n_distinct_new_primary_owners": 14
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 39609,
+      "forks": 4828,
+      "total_contributors": 500,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "project_age_days": 1060
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      67,
+      92,
+      75,
+      81,
+      97,
+      261,
+      202,
+      96,
+      69,
+      103,
+      136,
+      129,
+      243,
+      96,
+      159,
+      193,
+      131
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 11.63,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  {
+    "full_name": "ruby-grape/grape",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 10007,
+      "forks": 1231,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2010-08-02T14:25:08Z",
+      "html_url": "https://github.com/ruby-grape/grape"
+    },
+    "n_commits": 3166,
+    "n_developers": 493,
+    "n_files": 711,
+    "repo_first_commit": "2010-08-02T05:59:41+00:00",
+    "repo_last_commit": "2026-08-21T09:24:28+00:00",
+    "history_span_years": 16.05,
+    "founder": "mail:michael@intridea.com",
+    "founder_early_authorship_share": 0.658,
+    "yearly_tables": [
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:michael@intridea.com"
+        ],
+        "n_files": 167,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:michael@intridea.com"
+        ],
+        "n_files": 184,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:michael@intridea.com"
+        ],
+        "n_files": 219,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:michael@intridea.com"
+        ],
+        "n_files": 258,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2014,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 349,
+        "n_active_authors_in_doa": 29
+      },
+      {
+        "year": 2015,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 385,
+        "n_active_authors_in_doa": 42
+      },
+      {
+        "year": 2016,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 429,
+        "n_active_authors_in_doa": 53
+      },
+      {
+        "year": 2017,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 454,
+        "n_active_authors_in_doa": 56
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 470,
+        "n_active_authors_in_doa": 61
+      },
+      {
+        "year": 2019,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org",
+          "mail:d.spaeth@faber.de"
+        ],
+        "n_files": 487,
+        "n_active_authors_in_doa": 66
+      },
+      {
+        "year": 2020,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org",
+          "mail:d.spaeth@faber.de"
+        ],
+        "n_files": 510,
+        "n_active_authors_in_doa": 73
+      },
+      {
+        "year": 2021,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org",
+          "mail:d.spaeth@faber.de"
+        ],
+        "n_files": 531,
+        "n_active_authors_in_doa": 74
+      },
+      {
+        "year": 2022,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org",
+          "mail:d.spaeth@faber.de"
+        ],
+        "n_files": 535,
+        "n_active_authors_in_doa": 74
+      },
+      {
+        "year": 2023,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:dblock@dblock.org",
+          "mail:eproulx@petalmd.com"
+        ],
+        "n_files": 561,
+        "n_active_authors_in_doa": 77
+      },
+      {
+        "year": 2024,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:eproulx@petalmd.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 625,
+        "n_active_authors_in_doa": 79
+      },
+      {
+        "year": 2025,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:michael@intridea.com",
+          "mail:eproulx@petalmd.com",
+          "mail:dblock@dblock.org"
+        ],
+        "n_files": 650,
+        "n_active_authors_in_doa": 81
+      }
+    ],
+    "tfdd": {
+      "year": 2013,
+      "date": "2013-12-31T00:00:00+00:00",
+      "developer": "mail:michael@intridea.com",
+      "last_commit_date": "2012-05-05T07:20:47+00:00",
+      "silence_years": 1.65
+    },
+    "pre_tfdd_window": {
+      "window_start": "2012-12-31T00:00:00+00:00",
+      "window_end": "2013-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 382,
+      "n_distinct_new_primary_owners": 18
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 10007,
+      "forks": 1231,
+      "total_contributors": 493,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 1246
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      28,
+      19,
+      32,
+      25,
+      9,
+      10,
+      22,
+      35,
+      36,
+      11,
+      34,
+      56,
+      36,
+      14,
+      39,
+      31,
+      9
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 12.64,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  {
+    "full_name": "flightphp/core",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2883,
+      "forks": 417,
+      "language": "PHP",
+      "license": "MIT",
+      "created_at": "2011-03-31T07:48:42Z",
+      "html_url": "https://github.com/flightphp/core"
+    },
+    "n_commits": 965,
+    "n_developers": 74,
+    "n_files": 165,
+    "repo_first_commit": "2011-03-31T07:49:55+00:00",
+    "repo_last_commit": "2026-08-17T18:50:22+00:00",
+    "history_span_years": 15.38,
+    "founder": "mail:mike@mikecao.com",
+    "founder_early_authorship_share": 0.96,
+    "yearly_tables": [
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 15,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 16,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 39,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 41,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 43,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 43,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 43,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 43,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 44,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 44,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 44,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 44,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mike@mikecao.com"
+        ],
+        "n_files": 49,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:mike@mikecao.com",
+          "mail:n0nag0n@sky-9.com"
+        ],
+        "n_files": 96,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:mike@mikecao.com",
+          "mail:n0nag0n@sky-9.com"
+        ],
+        "n_files": 112,
+        "n_active_authors_in_doa": 10
+      }
+    ],
+    "tfdd": {
+      "year": 2022,
+      "date": "2022-12-31T00:00:00+00:00",
+      "developer": "mail:mike@mikecao.com",
+      "last_commit_date": "2021-12-19T03:07:38+00:00",
+      "silence_years": 1.03
+    },
+    "pre_tfdd_window": {
+      "window_start": "2021-12-31T00:00:00+00:00",
+      "window_end": "2022-12-31T00:00:00+00:00",
+      "founder_commit_share": null,
+      "n_pre_window_commits": 0,
+      "n_distinct_new_primary_owners": 3
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2883,
+      "forks": 417,
+      "total_contributors": 74,
+      "language": "PHP",
+      "license": "MIT",
+      "project_age_days": 4292
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      19,
+      113,
+      70,
+      33,
+      35,
+      11
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.63,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  {
+    "full_name": "expressjs/response-time",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 496,
+      "forks": 75,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2014-02-08T18:51:40Z",
+      "html_url": "https://github.com/expressjs/response-time"
+    },
+    "n_commits": 140,
+    "n_developers": 14,
+    "n_files": 20,
+    "repo_first_commit": "2014-02-08T18:51:30+00:00",
+    "repo_last_commit": "2026-06-03T02:19:51+00:00",
+    "history_span_years": 12.31,
+    "founder": "mail:doug@somethingdoug.com",
+    "founder_early_authorship_share": 0.96,
+    "yearly_tables": [
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 10,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 10,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com"
+        ],
+        "n_files": 14,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:doug@somethingdoug.com",
+          "mail:jonathanrichardong@gmail.com"
+        ],
+        "n_files": 20,
+        "n_active_authors_in_doa": 8
+      }
+    ],
+    "tfdd": {
+      "year": 2019,
+      "date": "2019-12-31T00:00:00+00:00",
+      "developer": "mail:doug@somethingdoug.com",
+      "last_commit_date": "2018-04-02T22:09:20+00:00",
+      "silence_years": 1.74
+    },
+    "pre_tfdd_window": {
+      "window_start": "2018-12-31T00:00:00+00:00",
+      "window_end": "2019-12-31T00:00:00+00:00",
+      "founder_commit_share": null,
+      "n_pre_window_commits": 0,
+      "n_distinct_new_primary_owners": 1
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 496,
+      "forks": 75,
+      "total_contributors": 14,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 2151
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 6.42,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  {
+    "full_name": "ice-cube-ruby/ice_cube",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2466,
+      "forks": 354,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2010-03-10T15:27:10Z",
+      "html_url": "https://github.com/ice-cube-ruby/ice_cube"
+    },
+    "n_commits": 1025,
+    "n_developers": 91,
+    "n_files": 163,
+    "repo_first_commit": "2010-03-10T16:25:52+00:00",
+    "repo_last_commit": "2026-01-20T09:12:43+00:00",
+    "history_span_years": 15.86,
+    "founder": "mail:john.crepezzi@patch.com",
+    "founder_early_authorship_share": 1.0,
+    "yearly_tables": [
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com"
+        ],
+        "n_files": 55,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com"
+        ],
+        "n_files": 88,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2013,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 105,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2014,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 122,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2015,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 124,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2016,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 129,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2017,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 132,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 133,
+        "n_active_authors_in_doa": 16
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 134,
+        "n_active_authors_in_doa": 16
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 135,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 140,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 140,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 140,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 154,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:john.crepezzi@patch.com",
+          "mail:john.crepezzi@gmail.com"
+        ],
+        "n_files": 154,
+        "n_active_authors_in_doa": 19
+      }
+    ],
+    "tfdd": {
+      "year": 2012,
+      "date": "2012-12-31T00:00:00+00:00",
+      "developer": "mail:john.crepezzi@patch.com",
+      "last_commit_date": "2011-01-19T03:10:45+00:00",
+      "silence_years": 1.95
+    },
+    "pre_tfdd_window": {
+      "window_start": "2011-12-31T00:00:00+00:00",
+      "window_end": "2012-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 130,
+      "n_distinct_new_primary_owners": 4
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2466,
+      "forks": 354,
+      "total_contributors": 91,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 1026
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      3,
+      29,
+      0,
+      1,
+      18,
+      1,
+      5,
+      5,
+      17,
+      5,
+      1,
+      3,
+      8,
+      2,
+      14,
+      9,
+      23
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 13.05,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  {
+    "full_name": "http-party/http-server",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 14209,
+      "forks": 1557,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2011-06-16T23:54:57Z",
+      "html_url": "https://github.com/http-party/http-server"
+    },
+    "n_commits": 718,
+    "n_developers": 128,
+    "n_files": 213,
+    "repo_first_commit": "2011-06-15T02:33:23+00:00",
+    "repo_last_commit": "2026-04-15T11:09:09+00:00",
+    "history_span_years": 14.83,
+    "founder": "mail:marak.squires@gmail.com",
+    "founder_early_authorship_share": 0.5,
+    "yearly_tables": [
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 78,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 78,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 78,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 79,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 79,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 79,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 79,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 84,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:marak.squires@gmail.com",
+          "mail:charlie@charlieistheman.com"
+        ],
+        "n_files": 88,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net",
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 171,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net"
+        ],
+        "n_files": 195,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net"
+        ],
+        "n_files": 195,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net"
+        ],
+        "n_files": 195,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net",
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 198,
+        "n_active_authors_in_doa": 18
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:jademichael@jmthornton.net",
+          "mail:marak.squires@gmail.com"
+        ],
+        "n_files": 212,
+        "n_active_authors_in_doa": 24
+      }
+    ],
+    "tfdd": {
+      "year": 2012,
+      "date": "2012-12-31T00:00:00+00:00",
+      "developer": "mail:marak.squires@gmail.com",
+      "last_commit_date": "2011-12-03T23:06:39+00:00",
+      "silence_years": 1.08
+    },
+    "pre_tfdd_window": {
+      "window_start": "2011-12-31T00:00:00+00:00",
+      "window_end": "2012-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 33,
+      "n_distinct_new_primary_owners": 5
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 14209,
+      "forks": 1557,
+      "total_contributors": 128,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 563
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      8,
+      2,
+      0,
+      0,
+      2,
+      2,
+      9,
+      2,
+      0,
+      1,
+      1,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 13.29,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  {
+    "full_name": "klee/klee",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2973,
+      "forks": 736,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "created_at": "2013-07-21T22:03:03Z",
+      "html_url": "https://github.com/klee/klee"
+    },
+    "n_commits": 2885,
+    "n_developers": 132,
+    "n_files": 1534,
+    "repo_first_commit": "2009-03-15T05:28:32+00:00",
+    "repo_last_commit": "2026-08-21T11:12:48+00:00",
+    "history_span_years": 17.43,
+    "founder": "mail:daniel@zuster.org",
+    "founder_early_authorship_share": 0.729,
+    "yearly_tables": [
+      {
+        "year": 2009,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 502,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 529,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 539,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 558,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 589,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 627,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 690,
+        "n_active_authors_in_doa": 21
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 792,
+        "n_active_authors_in_doa": 28
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 880,
+        "n_active_authors_in_doa": 32
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:daniel@zuster.org"
+        ],
+        "n_files": 973,
+        "n_active_authors_in_doa": 40
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:daniel.liew@imperial.ac.uk"
+        ],
+        "n_files": 1093,
+        "n_active_authors_in_doa": 44
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:daniel.liew@imperial.ac.uk"
+        ],
+        "n_files": 1239,
+        "n_active_authors_in_doa": 50
+      },
+      {
+        "year": 2021,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:daniel.liew@imperial.ac.uk",
+          "mail:m.nowack@imperial.ac.uk"
+        ],
+        "n_files": 1291,
+        "n_active_authors_in_doa": 53
+      },
+      {
+        "year": 2022,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:daniel.liew@imperial.ac.uk",
+          "mail:m.nowack@imperial.ac.uk"
+        ],
+        "n_files": 1352,
+        "n_active_authors_in_doa": 57
+      },
+      {
+        "year": 2023,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:m.nowack@imperial.ac.uk",
+          "mail:daniel.liew@imperial.ac.uk"
+        ],
+        "n_files": 1423,
+        "n_active_authors_in_doa": 58
+      },
+      {
+        "year": 2024,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:c.cadar@imperial.ac.uk",
+          "mail:m.nowack@imperial.ac.uk"
+        ],
+        "n_files": 1521,
+        "n_active_authors_in_doa": 62
+      },
+      {
+        "year": 2025,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:daniel@zuster.org",
+          "mail:c.cadar@imperial.ac.uk",
+          "mail:m.nowack@imperial.ac.uk"
+        ],
+        "n_files": 1525,
+        "n_active_authors_in_doa": 62
+      }
+    ],
+    "tfdd": {
+      "year": 2015,
+      "date": "2015-12-31T00:00:00+00:00",
+      "developer": "mail:daniel@zuster.org",
+      "last_commit_date": "2014-09-16T15:39:32+00:00",
+      "silence_years": 1.29
+    },
+    "pre_tfdd_window": {
+      "window_start": "2014-12-31T00:00:00+00:00",
+      "window_end": "2015-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 148,
+      "n_distinct_new_primary_owners": 20
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2973,
+      "forks": 736,
+      "total_contributors": 132,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "project_age_days": 892
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      18,
+      24,
+      25,
+      21,
+      28,
+      27,
+      14,
+      19,
+      18,
+      12,
+      49,
+      30,
+      12,
+      38,
+      50,
+      7,
+      13
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 10.64,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  {
+    "full_name": "graphql/dataloader",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 13382,
+      "forks": 515,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2015-09-10T10:05:23Z",
+      "html_url": "https://github.com/graphql/dataloader"
+    },
+    "n_commits": 242,
+    "n_developers": 69,
+    "n_files": 57,
+    "repo_first_commit": "2015-09-10T09:41:26+00:00",
+    "repo_last_commit": "2026-08-11T14:10:51+00:00",
+    "history_span_years": 10.92,
+    "founder": "mail:lee@leebyron.com",
+    "founder_early_authorship_share": 0.8,
+    "yearly_tables": [
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 17,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 20,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 26,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 38,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 38,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 38,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 48,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 53,
+        "n_active_authors_in_doa": 16
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 57,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lee@leebyron.com"
+        ],
+        "n_files": 57,
+        "n_active_authors_in_doa": 17
+      }
+    ],
+    "tfdd": {
+      "year": 2022,
+      "date": "2022-12-31T00:00:00+00:00",
+      "developer": "mail:lee@leebyron.com",
+      "last_commit_date": "2021-09-03T22:15:45+00:00",
+      "silence_years": 1.32
+    },
+    "pre_tfdd_window": {
+      "window_start": "2021-12-31T00:00:00+00:00",
+      "window_end": "2022-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 29,
+      "n_distinct_new_primary_owners": 12
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 13382,
+      "forks": 515,
+      "total_contributors": 69,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 2668
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      4,
+      8,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.61,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "mrwill84/DOClever",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2904,
+      "forks": 667,
+      "language": "JavaScript",
+      "license": null,
+      "created_at": "2017-03-03T02:53:50Z",
+      "html_url": "https://github.com/mrwill84/DOClever"
+    },
+    "n_commits": 187,
+    "n_developers": 6,
+    "n_files": 107545,
+    "repo_first_commit": "2017-03-03T02:53:51+00:00",
+    "repo_last_commit": "2025-12-27T06:38:17+00:00",
+    "history_span_years": 8.82,
+    "founder": "mail:395414574@qq.com",
+    "founder_early_authorship_share": 0.96,
+    "yearly_tables": [
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 62868,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:395414574@qq.com"
+        ],
+        "n_files": 107545,
+        "n_active_authors_in_doa": 4
+      }
+    ],
+    "tfdd": {
+      "year": 2021,
+      "date": "2021-12-31T00:00:00+00:00",
+      "developer": "mail:395414574@qq.com",
+      "last_commit_date": "2020-03-27T08:17:28+00:00",
+      "silence_years": 1.76
+    },
+    "pre_tfdd_window": {
+      "window_start": "2020-12-31T00:00:00+00:00",
+      "window_end": "2021-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 6,
+      "n_distinct_new_primary_owners": 3
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2904,
+      "forks": 667,
+      "total_contributors": 6,
+      "language": "JavaScript",
+      "license": null,
+      "project_age_days": 1763
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.99,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "guzzle/guzzle",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 23458,
+      "forks": 2392,
+      "language": "PHP",
+      "license": "MIT",
+      "created_at": "2011-02-28T02:44:05Z",
+      "html_url": "https://github.com/guzzle/guzzle"
+    },
+    "n_commits": 4519,
+    "n_developers": 442,
+    "n_files": 2523,
+    "repo_first_commit": "2011-02-28T04:32:13+00:00",
+    "repo_last_commit": "2026-08-09T21:20:25+00:00",
+    "history_span_years": 15.44,
+    "founder": "mail:mtdowling@gmail.com",
+    "founder_early_authorship_share": 0.973,
+    "yearly_tables": [
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 994,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 1611,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 1929,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2324,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2381,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2382,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2383,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2390,
+        "n_active_authors_in_doa": 16
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2406,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2416,
+        "n_active_authors_in_doa": 21
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2424,
+        "n_active_authors_in_doa": 23
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2425,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2426,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2426,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mtdowling@gmail.com"
+        ],
+        "n_files": 2428,
+        "n_active_authors_in_doa": 24
+      }
+    ],
+    "tfdd": {
+      "year": 2017,
+      "date": "2017-12-31T00:00:00+00:00",
+      "developer": "mail:mtdowling@gmail.com",
+      "last_commit_date": "2016-08-31T16:51:05+00:00",
+      "silence_years": 1.33
+    },
+    "pre_tfdd_window": {
+      "window_start": "2016-12-31T00:00:00+00:00",
+      "window_end": "2017-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 68,
+      "n_distinct_new_primary_owners": 14
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 23458,
+      "forks": 2392,
+      "total_contributors": 442,
+      "language": "PHP",
+      "license": "MIT",
+      "project_age_days": 2497
+    },
+    "post_tfdd_monthly_commits": [
+      1,
+      7,
+      8,
+      13,
+      13,
+      1,
+      7,
+      8,
+      3,
+      3,
+      25,
+      15,
+      10,
+      4,
+      1,
+      3,
+      12,
+      3
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 8.61,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "fastlane/fastlane",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 42009,
+      "forks": 6025,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2014-12-02T17:00:38Z",
+      "html_url": "https://github.com/fastlane/fastlane"
+    },
+    "n_commits": 17491,
+    "n_developers": 1709,
+    "n_files": 5699,
+    "repo_first_commit": "2014-09-09T11:40:43+00:00",
+    "repo_last_commit": "2026-08-15T19:02:36+00:00",
+    "history_span_years": 11.93,
+    "founder": "mail:krausefx@gmail.com",
+    "founder_early_authorship_share": 0.842,
+    "yearly_tables": [
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 322,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 1848,
+        "n_active_authors_in_doa": 82
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 4041,
+        "n_active_authors_in_doa": 141
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 4557,
+        "n_active_authors_in_doa": 171
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 4833,
+        "n_active_authors_in_doa": 197
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5082,
+        "n_active_authors_in_doa": 225
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5208,
+        "n_active_authors_in_doa": 251
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5378,
+        "n_active_authors_in_doa": 265
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5428,
+        "n_active_authors_in_doa": 276
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5498,
+        "n_active_authors_in_doa": 283
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5584,
+        "n_active_authors_in_doa": 287
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:krausefx@gmail.com"
+        ],
+        "n_files": 5622,
+        "n_active_authors_in_doa": 291
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:krausefx@gmail.com",
+      "last_commit_date": "2019-02-05T17:57:22+00:00",
+      "silence_years": 1.9
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 531,
+      "n_distinct_new_primary_owners": 250
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 42009,
+      "forks": 6025,
+      "total_contributors": 1709,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 2220
+    },
+    "post_tfdd_monthly_commits": [
+      14,
+      29,
+      47,
+      51,
+      41,
+      57,
+      155,
+      39,
+      39,
+      20,
+      20,
+      17,
+      21,
+      49,
+      27,
+      9,
+      7,
+      26
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.62,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "idank/explainshell",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 14194,
+      "forks": 847,
+      "language": "Python",
+      "license": "GPL-3.0",
+      "created_at": "2013-08-30T11:20:11Z",
+      "html_url": "https://github.com/idank/explainshell"
+    },
+    "n_commits": 1078,
+    "n_developers": 30,
+    "n_files": 431,
+    "repo_first_commit": "2013-08-30T11:17:32+00:00",
+    "repo_last_commit": "2026-08-18T11:43:44+00:00",
+    "history_span_years": 12.97,
+    "founder": "mail:idankk86@gmail.com",
+    "founder_early_authorship_share": 0.962,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 91,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 93,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 94,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 97,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 107,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 107,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 116,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:idankk86@gmail.com"
+        ],
+        "n_files": 116,
+        "n_active_authors_in_doa": 6
+      }
+    ],
+    "tfdd": {
+      "year": 2022,
+      "date": "2022-12-31T00:00:00+00:00",
+      "developer": "mail:idankk86@gmail.com",
+      "last_commit_date": "2021-08-31T09:01:39+00:00",
+      "silence_years": 1.33
+    },
+    "pre_tfdd_window": {
+      "window_start": "2021-12-31T00:00:00+00:00",
+      "window_end": "2022-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 14,
+      "n_distinct_new_primary_owners": 4
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 14194,
+      "forks": 847,
+      "total_contributors": 30,
+      "language": "Python",
+      "license": "GPL-3.0",
+      "project_age_days": 3409
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      12,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.63,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "maxs15/react-native-modalbox",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2918,
+      "forks": 496,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2015-07-17T14:34:39Z",
+      "html_url": "https://github.com/maxs15/react-native-modalbox"
+    },
+    "n_commits": 435,
+    "n_developers": 39,
+    "n_files": 101,
+    "repo_first_commit": "2015-07-17T22:09:21+00:00",
+    "repo_last_commit": "2024-12-15T09:14:54+00:00",
+    "history_span_years": 9.41,
+    "founder": "mail:maxime.mezrahi@gmail.com",
+    "founder_early_authorship_share": 0.34,
+    "yearly_tables": [
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 61,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 66,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 77,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 77,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:maxime.mezrahi@gmail.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 7
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:maxime.mezrahi@gmail.com",
+      "last_commit_date": "2019-09-28T15:03:05+00:00",
+      "silence_years": 1.26
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 9,
+      "n_distinct_new_primary_owners": 5
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2918,
+      "forks": 496,
+      "total_contributors": 39,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 1993
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      4,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      1,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.96,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "jekyll/jekyll-admin",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2931,
+      "forks": 375,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2016-05-19T17:23:27Z",
+      "html_url": "https://github.com/jekyll/jekyll-admin"
+    },
+    "n_commits": 1538,
+    "n_developers": 43,
+    "n_files": 970,
+    "repo_first_commit": "2016-05-19T17:23:28+00:00",
+    "repo_last_commit": "2025-06-05T15:41:21+00:00",
+    "history_span_years": 9.04,
+    "founder": "mail:mertkahyaoglu93@gmail.com",
+    "founder_early_authorship_share": 0.816,
+    "yearly_tables": [
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 704,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 894,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 908,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 955,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 967,
+        "n_active_authors_in_doa": 18
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 967,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 970,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 970,
+        "n_active_authors_in_doa": 19
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:mertkahyaoglu93@gmail.com"
+        ],
+        "n_files": 970,
+        "n_active_authors_in_doa": 19
+      }
+    ],
+    "tfdd": {
+      "year": 2021,
+      "date": "2021-12-31T00:00:00+00:00",
+      "developer": "mail:mertkahyaoglu93@gmail.com",
+      "last_commit_date": "2020-12-06T21:10:17+00:00",
+      "silence_years": 1.07
+    },
+    "pre_tfdd_window": {
+      "window_start": "2020-12-31T00:00:00+00:00",
+      "window_end": "2021-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 10,
+      "n_distinct_new_primary_owners": 18
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2931,
+      "forks": 375,
+      "total_contributors": 43,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 2051
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      1,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.43,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "biometrics/openbr",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2903,
+      "forks": 795,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "created_at": "2012-12-20T02:52:37Z",
+      "html_url": "https://github.com/biometrics/openbr"
+    },
+    "n_commits": 4399,
+    "n_developers": 72,
+    "n_files": 12358,
+    "repo_first_commit": "2012-12-20T03:01:21+00:00",
+    "repo_last_commit": "2026-01-09T17:26:36+00:00",
+    "history_span_years": 13.05,
+    "founder": "mail:josh.klontz@gmail.com",
+    "founder_early_authorship_share": 0.772,
+    "yearly_tables": [
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 1454,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 5420,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 6704,
+        "n_active_authors_in_doa": 16
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 9071,
+        "n_active_authors_in_doa": 23
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 9115,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 10727,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 10727,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 10728,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 10728,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 12353,
+        "n_active_authors_in_doa": 28
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 12355,
+        "n_active_authors_in_doa": 28
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 12355,
+        "n_active_authors_in_doa": 28
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 12355,
+        "n_active_authors_in_doa": 28
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:josh.klontz@gmail.com"
+        ],
+        "n_files": 12358,
+        "n_active_authors_in_doa": 30
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:josh.klontz@gmail.com",
+      "last_commit_date": "2019-06-04T02:49:43+00:00",
+      "silence_years": 1.57
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 21,
+      "n_distinct_new_primary_owners": 26
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2903,
+      "forks": 795,
+      "total_contributors": 72,
+      "language": "C++",
+      "license": "NOASSERTION",
+      "project_age_days": 2932
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      3,
+      9,
+      12,
+      1,
+      2,
+      0,
+      0,
+      275,
+      49,
+      2,
+      0,
+      0,
+      4,
+      0,
+      8,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.02,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "piskelapp/piskel",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 12726,
+      "forks": 911,
+      "language": "JavaScript",
+      "license": "Apache-2.0",
+      "created_at": "2012-08-22T22:53:24Z",
+      "html_url": "https://github.com/piskelapp/piskel"
+    },
+    "n_commits": 2102,
+    "n_developers": 46,
+    "n_files": 3694,
+    "repo_first_commit": "2012-08-22T22:53:24+00:00",
+    "repo_last_commit": "2026-06-28T16:40:17+00:00",
+    "history_span_years": 13.85,
+    "founder": "mail:julian.descottes@gmail.com",
+    "founder_early_authorship_share": 0.724,
+    "yearly_tables": [
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:grosbouddha@gmail.com"
+        ],
+        "n_files": 138,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 784,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 1521,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 1743,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 1983,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3475,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3488,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3489,
+        "n_active_authors_in_doa": 14
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:julian.descottes@gmail.com"
+        ],
+        "n_files": 3630,
+        "n_active_authors_in_doa": 14
+      }
+    ],
+    "tfdd": {
+      "year": 2022,
+      "date": "2022-12-31T00:00:00+00:00",
+      "developer": "mail:julian.descottes@gmail.com",
+      "last_commit_date": "2021-07-02T13:11:30+00:00",
+      "silence_years": 1.49
+    },
+    "pre_tfdd_window": {
+      "window_start": "2021-12-31T00:00:00+00:00",
+      "window_end": "2022-12-31T00:00:00+00:00",
+      "founder_commit_share": null,
+      "n_pre_window_commits": 0,
+      "n_distinct_new_primary_owners": 13
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 12726,
+      "forks": 911,
+      "total_contributors": 46,
+      "language": "JavaScript",
+      "license": "Apache-2.0",
+      "project_age_days": 3782
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.49,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dead"
+  },
+  {
+    "full_name": "laurentj/slimerjs",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 2998,
+      "forks": 254,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "created_at": "2012-12-12T19:29:21Z",
+      "html_url": "https://github.com/laurentj/slimerjs"
+    },
+    "n_commits": 1189,
+    "n_developers": 76,
+    "n_files": 583,
+    "repo_first_commit": "2012-12-12T19:18:56+00:00",
+    "repo_last_commit": "2021-11-07T10:37:27+00:00",
+    "history_span_years": 8.9,
+    "founder": "mail:ljouanneau@gmail.com",
+    "founder_early_authorship_share": 0.949,
+    "yearly_tables": [
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 33,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 419,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 444,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 536,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 574,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 582,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 583,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 583,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ljouanneau@gmail.com"
+        ],
+        "n_files": 583,
+        "n_active_authors_in_doa": 12
+      }
+    ],
+    "tfdd": {
+      "year": 2016,
+      "date": "2016-12-31T00:00:00+00:00",
+      "developer": "mail:ljouanneau@gmail.com",
+      "last_commit_date": "2015-10-23T20:37:41+00:00",
+      "silence_years": 1.19
+    },
+    "pre_tfdd_window": {
+      "window_start": "2015-12-31T00:00:00+00:00",
+      "window_end": "2016-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 237,
+      "n_distinct_new_primary_owners": 10
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 2998,
+      "forks": 254,
+      "total_contributors": 76,
+      "language": "JavaScript",
+      "license": "NOASSERTION",
+      "project_age_days": 1479
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      1,
+      7,
+      24,
+      7,
+      2,
+      0,
+      0,
+      7,
+      0,
+      21,
+      11,
+      1,
+      6,
+      1,
+      15,
+      0,
+      1
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 4.85,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  {
+    "full_name": "1c7/chinese-independent-developer",
+    "status": "discarded",
+    "discard_reason": "non_software_repo_low_code_fraction"
+  },
+  {
+    "full_name": "5etools-mirror-3/5etools-src",
+    "status": "discarded",
+    "discard_reason": "too_few_commits"
+  },
+  {
+    "full_name": "AlloyTeam/PhyTouch",
+    "status": "discarded",
+    "discard_reason": "right_censored_insufficient_post_tfdd_history",
+    "years_after_tfdd": 2.02
+  },
+  {
+    "full_name": "Anarios/return-youtube-dislike",
+    "status": "discarded",
+    "discard_reason": "no_qualifying_founder_only_tfdd",
+    "yearly_tables_preview_years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  {
+    "full_name": "FaridSafi/react-native-gifted-chat",
+    "status": "discarded",
+    "discard_reason": "mining_artifact_migration_squash"
+  },
+  {
+    "full_name": "ILIAS-eLearning/ILIAS",
+    "status": "discarded",
+    "discard_reason": "too_large_history"
+  },
+  {
+    "full_name": "SEVA77/circuitjs1",
+    "status": "discarded",
+    "discard_reason": "single_developer_only"
+  }
+]
