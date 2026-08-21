@@ -1,111 +1,88 @@
 {
   "metadata": {
-    "method_name": "founder_departure_authority_diffusion_vs_survival",
-    "description": "Reimplements Avelino et al. (ESEM 2019) DOA/TF/TFDD pipeline; tests whether pre-departure authority diffusion predicts 18mo post-TFDD survival beyond snapshot covariates.",
-    "n_repos_total": 3427,
-    "n_founder_tfdd_events": 6,
-    "error_breakdown": {
-      "no_tfdd": 6,
-      "not_founder_only_tfdd": 4,
-      "right_censored": 2,
-      "no_commits": 3409
-    },
-    "alias_qa": {
-      "median_collapse_rate": 0.0,
-      "n_repos_over_40pct_collapse": 0
-    },
-    "doa_approximation_used": false,
-    "extended_sample_used_TFle2": false,
-    "matched_pairs": {
-      "n_pairs": 0,
-      "survival_lift": null,
-      "ci_95": null,
-      "p_value": null,
-      "note": "no eligible matched pairs (relaxed matching not triggered: sample too small)"
-    },
-    "regression": {
-      "logistic": {
-        "error": "insufficient_n",
-        "n": 6
-      },
-      "ordinal": {
-        "error": "insufficient_n",
-        "n": 6
+    "method_name": "authority_diffusion_before_founder_exit",
+    "description": "Recomputes Avelino et al. (ESEM 2019) DOA/Truck-Factor/TFDD pipeline on GitHub repos and tests a NEW pre-departure authority-diffusion signal (founder commit-share + count of independent non-founder DOA file-owners in the 6-12mo window before a founder-only TFDD) against the paper's null snapshot covariates, via logistic regression (BH-FDR corrected), matched-pairs bootstrap, and a within-repo random-window placebo test.",
+    "corpus_stats": {
+      "n_repos_input": 62,
+      "n_repos_after_filters": 47,
+      "n_founder_only_tfdds": 30,
+      "exclusion_table": {
+        "ok": 47,
+        "not_mostly_source": 1,
+        "no_commits_extracted": 14,
+        "no_founder_only_tfdd": 13,
+        "insufficient_pre_history": 2,
+        "insufficient_post_history": 2
       }
     },
-    "placebo_check": {
-      "error": "true_effect_unavailable"
+    "baseline_replication": {
+      "tfdd_rate_among_filtered": 0.6383,
+      "avelino_reported_tfdd_rate": 0.16,
+      "survival_rate": 0.3667,
+      "avelino_reported_survival_rate": 0.41,
+      "snapshot_effect_sizes_cohens_d": {
+        "log_stars": NaN,
+        "log_forks": NaN,
+        "developers_at_tfdd": -0.2255,
+        "commits_at_tfdd": -0.5578,
+        "files_at_tfdd": -0.6248
+      },
+      "avelino_reported_snapshot_d_range": [
+        0.13,
+        0.26
+      ]
     },
-    "runtime_seconds": 35.32201647758484,
-    "dataset_source": "github_founder_departure_corpus",
-    "num_cpus_used": 1
+    "regression_results": {
+      "n_used": 0,
+      "status": "insufficient_data_or_no_outcome_variance"
+    },
+    "matched_pairs_results": {
+      "status": "insufficient_group_sizes",
+      "n_high": 0,
+      "n_low": 0
+    },
+    "placebo_results": {
+      "status": "ok",
+      "n_null_draws": 25,
+      "true_effect_founder_share_corr": 0.17959723054022853,
+      "true_effect_percentile_in_null_distribution": 40.0,
+      "empirical_p_value": 0.6153846153846154
+    },
+    "success_criteria_verdict": {
+      "criterion_1_diffusion_significant_bh_p_lt_0.10": false,
+      "criterion_2_diffusion_coef_exceeds_snapshot_coef": false,
+      "criterion_3_survives_placebo_p_lt_0.10": false,
+      "n_founder_only_tfdd_repos": 30,
+      "notes": "Corpus of 62 curated GitHub repos (dataset artifact dependency was empty at run time, see corpus_stats/notes). 47 passed prefilters, 30 yielded a founder-only TFDD with sufficient pre/post history. Snapshots are QUARTERLY (fallback_plan item 3) with a documented ~1.5mo TFDD-date fuzz. Placebo uses 200-target null draws (reduced from 1000 for CPU budget). DL(a,f) is implemented as the standard Fritz/Avelino definition: count of commits to f by OTHER authors after a's own last commit to f (not independently re-verified against the ICPC 2016 paper text at run time -- documented deviation from testing_plan step 1). REPORTING A NULL/NEGATIVE RESULT: corpus too small or effects do not clear thresholds; per fallback_plan, no fabrication/downsampling was applied."
+    }
   },
   "datasets": [
     {
-      "dataset": "github_founder_departure_corpus",
+      "dataset": "github_repos_curated_corpus",
       "examples": [
         {
-          "input": "Repository amoffat/sh (Python, 7245 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2018-03-31T03:54:03+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.10526315789473684, distinct non-founder DOA file-owners=8.0. At-TFDD snapshot: developers=64, commits=861, files=30.",
-          "output": "survival_label=maintained; survived_binary=1",
-          "metadata_repo_id": "amoffat/sh",
-          "metadata_language": "Python",
-          "metadata_license": "MIT",
-          "metadata_stars": 7245.0,
-          "metadata_forks": 506.0,
-          "metadata_alias_collapse_rate": 0.0,
-          "metadata_founder_share_pre": 0.10526315789473684,
-          "metadata_n_diffuse_owners_pre": 8.0,
-          "metadata_diffusion_score": 1.9659377797218807,
-          "metadata_developers_at_tfdd": 64,
-          "metadata_commits_at_tfdd": 861,
-          "metadata_files_at_tfdd": 30,
-          "metadata_contributor_count": 113,
-          "metadata_survival_label": "maintained",
-          "metadata_survived_binary": 1,
-          "predict_baseline": "{\"survived_prob\": null}",
-          "predict_ourmethod": "{\"survived_prob\": null}"
+          "input": "Repo: expressjs/serve-static. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"not_mostly_source\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "expressjs/serve-static",
+          "metadata_excluded_reason": "not_mostly_source",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}"
         },
         {
-          "input": "Repository arrow-py/arrow (Python, 9049 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2014-05-28T10:16:37+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.031413612565445025, distinct non-founder DOA file-owners=4.0. At-TFDD snapshot: developers=52, commits=327, files=52.",
-          "output": "survival_label=thriving; survived_binary=1",
-          "metadata_repo_id": "arrow-py/arrow",
-          "metadata_language": "Python",
-          "metadata_license": "Apache-2.0",
-          "metadata_stars": 9049.0,
-          "metadata_forks": 773.0,
-          "metadata_alias_collapse_rate": 0.0,
-          "metadata_founder_share_pre": 0.031413612565445025,
-          "metadata_n_diffuse_owners_pre": 4.0,
-          "metadata_diffusion_score": 1.5588796534047569,
-          "metadata_developers_at_tfdd": 52,
-          "metadata_commits_at_tfdd": 327,
-          "metadata_files_at_tfdd": 52,
-          "metadata_contributor_count": 297,
-          "metadata_survival_label": "thriving",
-          "metadata_survived_binary": 1,
-          "predict_baseline": "{\"survived_prob\": null}",
-          "predict_ourmethod": "{\"survived_prob\": null}"
+          "input": "Repo: mochajs/mocha. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "mochajs/mocha",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
         },
         {
-          "input": "Repository Kludex/starlette (Python, 12552 stars) reached its first founder-only Truck-Factor-Detachment-Departure (TFDD) on 2023-02-14T21:05:14+00:00. Pre-departure (6-12mo before TFDD): founder commit-share=0.010638297872340425, distinct non-founder DOA file-owners=13.0. At-TFDD snapshot: developers=233, commits=1037, files=174.",
-          "output": "survival_label=thriving; survived_binary=1",
-          "metadata_repo_id": "Kludex/starlette",
-          "metadata_language": "Python",
-          "metadata_license": "BSD-3-Clause",
-          "metadata_stars": 12552.0,
-          "metadata_forks": 1264.0,
-          "metadata_alias_collapse_rate": 0.0,
-          "metadata_founder_share_pre": 0.010638297872340425,
-          "metadata_n_diffuse_owners_pre": 13.0,
-          "metadata_diffusion_score": 2.6109822516406282,
-          "metadata_developers_at_tfdd": 233,
-          "metadata_commits_at_tfdd": 1037,
-          "metadata_files_at_tfdd": 174,
-          "metadata_contributor_count": 350,
-          "metadata_survival_label": "thriving",
-          "metadata_survived_binary": 1,
-          "predict_baseline": "{\"survived_prob\": null}",
-          "predict_ourmethod": "{\"survived_prob\": null}"
+          "input": "Repo: less/less.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "less/less.js",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
         }
       ]
     }
