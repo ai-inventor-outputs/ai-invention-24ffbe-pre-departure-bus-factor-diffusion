@@ -1,0 +1,207 @@
+{
+  "datasets": [
+    {
+      "dataset": "github_founder_departure_corpus",
+      "examples": [
+        {
+          "input": "{\"alias_ambiguous_repo\": false, \"commit_index\": 0, \"commit_sha\": \"fb5d66f2da33c2eb0d91dcbd1b393871ed9b9653\", \"commit_timestamp\": \"2017-09-21T06:08:24-05:00\", \"contributor_first_commit_ts\": \"2017-09-21...",
+          "output": "0",
+          "metadata_fold": "python|5000-100000",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2,
+          "metadata_full_name": "1c7/chinese-independent-developer",
+          "metadata_primary_language": "Python",
+          "metadata_search_stars_bucket": "5000-100000",
+          "metadata_commit_sha": "fb5d66f2da33c2eb0d91dcbd1b393871ed9b9653",
+          "metadata_commit_timestamp": "2017-09-21T06:08:24-05:00",
+          "metadata_commit_index": 0,
+          "metadata_n_commits_total": 3459,
+          "metadata_contributor_tenure_days": 97,
+          "metadata_founder_tfdd_approx": null,
+          "metadata_diffusion_window_tag": "n/a",
+          "metadata_alias_ambiguous_repo": false
+        },
+        {
+          "input": "{\"alias_ambiguous_repo\": false, \"commit_index\": 14, \"commit_sha\": \"dd88d39d35cf7f832f025aff6b5cdfc0bee3ae3b\", \"commit_timestamp\": \"2018-03-17T18:21:12+08:00\", \"contributor_first_commit_ts\": \"2018-03-1...",
+          "output": "1",
+          "metadata_fold": "python|5000-100000",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2,
+          "metadata_full_name": "1c7/chinese-independent-developer",
+          "metadata_primary_language": "Python",
+          "metadata_search_stars_bucket": "5000-100000",
+          "metadata_commit_sha": "dd88d39d35cf7f832f025aff6b5cdfc0bee3ae3b",
+          "metadata_commit_timestamp": "2018-03-17T18:21:12+08:00",
+          "metadata_commit_index": 14,
+          "metadata_n_commits_total": 3459,
+          "metadata_contributor_tenure_days": 3079,
+          "metadata_founder_tfdd_approx": null,
+          "metadata_diffusion_window_tag": "n/a",
+          "metadata_alias_ambiguous_repo": false
+        },
+        {
+          "input": "{\"alias_ambiguous_repo\": false, \"commit_index\": 28, \"commit_sha\": \"cd0c92179d7ae5a07d1caee127d570d020faf6c8\", \"commit_timestamp\": \"2018-03-17T19:03:41+08:00\", \"contributor_first_commit_ts\": \"2018-03-1...",
+          "output": "1",
+          "metadata_fold": "python|5000-100000",
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2,
+          "metadata_full_name": "1c7/chinese-independent-developer",
+          "metadata_primary_language": "Python",
+          "metadata_search_stars_bucket": "5000-100000",
+          "metadata_commit_sha": "cd0c92179d7ae5a07d1caee127d570d020faf6c8",
+          "metadata_commit_timestamp": "2018-03-17T19:03:41+08:00",
+          "metadata_commit_index": 28,
+          "metadata_n_commits_total": 3459,
+          "metadata_contributor_tenure_days": 3079,
+          "metadata_founder_tfdd_approx": null,
+          "metadata_diffusion_window_tag": "n/a",
+          "metadata_alias_ambiguous_repo": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "source": "GitHub REST search/repositories API (candidate discovery, GH_TOKEN-authenticated) + local `git clone --bare` / `git log --numstat` (full commit history extraction, avoids API rate limits).",
+    "description": "Per-(commit,file) rows for 254 GitHub repos passing a fame-independent stratified sample (6 languages x 3 star strata, 1170 candidates -> 254 final, full funnel in metadata) and founder-only-start fil...",
+    "n_examples": 50695,
+    "n_repos": 254,
+    "funnel": {
+      "totals": {
+        "sampled": 1170,
+        "excluded_insufficient_history": 143,
+        "excluded_mining_artifact": 112,
+        "excluded_no_dominant_founder": 118,
+        "final_processed": 254,
+        "final_rows": 3922288
+      },
+      "by_cell": {
+        "python|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 19,
+          "excluded_mining_artifact": 25,
+          "excluded_no_dominant_founder": 9,
+          "final_processed": 12
+        },
+        "python|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 13,
+          "excluded_mining_artifact": 11,
+          "excluded_no_dominant_founder": 15,
+          "final_processed": 24
+        },
+        "python|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 24,
+          "excluded_mining_artifact": 1,
+          "excluded_no_dominant_founder": 13,
+          "final_processed": 21
+        },
+        "javascript|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 10,
+          "excluded_mining_artifact": 22,
+          "excluded_no_dominant_founder": 8,
+          "final_processed": 24
+        },
+        "javascript|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 2,
+          "excluded_mining_artifact": 10,
+          "excluded_no_dominant_founder": 15,
+          "final_processed": 37
+        },
+        "javascript|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 10,
+          "excluded_mining_artifact": 4,
+          "excluded_no_dominant_founder": 13,
+          "final_processed": 34
+        },
+        "go|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 14,
+          "excluded_mining_artifact": 21,
+          "excluded_no_dominant_founder": 9,
+          "final_processed": 21
+        },
+        "go|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 8,
+          "excluded_mining_artifact": 7,
+          "excluded_no_dominant_founder": 17,
+          "final_processed": 32
+        },
+        "go|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 8,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 16,
+          "final_processed": 39
+        },
+        "java|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 3,
+          "excluded_mining_artifact": 11,
+          "excluded_no_dominant_founder": 3,
+          "final_processed": 10
+        },
+        "java|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 3,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "java|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 4,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "ruby|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 2,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "ruby|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 2,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "ruby|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 4,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "c++|50-500": {
+          "sampled": 65,
+          "excluded_insufficient_history": 5,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "c++|500-5000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 6,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        },
+        "c++|5000-100000": {
+          "sampled": 65,
+          "excluded_insufficient_history": 6,
+          "excluded_mining_artifact": 0,
+          "excluded_no_dominant_founder": 0,
+          "final_processed": 0
+        }
+      }
+    }
+  }
+}
