@@ -1,0 +1,5 @@
+[project]
+name = "gen-art-dataset-1-github-founder-departure-corpus"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
