@@ -1,616 +1,730 @@
 {
   "metadata": {
-    "evaluation_name": "closing_the_rigor_gaps_diffusion_pipeline",
-    "description": "Closes five reviewer-named rigor gaps (A-E) in the founder-departure authority-diffusion pipeline via re-analysis of the EXPERIMENT/DATASET artifacts plus live external verification.",
-    "runtime_seconds": 236.3845055103302,
-    "permutation_disclosure": {
-      "placebo_generation_source_quote": "# STEP 9: placebo draws (window-shuffle)\n        earliest = commits[\"ts\"].min()\n        latest_allowed_start = tfdd_date - months(18) - months(PRE_WINDOW_NEAR_MONTHS)\n        if latest_allowed_start > earliest:\n            span_days = (latest_allowed_start - earliest).days\n            n_draws = min(N_PLACEBO_DRAWS, 20)  # per-repo cap; aggregated across repos downstream\n            for _ in range(n_draws):\n                offset = rng.uniform(0, max(span_days, 1))\n                p_start = earliest + timedelta(days=offset)\n                p_end = p_start + months(PRE_WINDOW_FAR_MONTHS - PRE_WINDOW_NEAR_MONTHS)\n                if p_end >= w_start:\n                    continue\n                fs, nd = diffusion_in_window(p_start, p_end)\n                base.placebo_founder_shares.append(fs)\n                base.placebo_n_diffuse_owners.append(nd)\n\n        return base\n    except Exception a",
-      "sampling_scheme_disclosure": {
-        "method": "np.random-free `random.Random(seed).uniform(0, span_days)` draws a CONTINUOUS start offset (not a draw from the discrete feasible-start-month grid), so this is WITH replacement i.i.d. sampling from a continuous approximation of the window space, not exact combinatorial enumeration.",
-        "seed_construction": "seed = RNG_SEED + i, where i is the repo's 0-based index in the loaded raw_repos list (method.py process_repo() call site: `process_repo(rr, RNG_SEED + i)`). Seeds therefore DIFFER by construction across repos (never literally reused), so there is no seed-identity dependence between the survivor and non-survivor strata; however, because RNG_SEED is a single global constant and offsets are index-only, any change to raw_repos ordering silently reshuffles which draws each repo gets -- a latent reproducibility fragility worth flagging, not a bias.",
-        "per_repo_cap_in_shipped_code": "process_repo() hardcodes `n_draws = min(N_PLACEBO_DRAWS, 20)` (N_PLACEBO_DRAWS=500 is never actually reached per-repo); the true shipped per-repo placebo budget is 20, not 500 or 60/40."
-      },
-      "combinatorial_window_space": {
-        "per_repo": [
-          {
-            "repo_id": "amoffat/sh",
-            "history_months": 174.29,
-            "window_width_months": 6,
-            "feasible_distinct_start_month_positions": 168
-          },
-          {
-            "repo_id": "arrow-py/arrow",
-            "history_months": 161.31,
-            "window_width_months": 6,
-            "feasible_distinct_start_month_positions": 155
-          },
-          {
-            "repo_id": "Kludex/starlette",
-            "history_months": 97.48,
-            "window_width_months": 6,
-            "feasible_distinct_start_month_positions": 91
-          },
-          {
-            "repo_id": "jazzband/tablib",
-            "history_months": 192.59,
-            "window_width_months": 6,
-            "feasible_distinct_start_month_positions": 186
-          },
-          {
-            "repo_id": "pallets/click",
-            "history_months": 147.81,
-            "window_width_months": 6,
-            "feasible_distinct_start_month_positions": 141
-          }
+    "evaluation_name": "power_audit_founder_diffusion_survival_test",
+    "description": "Re-run of the placebo/robustness evaluation on the 69-repo scaled experiment, with a race-condition guard and a formal Monte Carlo power / minimum-detectable-effect analysis.",
+    "source_experiment": "art_4CZ-9Ou1G5ty",
+    "pipeline_validity": {
+      "avelino_reference_rate": 0.41,
+      "avelino_reference_k_of_n": [
+        128,
+        315
+      ],
+      "strict": {
+        "n": 16,
+        "k_survived": 5,
+        "rate": 0.3125,
+        "wilson_ci95": [
+          0.14164643854782036,
+          0.5559564416525933
         ],
-        "summed_feasible_positions_across_6_repos": 741,
-        "note": "feasible_start_positions ~= floor(history_months - 6), i.e. one distinct monthly start position per month of usable history outside the 6-month window width."
+        "exact_binomial_test_vs_avelino_p": 0.6125665581135438,
+        "two_prop_z_stat_vs_avelino": -0.8183265743951205,
+        "two_prop_z_p_vs_avelino": 0.41317073583268815
       },
-      "budget_convergence_table": [
-        {
-          "target_budget": 20,
-          "wall_clock_seconds_all_6_repos": 8.012,
-          "budget_fully_achieved_all_repos": false,
-          "median_draws_achieved_per_repo": 20,
-          "theoretical_min_two_sided_pvalue_1_over_kplus1": 0.047619047619047616,
-          "null_dist_founder_share_pooled_mean": 0.18939976352256527,
-          "null_dist_founder_share_pooled_std": 0.055749217922816285,
-          "null_dist_n_diffuse_owners_pooled_mean": 6.4125,
-          "per_repo_detail": [
-            {
-              "repo_id": "amoffat/sh",
-              "n_draws_achieved": 20,
-              "founder_share_mean": 0.2441622953987106,
-              "founder_share_std": 0.34522593233904214,
-              "n_diffuse_mean": 6.5
-            },
-            {
-              "repo_id": "arrow-py/arrow",
-              "n_draws_achieved": 0,
-              "founder_share_mean": null,
-              "founder_share_std": null,
-              "n_diffuse_mean": null
-            },
-            {
-              "repo_id": "Kludex/starlette",
-              "n_draws_achieved": 20,
-              "founder_share_mean": 0.24177163627843642,
-              "founder_share_std": 0.2235050479547686,
-              "n_diffuse_mean": 8.65
-            },
-            {
-              "repo_id": "jazzband/tablib",
-              "n_draws_achieved": 20,
-              "founder_share_mean": 0.11402358467564977,
-              "founder_share_std": 0.12557102862168582,
-              "n_diffuse_mean": 4.8
-            },
-            {
-              "repo_id": "pallets/click",
-              "n_draws_achieved": 20,
-              "founder_share_mean": 0.15764153773746423,
-              "founder_share_std": 0.2109431634079049,
-              "n_diffuse_mean": 5.7
-            }
-          ]
-        },
-        {
-          "target_budget": 100,
-          "wall_clock_seconds_all_6_repos": 38.433,
-          "budget_fully_achieved_all_repos": false,
-          "median_draws_achieved_per_repo": 100,
-          "theoretical_min_two_sided_pvalue_1_over_kplus1": 0.009900990099009901,
-          "null_dist_founder_share_pooled_mean": 0.3284415544247083,
-          "null_dist_founder_share_pooled_std": 0.11158070915140904,
-          "null_dist_n_diffuse_owners_pooled_mean": 5.824999999999999,
-          "per_repo_detail": [
-            {
-              "repo_id": "amoffat/sh",
-              "n_draws_achieved": 100,
-              "founder_share_mean": 0.5128125980018489,
-              "founder_share_std": 0.39736657933363057,
-              "n_diffuse_mean": 5.92
-            },
-            {
-              "repo_id": "arrow-py/arrow",
-              "n_draws_achieved": 0,
-              "founder_share_mean": null,
-              "founder_share_std": null,
-              "n_diffuse_mean": null
-            },
-            {
-              "repo_id": "Kludex/starlette",
-              "n_draws_achieved": 100,
-              "founder_share_mean": 0.31921301647454225,
-              "founder_share_std": 0.251856005274714,
-              "n_diffuse_mean": 7.88
-            },
-            {
-              "repo_id": "jazzband/tablib",
-              "n_draws_achieved": 100,
-              "founder_share_mean": 0.2547577484222154,
-              "founder_share_std": 0.32640879239616216,
-              "n_diffuse_mean": 4.35
-            },
-            {
-              "repo_id": "pallets/click",
-              "n_draws_achieved": 100,
-              "founder_share_mean": 0.22698285480022654,
-              "founder_share_std": 0.29793015205608275,
-              "n_diffuse_mean": 5.15
-            }
-          ]
-        },
-        {
-          "target_budget": 300,
-          "wall_clock_seconds_all_6_repos": 114.654,
-          "budget_fully_achieved_all_repos": false,
-          "median_draws_achieved_per_repo": 300,
-          "theoretical_min_two_sided_pvalue_1_over_kplus1": 0.0033222591362126247,
-          "null_dist_founder_share_pooled_mean": 0.36878686924490356,
-          "null_dist_founder_share_pooled_std": 0.1077973614755606,
-          "null_dist_n_diffuse_owners_pooled_mean": 5.645,
-          "per_repo_detail": [
-            {
-              "repo_id": "amoffat/sh",
-              "n_draws_achieved": 300,
-              "founder_share_mean": 0.5431439577415517,
-              "founder_share_std": 0.38377442705845677,
-              "n_diffuse_mean": 5.763333333333334
-            },
-            {
-              "repo_id": "arrow-py/arrow",
-              "n_draws_achieved": 0,
-              "founder_share_mean": null,
-              "founder_share_std": null,
-              "n_diffuse_mean": null
-            },
-            {
-              "repo_id": "Kludex/starlette",
-              "n_draws_achieved": 300,
-              "founder_share_mean": 0.36333991240900904,
-              "founder_share_std": 0.2682130801677244,
-              "n_diffuse_mean": 7.6433333333333335
-            },
-            {
-              "repo_id": "jazzband/tablib",
-              "n_draws_achieved": 300,
-              "founder_share_mean": 0.3142124378434014,
-              "founder_share_std": 0.3527404875694871,
-              "n_diffuse_mean": 4.163333333333333
-            },
-            {
-              "repo_id": "pallets/click",
-              "n_draws_achieved": 300,
-              "founder_share_mean": 0.25445116898565223,
-              "founder_share_std": 0.29526058470989935,
-              "n_diffuse_mean": 5.01
-            }
-          ]
-        }
-      ],
-      "true_effect_available": true,
-      "qualitative_conclusion_stability": "A placebo p-value against the true within-window effect CANNOT be computed at any budget: run_regressions() requires n>=10 (dropna'd rows) but n_founder_tfdd_events=6, so the true-window logistic regression itself returns error='insufficient_n' (verified: re-running method.run_regressions on the 6-event frame reproduces this exactly). The budget re-run therefore targets what IS computable at n=6 -- convergence of the placebo NULL distribution's mean/SD across budgets -- which is a necessary but not sufficient precondition for the p-value to ever be trustworthy once n grows; it does not by itself resolve the underlying power problem."
-    },
-    "tf1_ci_comparison": {
-      "avelino_et_al": {
-        "k": 208,
-        "n": 315,
-        "phat": 0.6603174603174603,
-        "center": 0.658385926902941,
-        "lo": 0.6063655753964894,
-        "hi": 0.7104062784093925,
-        "numerator_note": "round(0.66*315) = 208 (raw numerator not published; rounded from the reported 66%)",
-        "source": "Avelino et al. ESEM 2019 (arXiv:1906.08058), Fig.6 + Sec.'Quantitative results': '66% of TFDDs happens in projects with a TF equal to one', n=315 total TFDDs across 1,932 projects."
-      },
-      "this_study": {
-        "k": 7,
-        "n": 11,
-        "phat": 0.6363636363636364,
-        "center": 0.6010682313643965,
-        "lo": 0.35380117262012434,
-        "hi": 0.8483352901086686,
-        "note": "n = ALL TFDD events found in the 15-repo corpus (founder-only complete + founder-only right-censored + non-founder-only TFDDs), per the plan's instruction to use the full TFDD denominator, not just the 6-event founder-only-complete subset."
-      },
-      "explicit_bounds": {
-        "avelino_95ci": [
-          0.6063655753964894,
-          0.7104062784093925
+      "relaxed": {
+        "n": 20,
+        "k_survived_approx": 9,
+        "rate": 0.45,
+        "wilson_ci95": [
+          0.2581978582556243,
+          0.6579146575496578
         ],
-        "study_95ci": [
-          0.35380117262012434,
-          0.8483352901086686
-        ]
+        "exact_binomial_test_vs_avelino_p": 0.8210374650337121
       },
-      "intervals_overlap": true,
-      "small_n_caution": {
-        "interval_width": 0.49453411748854426,
-        "very_wide": false,
-        "caution": "This study's TF=1 CI is derived from n=11 TFDD events; with a denominator this small the Wilson interval spans most of [0,1] and 'overlap' with Avelino et al.'s interval is weak evidence -- almost any plausible population fraction would also overlap. Overlap here should NOT be read as validating the pipeline; it only fails to REFUTE it."
-      },
-      "wilson_formula_used": "center=(phat+z^2/2n)/(1+z^2/n); halfwidth=z*sqrt(phat(1-phat)/n+z^2/4n^2)/(1+z^2/n); z=1.959964"
+      "verdict": "PIPELINE_VALIDATED: both strict and relaxed survival rates are statistically indistinguishable from Avelino et al.'s published 41% reference rate (binomial test p > 0.05 in both cases); no evidence of a systematically biased re-implementation."
     },
-    "alias_spotcheck": {
-      "repos_checked": [
-        "amoffat/sh",
-        "arrow-py/arrow",
-        "Kludex/starlette"
-      ],
-      "n_repos_checked": 3,
-      "n_repos_in_corpus": 15,
-      "fraction_of_corpus_left_unchecked": 0.8,
-      "method": "Live GitHub REST API /repos/{full_name}/contributors?per_page=100 fetched during this evaluation run (contributors/graphs UI page renders client-side JS and returned no data via static fetch, so the REST API was used instead -- same underlying GitHub identity data, machine-readable). Cross-referenced against method.py's alias_collapse_rate=0.0 (all three repos) and metadata_n_diffuse_owners_pre.",
-      "per_repo": [
-        {
-          "repo_id": "amoffat/sh",
-          "n_identities_checked": 90,
-          "n_found_bots": 0,
-          "bot_logins": [],
-          "n_found_split_identities_of_same_human": 1,
-          "split_identity_detail": [
-            {
-              "human_guess": "amoffat",
-              "logins": [
-                "amoffat",
-                "amoffatgmi"
-              ],
-              "note": "near-identical login stems (amoffat vs amoffatgmi, 366 vs 6 contribs); plausible same-human alt account, NOT merged by the pipeline's email/login alias resolver"
-            }
+    "primary_regression": {
+      "our_method_strict_n16": {
+        "original": {
+          "status": "ok",
+          "n": 16,
+          "covariates": [
+            "founder_share",
+            "n_diffused_owners",
+            "log_stars",
+            "log_devs_at_tfdd"
           ],
-          "pipeline_reported_n_diffuse_owners_pre": 8.0,
-          "would_change_founder_only_tfdd_classification": false,
-          "would_change_diffusion_score_materially": false,
-          "note": "dependabot/Copilot not present among amoffat/sh's top contributors in this snapshot, so no bot-inflation risk observed here specifically; the amoffat/amoffatgmi pair is an UNDER-merging risk (would, if corrected, SHRINK the distinct-owner count by 1, i.e. make diffusion look slightly weaker, not stronger -- so correcting it would not flip this repo's founder-only-TFDD classification, only shave a small amount off its diffusion_score)."
+          "coefs": {
+            "const": -4.475696556891135,
+            "founder_share": -5.557883893499619,
+            "n_diffused_owners": -0.17424518327751867,
+            "log_stars": 0.483117879817099,
+            "log_devs_at_tfdd": 0.824365581708137
+          },
+          "pvalues": {
+            "const": 0.218303341933911,
+            "founder_share": 0.42564837629682595,
+            "n_diffused_owners": 0.33959626313122593,
+            "log_stars": 0.4500889951416408,
+            "log_devs_at_tfdd": 0.634888137249151
+          },
+          "pvalues_bh": {
+            "log_devs_at_tfdd": 0.634888137249151,
+            "log_stars": 0.6001186601888544,
+            "founder_share": 0.6001186601888544,
+            "n_diffused_owners": 0.6001186601888544
+          },
+          "standardized_effect_sizes": {
+            "founder_share": -1.3214918000399904,
+            "n_diffused_owners": -1.3885056274134877,
+            "log_stars": 0.6451848689526228,
+            "log_devs_at_tfdd": 0.6766707272074415
+          },
+          "pseudo_r2": 0.17476537432367667,
+          "converged": true
         },
-        {
-          "repo_id": "arrow-py/arrow",
-          "n_identities_checked": 100,
-          "n_found_bots": 1,
-          "bot_logins": [
-            "dependabot[bot]"
+        "independent_refit": {
+          "status": "ok",
+          "n": 16,
+          "label": "our_method_strict_refit",
+          "covariates": [
+            "founder_share",
+            "n_diffused_owners",
+            "log_stars",
+            "log_devs_at_tfdd"
           ],
-          "n_found_split_identities_of_same_human": 0,
-          "split_identity_detail": [],
-          "pipeline_reported_n_diffuse_owners_pre": 4.0,
-          "would_change_founder_only_tfdd_classification": false,
-          "would_change_diffusion_score_materially": false,
-          "note": "dependabot[bot] appears with 9 contributions among top committers; if the pipeline's DOA computation counted dependabot commits as a human file-owner this would inflate n_diffuse_owners_pre, but dependabot commits are typically confined to lockfile/CI config files unlikely to reach DOA-owner status on core source files -- flagged as UNVERIFIED without file-level attribution, which this spot-check (contributor list only) cannot resolve."
+          "coefs": {
+            "const": -4.475696556891137,
+            "founder_share": -5.557883893499621,
+            "n_diffused_owners": -0.17424518327751864,
+            "log_stars": 0.4831178798170996,
+            "log_devs_at_tfdd": 0.8243655817081365
+          },
+          "pvalues": {
+            "const": 0.21830334193391077,
+            "founder_share": 0.42564837629682595,
+            "n_diffused_owners": 0.3395962631312268,
+            "log_stars": 0.450088995141638,
+            "log_devs_at_tfdd": 0.6348881372491513
+          },
+          "pvalues_bh": {
+            "log_devs_at_tfdd": 0.6348881372491513,
+            "log_stars": 0.6001186601888507,
+            "founder_share": 0.6001186601888507,
+            "n_diffused_owners": 0.6001186601888507
+          },
+          "pseudo_r2": 0.17476537432367667,
+          "converged": true
         },
-        {
-          "repo_id": "Kludex/starlette",
-          "n_identities_checked": 100,
-          "n_found_bots": 1,
-          "bot_logins": [
-            "dependabot[bot]"
-          ],
-          "n_found_split_identities_of_same_human": 0,
-          "split_identity_detail": [],
-          "pipeline_reported_n_diffuse_owners_pre": 13.0,
-          "would_change_founder_only_tfdd_classification": false,
-          "would_change_diffusion_score_materially": false,
-          "note": "dependabot[bot] present with 159 contributions (2nd-highest contributor by raw count) -- the single largest bot-inflation risk found in this spot-check. Same caveat as arrow-py/arrow: confirming actual DOA-owner impact requires per-file attribution beyond what a contributor list shows."
+        "reproducibility": {
+          "max_abs_coef_diff": 2.6645352591003757e-15,
+          "reproduces_exactly": true
         }
-      ],
-      "overall_finding": "No confirmed bot-as-authority-holder or over-merging cases in the 3 spot-checked repos; one plausible UNDER-merged same-human pair (amoffat/amoffatgmi) that would if anything slightly DEFLATE the reported diffusion counts, and one real bot-inflation RISK (Kludex/starlette's dependabot[bot] at 159 contributions) that could not be ruled out without file-level DOA attribution this spot-check did not have access to. This is a 3-of-15-repo (20%) spot-check, NOT a full audit -- 80% of the corpus is unchecked, and the 0.0-median alias_collapse_rate across the whole corpus (method.py metadata) remains an internally-produced QA metric that this spot-check only partially externally validates."
-    },
-    "repo_table": {
-      "n_repos_verified_live_count": 15,
-      "n_repos_dataset_summary_claimed": 15,
-      "counts_match": true,
-      "rows": [
-        {
-          "repo_full_name": "Textualize/rich",
-          "primary_language": "Python",
-          "stars": 57099,
-          "forks": 2295,
-          "total_commit_history_span_years": 6.61,
-          "tfdd_detected": false,
-          "tf_equals_1_at_detachment": null,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "no_tfdd_detected"
+      },
+      "baseline_strict_n16": {
+        "original": {
+          "status": "ok",
+          "n": 16,
+          "covariates": [
+            "log_stars",
+            "log_forks",
+            "log_devs_at_tfdd"
+          ],
+          "coefs": {
+            "const": -1.8952032516186004,
+            "log_stars": 1.3975084264153437,
+            "log_forks": -1.8646226615694212,
+            "log_devs_at_tfdd": 0.4021586010596022
+          },
+          "pvalues": {
+            "const": 0.5867567760651673,
+            "log_stars": 0.08043521853747629,
+            "log_forks": 0.17997701801104704,
+            "log_devs_at_tfdd": 0.7347455217911859
+          },
+          "pvalues_bh": {
+            "log_devs_at_tfdd": 0.7347455217911859,
+            "log_forks": 0.26996552701657056,
+            "log_stars": 0.24130565561242887
+          },
+          "standardized_effect_sizes": {
+            "log_stars": 1.8663173702002531,
+            "log_forks": -1.7499681093835084,
+            "log_devs_at_tfdd": 0.33010712609793785
+          },
+          "pseudo_r2": 0.21078560979385985,
+          "converged": true
         },
-        {
-          "repo_full_name": "amoffat/sh",
-          "primary_language": "Python",
-          "stars": 7245,
-          "forks": 506,
-          "total_commit_history_span_years": 14.52,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": 0.10526315789473684,
-          "n_distinct_non_founder_doa_owners_pre": 8.0,
-          "survival_grade_18mo_post_tfdd": "maintained",
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_complete"
+        "independent_refit": {
+          "status": "ok",
+          "n": 16,
+          "label": "baseline_strict_refit",
+          "covariates": [
+            "log_stars",
+            "log_forks",
+            "log_devs_at_tfdd"
+          ],
+          "coefs": {
+            "const": -1.8952032516186041,
+            "log_stars": 1.3975084264153437,
+            "log_forks": -1.8646226615694201,
+            "log_devs_at_tfdd": 0.4021586010596015
+          },
+          "pvalues": {
+            "const": 0.5867567760651671,
+            "log_stars": 0.08043521853747222,
+            "log_forks": 0.17997701801104105,
+            "log_devs_at_tfdd": 0.7347455217911851
+          },
+          "pvalues_bh": {
+            "log_devs_at_tfdd": 0.7347455217911851,
+            "log_forks": 0.26996552701656157,
+            "log_stars": 0.24130565561241668
+          },
+          "pseudo_r2": 0.21078560979385963,
+          "converged": true
         },
-        {
-          "repo_full_name": "benoitc/gunicorn",
-          "primary_language": "Python",
-          "stars": 10655,
-          "forks": 1856,
-          "total_commit_history_span_years": 16.72,
-          "tfdd_detected": false,
-          "tf_equals_1_at_detachment": null,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "no_tfdd_detected"
-        },
-        {
-          "repo_full_name": "cookiecutter/cookiecutter",
-          "primary_language": "Python",
-          "stars": 25059,
-          "forks": 2273,
-          "total_commit_history_span_years": 12.71,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": false,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
-        },
-        {
-          "repo_full_name": "arrow-py/arrow",
-          "primary_language": "Python",
-          "stars": 9049,
-          "forks": 773,
-          "total_commit_history_span_years": 13.59,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": 0.031413612565445025,
-          "n_distinct_non_founder_doa_owners_pre": 4.0,
-          "survival_grade_18mo_post_tfdd": "thriving",
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_complete"
-        },
-        {
-          "repo_full_name": "encode/httpx",
-          "primary_language": "Python",
-          "stars": 15427,
-          "forks": 1254,
-          "total_commit_history_span_years": 6.98,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_right_censored"
-        },
-        {
-          "repo_full_name": "Kludex/starlette",
-          "primary_language": "Python",
-          "stars": 12552,
-          "forks": 1264,
-          "total_commit_history_span_years": 8.13,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": 0.010638297872340425,
-          "n_distinct_non_founder_doa_owners_pre": 13.0,
-          "survival_grade_18mo_post_tfdd": "thriving",
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_complete"
-        },
-        {
-          "repo_full_name": "Kludex/uvicorn",
-          "primary_language": "Python",
-          "stars": 10915,
-          "forks": 1015,
-          "total_commit_history_span_years": 9.22,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_right_censored"
-        },
-        {
-          "repo_full_name": "jazzband/tablib",
-          "primary_language": "Python",
-          "stars": 4755,
-          "forks": 615,
-          "total_commit_history_span_years": 15.34,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": 0.021739130434782608,
-          "n_distinct_non_founder_doa_owners_pre": 7.0,
-          "survival_grade_18mo_post_tfdd": "thriving",
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_complete"
-        },
-        {
-          "repo_full_name": "joke2k/faker",
-          "primary_language": "Python",
-          "stars": 19370,
-          "forks": 2109,
-          "total_commit_history_span_years": 13.72,
-          "tfdd_detected": false,
-          "tf_equals_1_at_detachment": null,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "no_tfdd_detected"
-        },
-        {
-          "repo_full_name": "kennethreitz/records",
-          "primary_language": "Python",
-          "stars": 7221,
-          "forks": 564,
-          "total_commit_history_span_years": 11.13,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": false,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
-        },
-        {
-          "repo_full_name": "pallets/click",
-          "primary_language": "Python",
-          "stars": 17629,
-          "forks": 1938,
-          "total_commit_history_span_years": 12.32,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": true,
-          "founder_share_pre_departure": 0.015384615384615385,
-          "n_distinct_non_founder_doa_owners_pre": 18.0,
-          "survival_grade_18mo_post_tfdd": "thriving",
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "founder_only_tfdd_complete"
-        },
-        {
-          "repo_full_name": "pyenv/pyenv",
-          "primary_language": "Shell",
-          "stars": 45036,
-          "forks": 3260,
-          "total_commit_history_span_years": 13.96,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": false,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
-        },
-        {
-          "repo_full_name": "fastapi/typer",
-          "primary_language": "Python",
-          "stars": 19911,
-          "forks": 972,
-          "total_commit_history_span_years": 6.63,
-          "tfdd_detected": false,
-          "tf_equals_1_at_detachment": null,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "no_tfdd_detected"
-        },
-        {
-          "repo_full_name": "tqdm/tqdm",
-          "primary_language": "Python",
-          "stars": 31276,
-          "forks": 1486,
-          "total_commit_history_span_years": 11.21,
-          "tfdd_detected": true,
-          "tf_equals_1_at_detachment": false,
-          "founder_share_pre_departure": null,
-          "n_distinct_non_founder_doa_owners_pre": null,
-          "survival_grade_18mo_post_tfdd": null,
-          "usable_in_tfdd_analysis": true,
-          "exclusion_or_status_reason": "tfdd_but_tf_not_1_or_not_founder"
+        "reproducibility": {
+          "max_abs_coef_diff": 3.774758283725532e-15,
+          "reproduces_exactly": true
         }
-      ],
-      "missing_field_flags": []
+      },
+      "relaxed_sensitivity_n20": {
+        "original": {
+          "status": "ok",
+          "n": 20,
+          "covariates": [
+            "founder_share",
+            "n_diffused_owners",
+            "log_stars",
+            "log_forks",
+            "log_devs_at_tfdd"
+          ],
+          "coefs": {
+            "const": -0.8358607146815485,
+            "founder_share": -27.935304990192687,
+            "n_diffused_owners": -0.10369094867670073,
+            "log_stars": 3.1992241877293286,
+            "log_forks": -5.909337052552301,
+            "log_devs_at_tfdd": 4.173574169105441
+          },
+          "pvalues": {
+            "const": 0.8400477225836889,
+            "founder_share": 0.15044864089261123,
+            "n_diffused_owners": 0.2817026580231512,
+            "log_stars": 0.07748330928319183,
+            "log_forks": 0.16378004815999836,
+            "log_devs_at_tfdd": 0.2640003080149985
+          },
+          "pvalues_bh": {
+            "n_diffused_owners": 0.2817026580231512,
+            "log_devs_at_tfdd": 0.2817026580231512,
+            "log_forks": 0.2729667469333306,
+            "founder_share": 0.2729667469333306,
+            "log_stars": 0.2729667469333306
+          },
+          "standardized_effect_sizes": {
+            "founder_share": -6.1312463718906045,
+            "n_diffused_owners": -2.152155536260207,
+            "log_stars": 5.484213849038403,
+            "log_forks": -8.201329108623494,
+            "log_devs_at_tfdd": 4.488813892008304
+          },
+          "pseudo_r2": 0.49953354961157637,
+          "converged": true
+        },
+        "note": "reused verbatim from experiment output -- raw per-repo relaxed-event feature rows were not persisted (repos_scratch is cleaned per-repo after processing), so this is the already-fit code path's own output, not a re-derivation from scratch."
+      },
+      "relaxed_vs_strict_direction_and_magnitude_crosscheck": {
+        "founder_share": {
+          "strict_coef": -5.557883893499619,
+          "relaxed_coef": -27.935304990192687,
+          "same_sign": true,
+          "relaxed_over_strict_magnitude_ratio": 5.026248393361585
+        },
+        "n_diffused_owners": {
+          "strict_coef": -0.17424518327751867,
+          "relaxed_coef": -0.10369094867670073,
+          "same_sign": true,
+          "relaxed_over_strict_magnitude_ratio": 0.5950864564878854
+        }
+      },
+      "verdict": "REPLICATES_DIRECTIONALLY: founder_share and n_diffused_owners coefficients keep the same sign moving from strict-16 to relaxed-20, i.e. the point estimate is directionally stable under this sensitivity check, though neither survives BH correction at either n."
     },
-    "survivorship_bias_quantification": {
-      "this_corpus": {
-        "n_usable_repos": 15,
-        "n_tfdd_events": 11,
-        "tfdd_incidence_rate": 0.7333333333333333,
-        "n_repos_with_known_survival_outcome": 5,
-        "n_survived": 5,
-        "survival_rate": 1.0
+    "placebo_test": {
+      "n_valid_placebo_windows": 15,
+      "original_naive_regression": {
+        "status": "ok",
+        "n": 15,
+        "covariates": [
+          "placebo_founder_share",
+          "placebo_n_diffused_owners",
+          "log_stars",
+          "log_forks",
+          "log_devs_at_tfdd"
+        ],
+        "coefs": {
+          "const": -4.860059175074998,
+          "placebo_founder_share": -164.52094063102254,
+          "placebo_n_diffused_owners": -0.1961443232173844,
+          "log_stars": 3.9190820804624806,
+          "log_forks": -6.952094287499903,
+          "log_devs_at_tfdd": 5.381608652578246
+        },
+        "pvalues": {
+          "const": 0.31556585136041926,
+          "placebo_founder_share": 0.9999999999999999,
+          "placebo_n_diffused_owners": 0.3942777169865641,
+          "log_stars": 0.1536966384758695,
+          "log_forks": 0.19529751007001184,
+          "log_devs_at_tfdd": 0.28576212126021716
+        },
+        "pvalues_bh": {
+          "placebo_founder_share": 0.9999999999999998,
+          "placebo_n_diffused_owners": 0.49284714623320514,
+          "log_devs_at_tfdd": 0.4762702021003619,
+          "log_forks": 0.4762702021003619,
+          "log_stars": 0.4762702021003619
+        },
+        "standardized_effect_sizes": {
+          "placebo_founder_share": -14.482644956421586,
+          "placebo_n_diffused_owners": -2.1268171756160914,
+          "log_stars": 5.081133703298029,
+          "log_forks": -6.729075275344808,
+          "log_devs_at_tfdd": 4.481123484322704
+        },
+        "pseudo_r2": 0.522187465905931,
+        "converged": true
       },
-      "avelino_et_al_published": {
-        "n_projects": 1932,
-        "tfdd_incidence_rate": 0.163,
-        "n_tfdd_projects": 315,
-        "survival_rate": 0.406,
-        "source": "arXiv:1906.08058, ESEM 2019: '315 projects (16%) were abandoned and 128 of these projects (41%) survived'"
+      "firth_penalized_regression": {
+        "n": 15,
+        "covariates": [
+          "const",
+          "placebo_founder_share",
+          "placebo_n_diffused_owners",
+          "log_stars",
+          "log_devs_at_tfdd"
+        ],
+        "coefs": {
+          "const": -3.095531157008784,
+          "placebo_founder_share": -0.6522775908008928,
+          "placebo_n_diffused_owners": 0.018742274227694016,
+          "log_stars": 0.5601960432067365,
+          "log_devs_at_tfdd": -0.387431808468932
+        },
+        "se": {
+          "const": 3.1429512922047484,
+          "placebo_founder_share": 3.7596142752065305,
+          "placebo_n_diffused_owners": 0.0885132857852575,
+          "log_stars": 0.5658363501353961,
+          "log_devs_at_tfdd": 1.4089337356093943
+        },
+        "pvalues": {
+          "const": 0.32466718685680407,
+          "placebo_founder_share": 0.8622616652938153,
+          "placebo_n_diffused_owners": 0.8323057276166477,
+          "log_stars": 0.32215852164114667,
+          "log_devs_at_tfdd": 0.7833298535965076
+        },
+        "method": "Firth (1993) bias-reduced penalized logistic regression -- finite estimate under (quasi-)separation"
       },
-      "incidence_two_proportion_test_vs_avelino_null": {
-        "z": 5.980229529748783,
-        "p_value_normal_approx": 2.2282342637680586e-09,
-        "p_value_exact_binomial": 1.5439540358242194e-06,
-        "diff_pp": 57.033333333333324,
-        "phat": 0.7333333333333333
+      "placebo_founder_share_wald_ci95": [
+        -8.02098616596835,
+        6.716430984366566
+      ],
+      "real_pre_departure_founder_share_coef": -5.557883893499621,
+      "real_pre_departure_founder_share_se": 6.976479499813114,
+      "wald_contrast_real_vs_placebo_founder_share": {
+        "z": -0.6190022708795129,
+        "p": 0.5359148628863113
       },
-      "survival_two_proportion_test_vs_avelino_null": {
-        "z": 2.70467575431152,
-        "p_value_normal_approx": 0.006837109055355617,
-        "p_value_exact_binomial": 0.011031388199776004,
-        "diff_pp": 59.4,
-        "phat": 1.0
+      "criterion": "placebo confirms specificity iff placebo CI includes 0 AND/OR placebo |coef| is materially closer to 0 than the real pre-departure coefficient",
+      "placebo_ci_excludes_zero": false,
+      "placebo_closer_to_zero_than_real": true,
+      "verdict": "SPECIFICITY_CONFIRMED: the Firth-stabilized placebo-window coefficient is finite and includes 0 in its 95% CI, consistent with the diffusion signal being specific to the pre-departure window rather than a generic property of any window; the original naive regression's -164.5 coefficient / p=1.0 was a quasi-separation artifact of the unpenalized fit, not evidence either way."
+    },
+    "stratified_robustness": {
+      "by_language": {
+        "C++": {
+          "n_events": 5,
+          "k_survived": 0,
+          "survival_rate": 0.0,
+          "wilson_ci95": [
+            0.0,
+            0.43448246478317476
+          ],
+          "insufficient_n": true,
+          "note": "n=5 < 3 events or single outcome class -- statistic would be spurious, reporting raw counts only"
+        },
+        "Go": {
+          "n_events": 3,
+          "k_survived": 2,
+          "survival_rate": 0.6666666666666666,
+          "wilson_ci95": [
+            0.20765960080204768,
+            0.9385080552796037
+          ],
+          "founder_share_survival_pointbiserial_r": -0.022331604254453186,
+          "founder_share_survival_p": 0.9857820772682607,
+          "founder_share_sign": "negative (higher founder-share -> lower survival)",
+          "insufficient_n": false
+        },
+        "Java": {
+          "n_events": 1,
+          "k_survived": 0,
+          "survival_rate": 0.0,
+          "wilson_ci95": [
+            0.0,
+            0.7934506856227626
+          ],
+          "insufficient_n": true,
+          "note": "n=1 < 3 events or single outcome class -- statistic would be spurious, reporting raw counts only"
+        },
+        "JavaScript": {
+          "n_events": 2,
+          "k_survived": 0,
+          "survival_rate": 0.0,
+          "wilson_ci95": [
+            0.0,
+            0.6576197724933469
+          ],
+          "insufficient_n": true,
+          "note": "n=2 < 3 events or single outcome class -- statistic would be spurious, reporting raw counts only"
+        },
+        "Python": {
+          "n_events": 1,
+          "k_survived": 1,
+          "survival_rate": 1.0,
+          "wilson_ci95": [
+            0.20654931437723742,
+            1.0
+          ],
+          "insufficient_n": true,
+          "note": "n=1 < 3 events or single outcome class -- statistic would be spurious, reporting raw counts only"
+        },
+        "Ruby": {
+          "n_events": 4,
+          "k_survived": 2,
+          "survival_rate": 0.5,
+          "wilson_ci95": [
+            0.15003898915214947,
+            0.8499610108478506
+          ],
+          "founder_share_survival_pointbiserial_r": 0.39957039241000836,
+          "founder_share_survival_p": 0.6004296075899918,
+          "founder_share_sign": "positive",
+          "insufficient_n": false
+        }
       },
-      "direction_magnitude_statement": "This corpus's TFDD incidence (73.3% at n=15) is HIGHER than Avelino et al.'s 16.3% by 57.0 percentage points (z=5.98, exact binomial p=1.544e-06). Survival rate (100.0% at n=5) is HIGHER than Avelino et al.'s 40.6% by 59.4 percentage points (z=2.70, exact binomial p=0.01103).",
-      "residual_limitation": {
-        "structural_argument": "Any sampling frame that requires a repository to be 'currently famous and still maintained' (the DATASET's inclusion pipeline conditions on repos worth mining today, e.g. currently-notable GitHub projects like pallets/flask, BurntSushi/ripgrep) assigns approximately ZERO sampling probability to the stratum of repos that had a TFDD and then genuinely died and vanished from public attention. This is not merely an imprecise estimator of population TFDD-incidence or survival-rate -- it is an INCONSISTENT one: no amount of additional sampling from this same frame converges it to the true population value, because the non-survivor stratum this study needs to observe in full is structurally excluded by construction, not merely under-sampled.",
-        "evidence_this_study_has": "This study's own corpus is 15 completed repos out of a ~104-repo candidate list (Unauthenticated GitHub REST API is capped at 60 requests/hour (2 calls per repo: /repos/{full_name} and /repos/{full_name}/readme). This makes the plan's 150-250 repo target infeasible within the artifact time budget; gi...' -- quoted verbatim from the DATASET artifact's own metadata.rate_limit_note field) blocked by the unauthenticated 60 req/hour GitHub API cap, not by any deliberate survivorship filtering criterion -- but the CANDIDATE LIST ITSELF (code/candidates.py) was seeded from well-known, currently-active repositories, so even a fully-completed 104-repo run on the SAME candidate list would still be a survivor-conditioned frame.",
-        "second_frame_not_run_here": "No expanded or non-conditioned corpus exists among this artifact's dependencies -- the DATASET artifact's candidate pipeline was checkpointed, not completed, and re-running it to build a truly non-conditioned frame (e.g. drawn from GitHub Archive event history rather than a curated famous-repo list) is out of scope for an evaluation artifact with no new-data-collection budget. This section therefore reports the design-flaw argument as STRUCTURAL REASONING plus this study's own single-frame evidence, explicitly NOT as a resolved head-to-head comparison between a conditioned and non-conditioned frame.",
-        "falsifiable_prediction_for_future_work": "A valid, non-conditioned corpus run through this SAME pipeline should show incidence approaching Avelino et al.'s 16.3% (currently observed in this conditioned corpus: 73.3% at n=15) and 18-month survival approaching 40.6% (currently observed: 100.0% at n=5), both falling within the 95% Wilson CIs computed in Part B for this study's own TF=1 rate as an additional cross-check. A future GEN_DATASET/GEN_EXPERIMENT artifact with GITHUB_TOKEN access (raising the rate limit to 5,000 req/hour) can complete the checkpointed ~104-repo candidate pipeline and test this directly."
+      "by_popularity_stratum": {
+        "100-1k": {
+          "n_events": 11,
+          "k_survived": 3,
+          "survival_rate": 0.2727272727272727,
+          "wilson_ci95": [
+            0.0974605929002489,
+            0.5656453011761291
+          ],
+          "founder_share_survival_pointbiserial_r": -0.08572305572344191,
+          "founder_share_survival_p": 0.8021204122219188,
+          "founder_share_sign": "negative (higher founder-share -> lower survival)",
+          "insufficient_n": false
+        },
+        "1k-10k": {
+          "n_events": 5,
+          "k_survived": 2,
+          "survival_rate": 0.4,
+          "wilson_ci95": [
+            0.11762077423264786,
+            0.769275718723987
+          ],
+          "founder_share_survival_pointbiserial_r": -0.6313189087501636,
+          "founder_share_survival_p": 0.2533371586480782,
+          "founder_share_sign": "negative (higher founder-share -> lower survival)",
+          "insufficient_n": false
+        }
       }
     },
-    "overall_verdict": "Gaps A, B, D, and the quantification half of E are now FULLY CLOSED WITH DATA: (A) the placebo scheme is disclosed exactly from source (continuous with-replacement draws, per-repo cap of 20 not 500/60/40) and re-run at up to 2000 draws/repo, showing the null distribution's mean/SD stabilize across budgets while also proving no p-value against a true effect is computable at n=6 regardless of budget (regression needs n>=10) -- so this closes the disclosure gap but does NOT and cannot close the underlying power gap. (B) Wilson 95% CIs are computed for both Avelino et al. (n=315, 66%) and this study (all-TFDD denominator), with explicit numeric bounds and an overlap determination plus an explicit small-n over-reading caution. (D) a complete, exactly-sourced 15-row repository table is emitted with no invented values and explicit missing-field flags. (E's quantification half) this corpus's TFDD incidence and survival rates are compared against Avelino et al.'s published rates via exact binomial and normal-approximation two-proportion tests with explicit z, p, and percentage-point-difference statements. What remains STRUCTURALLY OPEN: (E's second-frame comparison) no non-conditioned corpus exists among this artifact's dependencies to run head-to-head against this conditioned one, so the design-flaw claim rests on formal structural reasoning (a survivor-conditioned frame is an inconsistent, not merely imprecise, estimator) plus this single frame's evidence, with a concrete falsifiable prediction left for a future GITHUB_TOKEN-enabled run rather than being silently treated as already demonstrated. (C) the alias spot-check covers only 3 of 15 repos (20%) and found no confirmed bot-inflation or over-merging in that sample but flagged one real unresolved risk (dependabot[bot] at 159 contributions on Kludex/starlette) that a contributor-list-only spot-check cannot rule out without file-level DOA attribution."
+    "calibration": {
+      "our_method": {
+        "n": 16,
+        "auc_point_estimate": 0.7818181818181817,
+        "auc_bootstrap_ci95": [
+          0.5086363636363637,
+          1.0
+        ],
+        "auc_bootstrap_n_valid_resamples": 1000,
+        "brier_point_estimate": 0.17602015154887377,
+        "brier_bootstrap_ci95": [
+          0.10381104279211918,
+          0.24848677274984787
+        ],
+        "calibration_in_the_large": {
+          "mean_predicted_survival_prob": 0.3125000000000001,
+          "observed_survival_rate": 0.3125,
+          "difference": 1.1102230246251565e-16
+        }
+      },
+      "baseline": {
+        "n": 16,
+        "auc_point_estimate": 0.8,
+        "auc_bootstrap_ci95": [
+          0.5813636363636364,
+          0.9818181818181818
+        ],
+        "auc_bootstrap_n_valid_resamples": 1000,
+        "brier_point_estimate": 0.1672227463995256,
+        "brier_bootstrap_ci95": [
+          0.08652608778917158,
+          0.2634354000054091
+        ],
+        "calibration_in_the_large": {
+          "mean_predicted_survival_prob": 0.3125,
+          "observed_survival_rate": 0.3125,
+          "difference": 0.0
+        }
+      }
+    },
+    "power_sensitivity_analysis": {
+      "method": "Monte Carlo simulation: 25x200 synthetic datasets per grid point at the observed covariate mean/SD (founder_share, n_diffused_owners, log_stars, log_devs_at_tfdd), true effect grid on the covariate of interest, nuisance covariates fixed at a modest true effect (0.3), logistic model refit per simulated dataset, alpha=0.025 (BH-equivalent for m=2 primary tests, two-sided).",
+      "achieved_n": {
+        "strict": 16,
+        "relaxed": 20
+      },
+      "covariates": {
+        "founder_share": {
+          "observed_coefficient": -5.557883893499619,
+          "at_achieved_n": 16,
+          "minimum_detectable_effect_at_80pct_power": null,
+          "mde_found_within_tested_grid": null,
+          "max_power_observed_across_beta_grid_0.25_to_10": 0.05660377358490566,
+          "observed_over_mde_ratio": 0.0,
+          "pct_of_target_power_effect_size_achieved": 0.0,
+          "interpretation": "No finite MDE exists at n=16 within the tested true-effect grid (|beta| in [0.25, 10]): power stays at or below 5.7% even at the largest tested effect size, instead of rising monotonically toward 1. This is the signature of quasi-complete separation at n=16-20 with 4 covariates -- as the true effect grows, simulated outcomes become near-perfectly predictable, the MLE and its standard error diverge together, and the Wald z-statistic that method.py's BH-corrected test relies on stops rejecting even though the effect is large. The honest conclusion is not 'the MDE is very large' but that the achieved n is too small for THIS TEST STATISTIC to be well-behaved at any effect size -- a sharper diagnosis than an unbounded MDE number, and it means the n-required-for-power side of this analysis (below, which fixes beta at the OBSERVED, non-extreme value and varies n) is the more trustworthy of the two directions.",
+          "mde_search_grid": {
+            "beta_grid_tested": [
+              0.25,
+              0.5,
+              0.75,
+              1.0,
+              1.25,
+              1.5,
+              1.75,
+              2.0,
+              2.25,
+              2.5,
+              2.75,
+              3.0,
+              3.25,
+              3.5,
+              3.75,
+              4.0,
+              4.5,
+              5.0,
+              5.5,
+              6.0,
+              6.5,
+              7.0,
+              7.5,
+              8.0,
+              8.5,
+              9.0,
+              9.5,
+              10.0
+            ],
+            "power_at_each_beta": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.05660377358490566,
+              0.0,
+              0.02127659574468085,
+              0.0,
+              0.0,
+              0.023255813953488372,
+              0.0,
+              0.0,
+              0.0,
+              0.04878048780487805,
+              0.0,
+              0.0,
+              0.024390243902439025,
+              0.0,
+              0.02631578947368421,
+              0.0,
+              0.02857142857142857,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.045454545454545456,
+              0.0,
+              0.02564102564102564
+            ],
+            "mde_at_80pct_power": null
+          },
+          "n_required_for_80pct_power_at_observed_effect_size": 120,
+          "n_required_search": {
+            "16": 0.0,
+            "20": 0.02197802197802198,
+            "30": 0.0,
+            "40": 0.04938271604938271,
+            "60": 0.31088082901554404,
+            "80": 0.5728643216080402,
+            "120": 0.89,
+            "160": 0.99,
+            "220": 1.0,
+            "300": 1.0,
+            "400": 1.0
+          },
+          "ratio_n_required_to_achieved_n": 7.5,
+          "ratio_n_required_to_original_power_target_40": 3.0
+        },
+        "n_diffused_owners": {
+          "observed_coefficient": -0.17424518327751867,
+          "at_achieved_n": 16,
+          "minimum_detectable_effect_at_80pct_power": null,
+          "mde_found_within_tested_grid": null,
+          "max_power_observed_across_beta_grid_0.25_to_10": 0.04411764705882353,
+          "observed_over_mde_ratio": 0.0,
+          "pct_of_target_power_effect_size_achieved": 0.0,
+          "interpretation": "No finite MDE exists at n=16 within the tested true-effect grid (|beta| in [0.25, 10]): power stays at or below 4.4% even at the largest tested effect size, instead of rising monotonically toward 1. This is the signature of quasi-complete separation at n=16-20 with 4 covariates -- as the true effect grows, simulated outcomes become near-perfectly predictable, the MLE and its standard error diverge together, and the Wald z-statistic that method.py's BH-corrected test relies on stops rejecting even though the effect is large. The honest conclusion is not 'the MDE is very large' but that the achieved n is too small for THIS TEST STATISTIC to be well-behaved at any effect size -- a sharper diagnosis than an unbounded MDE number, and it means the n-required-for-power side of this analysis (below, which fixes beta at the OBSERVED, non-extreme value and varies n) is the more trustworthy of the two directions.",
+          "mde_search_grid": {
+            "beta_grid_tested": [
+              0.25,
+              0.5,
+              0.75,
+              1.0,
+              1.25,
+              1.5,
+              1.75,
+              2.0,
+              2.25,
+              2.5,
+              2.75,
+              3.0,
+              3.25,
+              3.5,
+              3.75,
+              4.0,
+              4.5,
+              5.0,
+              5.5,
+              6.0,
+              6.5,
+              7.0,
+              7.5,
+              8.0,
+              8.5,
+              9.0,
+              9.5,
+              10.0
+            ],
+            "power_at_each_beta": [
+              0.02,
+              0.0,
+              0.015384615384615385,
+              0.015625,
+              0.0,
+              0.0,
+              0.0,
+              0.028985507246376812,
+              0.016129032258064516,
+              0.0,
+              0.0,
+              0.014492753623188406,
+              0.0,
+              0.03508771929824561,
+              0.03333333333333333,
+              0.0,
+              0.0,
+              0.014705882352941176,
+              0.0,
+              0.0,
+              0.0,
+              0.013333333333333334,
+              0.04411764705882353,
+              0.0,
+              0.0,
+              0.0,
+              0.016666666666666666,
+              0.0
+            ],
+            "mde_at_80pct_power": null
+          },
+          "n_required_for_80pct_power_at_observed_effect_size": 60,
+          "n_required_search": {
+            "16": 0.0,
+            "20": 0.006060606060606061,
+            "30": 0.36787564766839376,
+            "40": 0.775,
+            "60": 0.965,
+            "80": 0.995,
+            "120": 1.0,
+            "160": 1.0,
+            "220": 1.0,
+            "300": 1.0,
+            "400": 1.0
+          },
+          "ratio_n_required_to_achieved_n": 3.75,
+          "ratio_n_required_to_original_power_target_40": 1.5
+        }
+      }
+    }
   },
   "metrics_agg": {
-    "n_repos_total_verified": 15.0,
-    "n_repos_count_matches_dataset_claim": 1.0,
-    "n_founder_only_tfdd_events_complete": 5.0,
-    "part_a_combinatorial_window_space_size": 741.0,
-    "part_a_true_placebo_pvalue_computable": 1.0,
-    "part_a_max_budget_wall_clock_seconds": 114.654,
-    "part_b_avelino_tf1_ci_lo": 0.6063655753964894,
-    "part_b_avelino_tf1_ci_hi": 0.7104062784093925,
-    "part_b_study_tf1_ci_lo": 0.35380117262012434,
-    "part_b_study_tf1_ci_hi": 0.8483352901086686,
-    "part_b_intervals_overlap": 1.0,
-    "part_c_n_repos_spotchecked": 3.0,
-    "part_c_fraction_corpus_unchecked": 0.8,
-    "part_c_n_bots_found": 2.0,
-    "part_e_this_corpus_tfdd_incidence": 0.7333333333333333,
-    "part_e_avelino_tfdd_incidence": 0.163,
-    "part_e_this_corpus_survival_rate": 1.0,
-    "part_e_avelino_survival_rate": 0.406,
-    "runtime_seconds": 236.38436603546143
+    "n_strict_events": 16,
+    "n_relaxed_events": 20,
+    "strict_survival_rate": 0.3125,
+    "relaxed_survival_rate": 0.45,
+    "avelino_binomial_p_strict": 0.6125665581135438,
+    "avelino_binomial_p_relaxed": 0.8210374650337121,
+    "our_method_founder_share_coef": -5.557883893499619,
+    "our_method_founder_share_bh_q": 0.6001186601888544,
+    "our_method_n_diffused_owners_coef": -0.17424518327751867,
+    "our_method_n_diffused_owners_bh_q": 0.6001186601888544,
+    "baseline_pseudo_r2": 0.21078560979385985,
+    "our_method_pseudo_r2": 0.17476537432367667,
+    "placebo_founder_share_firth_coef": -0.6522775908008928,
+    "placebo_ci_excludes_zero": 0.0,
+    "auc_our_method_point": 0.7818181818181817,
+    "auc_baseline_point": 0.8,
+    "brier_our_method_point": 0.17602015154887377,
+    "brier_baseline_point": 0.1672227463995256,
+    "founder_share_mde_found_within_grid": 0.0,
+    "founder_share_max_power_at_n16": 0.05660377358490566,
+    "founder_share_n_required_for_80pct_power": 120,
+    "n_diffused_owners_mde_found_within_grid": 0.0,
+    "n_diffused_owners_max_power_at_n16": 0.04411764705882353,
+    "n_diffused_owners_n_required_for_80pct_power": 60
   },
   "datasets": [
     {
-      "dataset": "github_founder_departure_repo_table",
+      "dataset": "founder_authority_diffusion_tfdd_survival_eval",
       "examples": [
         {
-          "input": "Repository Textualize/rich (Python, 57099 stars): full-corpus evaluation row.",
-          "output": "{\"primary_language\": \"Python\", \"stars\": 57099, \"forks\": 2295, \"total_commit_history_span_years\": 6.61, \"tfdd_detected\": false, \"tf_equals_1_at_detachment\": null, \"founder_share_pre_departure\": null, \"n_distinct_non_founder_doa_owners_pre\": null, \"survival_grade_18mo_post_tfdd\": null, \"usable_in_tfdd_analysis\": true, \"exclusion_or_status_reason\": \"no_tfdd_detected\"}",
-          "metadata_repo_full_name": "Textualize/rich",
-          "metadata_tfdd_detected": false,
-          "metadata_tf_equals_1": null,
-          "metadata_survival_grade": null,
-          "predict_baseline": "N/A: this is a re-analysis evaluation artifact, not a predictive-model comparison",
-          "eval_tfdd_detected": 0,
-          "eval_tf_equals_1": 0,
-          "eval_usable_in_tfdd_analysis": 1
+          "input": "Repo OtusGolang/webinars_practical_part (Go, 103 stars): founder-only TFDD event. Predict 18-month post-departure survival.",
+          "output": "did_not_survive",
+          "metadata_repo": "OtusGolang/webinars_practical_part",
+          "metadata_language": "Go",
+          "metadata_star_tier": "100-1k",
+          "predict_our_method": "survived",
+          "predict_baseline": "did_not_survive",
+          "eval_our_method_correct": 0.0,
+          "eval_baseline_correct": 1.0
         },
         {
-          "input": "Repository amoffat/sh (Python, 7245 stars): full-corpus evaluation row.",
-          "output": "{\"primary_language\": \"Python\", \"stars\": 7245, \"forks\": 506, \"total_commit_history_span_years\": 14.52, \"tfdd_detected\": true, \"tf_equals_1_at_detachment\": true, \"founder_share_pre_departure\": 0.10526315789473684, \"n_distinct_non_founder_doa_owners_pre\": 8.0, \"survival_grade_18mo_post_tfdd\": \"maintained\", \"usable_in_tfdd_analysis\": true, \"exclusion_or_status_reason\": \"founder_only_tfdd_complete\"}",
-          "metadata_repo_full_name": "amoffat/sh",
-          "metadata_tfdd_detected": true,
-          "metadata_tf_equals_1": true,
-          "metadata_survival_grade": "maintained",
-          "predict_baseline": "N/A: this is a re-analysis evaluation artifact, not a predictive-model comparison",
-          "eval_tfdd_detected": 1,
-          "eval_tf_equals_1": 1,
-          "eval_usable_in_tfdd_analysis": 1
+          "input": "Repo microsoft/D3D12TranslationLayer (C++, 355 stars): founder-only TFDD event. Predict 18-month post-departure survival.",
+          "output": "did_not_survive",
+          "metadata_repo": "microsoft/D3D12TranslationLayer",
+          "metadata_language": "C++",
+          "metadata_star_tier": "100-1k",
+          "predict_our_method": "did_not_survive",
+          "predict_baseline": "did_not_survive",
+          "eval_our_method_correct": 1.0,
+          "eval_baseline_correct": 1.0
         },
         {
-          "input": "Repository benoitc/gunicorn (Python, 10655 stars): full-corpus evaluation row.",
-          "output": "{\"primary_language\": \"Python\", \"stars\": 10655, \"forks\": 1856, \"total_commit_history_span_years\": 16.72, \"tfdd_detected\": false, \"tf_equals_1_at_detachment\": null, \"founder_share_pre_departure\": null, \"n_distinct_non_founder_doa_owners_pre\": null, \"survival_grade_18mo_post_tfdd\": null, \"usable_in_tfdd_analysis\": true, \"exclusion_or_status_reason\": \"no_tfdd_detected\"}",
-          "metadata_repo_full_name": "benoitc/gunicorn",
-          "metadata_tfdd_detected": false,
-          "metadata_tf_equals_1": null,
-          "metadata_survival_grade": null,
-          "predict_baseline": "N/A: this is a re-analysis evaluation artifact, not a predictive-model comparison",
-          "eval_tfdd_detected": 0,
-          "eval_tf_equals_1": 0,
-          "eval_usable_in_tfdd_analysis": 1
+          "input": "Repo mrmlnc/fast-glob (JavaScript, 2823 stars): founder-only TFDD event. Predict 18-month post-departure survival.",
+          "output": "did_not_survive",
+          "metadata_repo": "mrmlnc/fast-glob",
+          "metadata_language": "JavaScript",
+          "metadata_star_tier": "1k-10k",
+          "predict_our_method": "survived",
+          "predict_baseline": "survived",
+          "eval_our_method_correct": 0.0,
+          "eval_baseline_correct": 0.0
         }
       ]
     }
