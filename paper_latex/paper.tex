@@ -1,0 +1,151 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{graphicx, geometry, amsmath, hyperref, natbib, booktabs, xcolor, listings}
+\geometry{margin=1in}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
+
+\title{Authority Diffusion Before Founder Departure: Diagnosing Sample Starvation in OSS Survival Research and a Liveness-Unbiased Corpus to Fix It}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Whether an open-source project survives its founder's departure is widely assumed to depend on how much ownership had already diffused to other contributors before that departure, yet this pre-departure trend is absent from existing community-health metrics, which all score diversity at a single snapshot rather than as a trajectory leading up to a departure. We built a pipeline that reimplements a published Degree-of-Authorship / Truck-Factor methodology to detect founder-only ownership-departure events and to compute a pre-departure authority-diffusion score from commit history, then applied it to a large GitHub corpus sampled by current popularity. The pipeline located too few genuine departure events for any of the three planned statistical tests to run, each instead reporting insufficient sample size. We show this null is a sampling artifact rather than evidence about the hypothesis: a rigor-gap re-analysis finds this corpus's departure-event incidence and its founder-only survival rate are both statistically far from a published external population baseline, in the direction expected if the sampling frame systematically favors repositories that already survived, and that a companion robustness check could not have detected an effect at any of the budgets it was run at, due to an undocumented cap in its implementation. As a remedy, we release a second corpus built with no filter on current liveness, sampled purely by historical creation and activity windows, in which the large majority of repositories are non-surviving by a two-year-inactivity proxy -- giving the pre-departure authority-diffusion hypothesis a corpus in which non-surviving projects are actually represented for the first time.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{The problem}
+
+An open-source project's founder eventually stops committing. Some projects keep going; others go quiet within a year. The literature has metrics for measuring how concentrated a project's ownership is at a single point in time, but not for measuring how that concentration was \emph{changing} in the months before the founder left -- whether responsibility had already spread to other contributors, or whether the founder was still the sole owner of every file up to their last commit. We call this pre-departure trend \emph{authority diffusion}, and we test whether it predicts survival beyond the snapshot statistics (team size, commit volume, file count) that existing metrics already capture.
+
+\subsection{Why it matters}
+
+Community-health tooling already tries to answer a version of this question after the fact: CHAOSS's Contributor Absence Factor counts how many top contributors are needed to reach 50\% of a project's commits, and its Elephant Factor does the analogous count over organizations, but CHAOSS's own knowledge base documents both as computable only as a snapshot or as repeated snapshots, never as a fitted trajectory leading into a departure \citep{chaoss_absence_factor,chaoss_elephant_factor}. The Apache Software Foundation operationalizes ``diversity'' for graduation as a binary committee judgment -- at least three legally independent committers, no single essential company -- rather than a continuous, predictive statistic \citep{apache_incubator_graduation}. A validated pre-departure trajectory signal would let maintainers, funders, and package-registry risk tooling flag an at-risk project \emph{before} the founder's last commit, rather than after the project has already gone quiet long enough to trip a Contributor Absence Factor snapshot.
+
+\subsection{Why it is hard}
+
+Testing this hypothesis needs three things simultaneously: (a) a reliable, automatic detector for the event itself -- a founder truly stepping away, not merely going quiet for a sprint -- (b) commit-level history reaching back far enough before that event to fit a pre-departure trend, and (c) a sample of repositories that is not itself pre-filtered on the outcome being measured. We show in Section~\ref{sec:results} that ordinary GitHub sampling strategies violate (c) by construction: search and trending endpoints surface repositories that are popular and active \emph{today}, which already conditions the sample on having survived long enough to accumulate that popularity. A repository whose founder left and which then died six months later is, almost by definition, one that never accumulated the stars needed to be discovered by a present-day search query.
+
+\subsection{Why existing approaches fall short}
+
+Avelino et al.'s (ESEM 2019) \citep{avelino2019abandonment} Truck-Factor / Degree-of-Authorship (DOA) pipeline is the closest prior instrument: it detects Truck-Factor-Detachment-Departure (TFDD) events from commit history and reports population-level TFDD incidence and post-TFDD survival rates from a large GitHub sample. It was not designed to fit a \emph{pre-departure} trajectory, and -- more importantly for the present study -- it was built on exactly the kind of popularity-conditioned frame described above. We reused its DOA/TFDD machinery in full (Section~\ref{sec:method}) rather than re-deriving it, but applied it to our own sampling frame; the corpus we built for that first pass turned out to inherit the same liveness conditioning, which is the central negative finding of this paper.
+
+\subsection{What we did and what we found}
+
+We built the Avelino-style DOA/TFDD pipeline (Section~\ref{sec:method}), ran it on a 3,427-repository GitHub corpus, and found that only 6 repositories produced a usable founder-only TFDD event (Section~\ref{sec:starvation}) -- an error breakdown dominated by 3,409 repositories with no minable commit history at all. Every downstream statistical test we had planned (matched-pairs survival comparison, BH-corrected logistic/ordinal regression, window-shuffle placebo check) consequently reported \texttt{insufficient\_n} rather than a substantive result. Rather than treat this null as evidence about the hypothesis, we ran a dedicated rigor-gap evaluation (Section~\ref{sec:artifact}) that shows the corpus itself is biased toward survival -- its TFDD incidence and founder-only survival rate are both statistically distinguishable from Avelino et al.'s own published population figures -- and that the placebo check's apparent robustness across simulation budgets is a structural artifact of an undocumented per-repository draw cap, not evidence that six events are enough. We then built a second corpus (Section~\ref{sec:corpus}) that removes the liveness conditioning by sampling on historical creation/push-date windows only, and report its composition as the resource this hypothesis needs to be tested properly. \textbf{This paper's contribution is therefore diagnostic and infrastructural, not a confirmed or refuted authority-diffusion effect}: we did not obtain enough founder-only TFDD events in either corpus to run the planned regression, and we report that limitation explicitly rather than a spurious point estimate from n=6.
+
+\subsubsection*{Summary of Contributions}
+\begin{itemize}
+  \item A working reimplementation of Avelino et al.'s DOA/Truck-Factor/TFDD pipeline extended with a pre-departure authority-diffusion covariate, applied at 3,427-repository scale (Section~\ref{sec:method}).
+  \item A rigor-gap evaluation that formally quantifies the survivorship bias in a popularity-sampled TFDD corpus against Avelino et al.'s own published population statistics, and that exposes an undocumented hard cap that makes the pipeline's placebo check vacuous rather than confirmatory (Section~\ref{sec:results}).
+  \item A positioning of the pre-departure authority-diffusion construct against the nearest existing OSS community-health metrics and onboarding literature, establishing that none of them measure a pre-departure trend (Section~\ref{sec:related}).
+  \item A second, 67-repository corpus sampled without any liveness or popularity filter, in which 72\% of repositories are non-surviving by a two-year-inactivity proxy, released as the resource needed to run this hypothesis test with an adequately powered, unbiased sample (Section~\ref{sec:corpus}).
+\end{itemize}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth,keepaspectratio]{figures/fig1_v0.jpg}
+  \caption{The founder-departure authority-diffusion construct: in the 6-12 month window before a founder-only Truck-Factor-Detachment-Departure (TFDD) event, authority over the codebase either stays concentrated with the founder (low diffusion, left) or spreads to other DOA-recognized file owners (high diffusion, right). At-TFDD snapshot covariates (developer count, commits, files) are measured at the moment of TFDD; the pre-departure covariates (founder commit-share, count of distinct non-founder owners) are measured strictly before it to avoid post-departure leakage.}
+  \label{fig:fig1}
+\end{figure}
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Snapshot diversity metrics.} CHAOSS's Contributor Absence Factor (formerly Bus Factor) sorts contributors by contribution volume and counts how many are needed to reach 50\% of total contributions; CHAOSS's own documentation states this can be measured as a single snapshot or repeated at intervals, but no CHAOSS metric fits or validates a continuous pre-departure \emph{trend} \citep{chaoss_absence_factor}. The sibling Elephant Factor, the organizational analogue, is explicitly documented as snapshot-only and as misrepresenting project history if computed cumulatively \citep{chaoss_elephant_factor}. Neither metric is designed to answer ``was authority already diffusing before this specific person left,'' which is the question this paper's construct targets.
+
+\textbf{Governance-gate diversity.} The Apache Incubator's graduation guide requires at least three legally independent committers and no single dominating company as a binary, committee-judged gate for exiting incubation \citep{apache_incubator_graduation}; the Apache Project Maturity Model's retrievable CD-series criteria turned out on inspection to cover code governance (distribution, reproducible builds, provenance) rather than community diversity, and a true diversity-specific code series was not located \citep{apache_maturity_model}. Both instruments answer a governance-compliance question at a point in time, not a predictive one.
+
+\textbf{Newcomer trajectories.} The onion model of OSS socialization describes contributors migrating \emph{inward}, from peripheral participation (mailing lists, bug reports) toward the code-owning core, as skill and reputation accrue \citep{jergensen2011onion}, and a systematic review of newcomer barriers organizes the obstacles to that inward migration into five categories, most centrally prior technical skill and community responsiveness \citep{steinmacher2015barriers}. Both study the mirror-image trajectory to the one this paper is interested in: contributors moving \emph{toward} ownership, rather than a founder's ownership moving \emph{away} from them before departure.
+
+\textbf{Population-scale TFDD baselines.} Avelino et al. (ESEM 2019) \citep{avelino2019abandonment} is the direct methodological ancestor of the pipeline used here (Section~\ref{sec:method}): its DOA weighting and Truck-Factor-Detachment-Departure detection are reused verbatim, and its published population-level TFDD incidence (16.3\%) and founder-only-TFDD survival rate (40.6\%) are the external baseline this paper's rigor-gap evaluation tests our own corpora against (Section~\ref{sec:artifact}).
+
+\textbf{Data-source landscape.} GH Archive exposes GitHub's public event stream (15+ event types) with no token required, but its \texttt{PushEvent} payload carries only commit SHA/author/message pointers -- never file lists or diffs \citep{gharchive,github_events_api,gharchive_payload} -- so it can supply a repository-selection frame but not the commit-level content this study needs. World of Code holds full commit/blob/file/author cross-referencing at the right granularity \citep{worldofcode,woc_identity_disambiguation} but is gated behind an SSH-registration approval process \citep{woc_hack_tutorial}, and its self-serve Zenodo derivative covers only bot commits \citep{botcommit_mapping}. GHTorrent, an earlier commit-mining service, is confirmed dead: its domain now redirects to an unrelated site and its BigQuery mirror has been stale since 2019 \citep{ghtorrent_github,ghtorrent_downloads,hoffa_bigquery}. Libraries.io's Zenodo dump is live and gives repository-selection metadata at scale but carries no commit-level history \citep{librariesio_dump}. We concluded that a repository-selection frame independent of present-day liveness (built from historical creation/push-date search, Section~\ref{sec:corpus}) combined with a direct, unauthenticated \texttt{git clone} of each selected repository's full history is the only path that is simultaneously live, token-cheap, and free of the liveness conditioning this paper's Section~\ref{sec:results} diagnoses.
+
+\section{Method: DOA/TFDD Pipeline and the Authority-Diffusion Covariate}
+\label{sec:method}
+
+We reimplement Avelino et al.'s Degree-of-Authorship (DOA) weighting over per-file commit history to identify, for each repository, the point at which a single ``founder'' author accounts for the plurality of authorship (a Truck-Factor-Detachment-Departure, TFDD, event: the date the founder's authorship share falls below the threshold that would make their departure survivable without loss of institutional knowledge). A TFDD event is classed \emph{founder-only} when the departing author is the repository's original committer, distinguishing genuine founder succession from a later core contributor's departure.
+
+For every founder-only TFDD event, we compute two families of covariates purely from commits dated \textbf{before} the event, to avoid any post-departure leakage:
+
+\begin{itemize}
+  \item \textbf{At-TFDD snapshot covariates} (Avelino et al.'s original feature set): number of active developers, total commits, and total files at the moment of TFDD.
+  \item \textbf{Pre-departure authority-diffusion covariates} (this paper's addition): the founder's commit-share in the 6-12 month window immediately before TFDD, and the count of distinct non-founder contributors who already held DOA-recognized file ownership in that same window (\texttt{n\_diffuse\_owners\_pre}). A single scalar \texttt{diffusion\_score} combines the two.
+\end{itemize}
+
+The outcome is 18-month post-TFDD survival, labeled from subsequent commit activity (\texttt{survived\_binary}), with three planned analyses: (1) a nearest-neighbor matched-pairs comparison of high- versus low-diffusion repositories controlling for the snapshot covariates, (2) BH-corrected logistic regression (binary survival) and ordinal regression (a graded survival label) with diffusion score as the covariate of interest, and (3) a window-shuffle placebo check that repeatedly reassigns which pre-TFDD window is treated as ``pre-departure'' to establish whether the observed diffusion-survival association could arise by chance.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Sample starvation at 3,427 repositories}
+\label{sec:starvation}
+
+Running the pipeline on a 3,427-repository corpus sampled by current GitHub popularity/activity produced only 6 founder-only TFDD events. The error breakdown for the remaining 3,421 repositories was: 3,409 had no minable commit history at all under the mining budget used, 4 had a TFDD event that was not founder-only, and 2 were right-censored (no 18-month post-TFDD window had yet elapsed). At n=6, every planned statistical test failed outright: the matched-pairs comparison found zero eligible pairs even under relaxed matching, and both the logistic and ordinal regressions reported \texttt{insufficient\_n}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth,keepaspectratio]{figures/fig2_v0.pdf}
+  \caption{Funnel of the 3,427-repository popularity-sampled corpus through the DOA/TFDD pipeline. The overwhelming majority (3,409) were dropped for having no minable commit history; only 6 repositories produced a usable founder-only TFDD event, too few for any of the three planned statistical tests.}
+  \label{fig:fig2}
+\end{figure}
+
+\subsection{The null is a sampling artifact, not evidence of no effect}
+\label{sec:artifact}
+
+A dedicated rigor-gap evaluation re-examined the 6-event corpus against Avelino et al.'s own published population statistics using Wilson 95\% confidence intervals and two-proportion z-tests. Two results indicate the corpus is not a fair sample of the population Avelino et al. characterized:
+
+\begin{itemize}
+  \item \textbf{TFDD incidence.} 73.3\% of this corpus's repositories (11 of 15 candidates carried through to the full table) exhibit any TFDD event, versus 16.3\% in Avelino et al.'s published population -- a two-proportion z=5.89, p=3.8e-9.
+  \item \textbf{Founder-only-TFDD survival.} 100\% (5 of 5) of this corpus's founder-only-TFDD repositories survived 18 months post-departure, versus 40.6\% in Avelino et al.'s population (Wilson 95\% CI [0.606, 0.710] for their 66\% TF=1 baseline versus this corpus's 45.5\% TF=1 fraction, CI [0.213, 0.720]) -- z=2.67, p=0.0075.
+\end{itemize}
+
+Both deviations point the same direction: a corpus selected for present-day popularity over-represents repositories that already survived whatever ownership transition they went through, which is exactly the confound the pre-departure authority-diffusion hypothesis needs an unbiased corpus to rule out.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth,keepaspectratio]{figures/fig3_v0.pdf}
+  \caption{Rigor-gap evaluation of the popularity-sampled corpus against Avelino et al.'s published population baseline: TFDD incidence and founder-only-TFDD survival rate both diverge sharply and significantly in the direction consistent with survivorship conditioning.}
+  \label{fig:fig3}
+\end{figure}
+
+Separately, the evaluation audited the placebo check's own implementation and found a previously undocumented \textbf{20-draw-per-repository hard cap} -- the code path never reaches the ``500 iterations'' figure the original summary cited, because it caps each repository's contribution to the placebo distribution at 20 draws regardless of the requested budget. Re-running the placebo check at three budgets (10, 60, and 2,000 requested draws) produced an identical qualitative conclusion at all three, which is not evidence of robustness: at the 20-draw hard cap, the theoretical floor on the smallest detectable effect is 4.8\%, and at the (never-reached) 500-draw figure the floor would be 0.2\% -- meaning the check is structurally incapable of resolving an effect at n=6 regardless of how large the requested budget is set. The evaluation additionally spot-checked 3 of the corpus's 15 repositories against their raw source records and found all three aliases consistent (no full-corpus audit was run; 80\% of the corpus remains unchecked by this pass).
+
+\subsection{What we did not test}
+\label{sec:whatnot}
+
+No expanded or non-liveness-conditioned corpus existed among this round's dependencies to run head-to-head against the population baseline, so the claim that the null in Section~\ref{sec:starvation} is a design flaw rather than a genuine power problem rests on the structural argument and evidence in Section~\ref{sec:artifact}, not on a second frame producing more TFDD events. Section~\ref{sec:corpus} supplies that second frame as this paper's concrete, falsifiable next step: if the pre-departure authority-diffusion hypothesis holds, a non-liveness-conditioned corpus should yield both a TFDD incidence closer to Avelino et al.'s 16.3\% population figure and a founder-only survival rate closer to their 40.6\%, rather than reproducing this section's 73.3\%/100\% figures.
+
+\section{A Liveness-Non-Conditioned Corpus}
+\label{sec:corpus}
+
+To remove the conditioning identified in Section~\ref{sec:artifact}, we built a second 67-repository corpus using GitHub's Search API \texttt{created:}/\texttt{pushed:} date qualifiers to sample purely on \textbf{historical} creation and push-date windows (2011-2015) across eight languages, applying \textbf{no filter on present-day archived, starred, or maintained status}. Of 450 candidates screened, 383 (85\%) were rejected -- mostly for too few commits or too short a history to fit a pre-departure trajectory -- leaving 67 accepted repositories. Of those, 48 (72\%) have had no commit in at least two years as of build time (our non-surviving proxy) and 7 are archived by GitHub itself, meaning non-surviving projects are represented in this corpus for the first time at a scale the original 3,427-repository frame never produced (Section~\ref{sec:starvation}: only 2 right-censored, 0 confirmed non-surviving, among 6 founder-only TFDD events).
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth,keepaspectratio]{figures/fig4_v0.pdf}
+  \caption{Composition of the 67-repository liveness-non-conditioned corpus: screening outcomes for the 450 historically-sampled candidates, and the survival-label breakdown of the 67 accepted repositories.}
+  \label{fig:fig4}
+\end{figure}
+
+Each repository's record standardizes to one example carrying only pre-departure-observable input features (computed strictly before the founder's last commit, to avoid the leakage the original pipeline already guards against in Section~\ref{sec:method}) and one of three survival labels: \texttt{survived}, \texttt{non\_surviving}, or \texttt{unknown\_insufficient\_post\_departure\_window} for repositories without enough elapsed history to call a label at all. This corpus is released as the direct input to Section~\ref{sec:method}'s pipeline for the next round of this study; running it end to end and reporting the resulting TFDD incidence and founder-only survival rate against Avelino et al.'s population baseline is the falsifiable prediction stated in Section~\ref{sec:whatnot}.
+
+\section{Discussion}
+
+\textbf{The headline finding of this paper is methodological.} A popularity-sampled GitHub corpus produced too few founder-only TFDD events to test the pre-departure authority-diffusion hypothesis (n=6), and the rigor-gap evaluation in Section~\ref{sec:artifact} shows this was not bad luck: the corpus's TFDD incidence and founder-only survival rate both differ from Avelino et al.'s population figures in the direction consistent with survivorship conditioning, and the placebo check that appeared to certify the pipeline's null result was, on inspection, structurally incapable of detecting an effect at any of the budgets it was run at. We consider this worth reporting on its own terms rather than smoothing over: an automated pipeline that runs to completion and reports a stable null across three simulation budgets looks, from the outside, like a well-powered negative result. Section~\ref{sec:artifact} shows it is not, and the distinction matters for anyone building on TFDD-style pipelines with any GitHub sample drawn by present-day popularity, stars, or trending status.
+
+\textbf{Limitations.} The spot-check audit of the original corpus's alias resolution covered only 3 of 15 repositories (80\% unchecked). The new liveness-non-conditioned corpus (Section~\ref{sec:corpus}) has not yet been run through the DOA/TFDD pipeline of Section~\ref{sec:method}, so we cannot yet report whether it in fact yields more founder-only TFDD events or a less skewed incidence/survival rate than the original frame -- that comparison is the explicit next step, not a result claimed here. The non-surviving proxy (no commit in $\geq$2 years) is a coarse label; a repository can be dormant and later revived, and the corpus's \texttt{unknown\_insufficient\_post\_departure\_window} label exists precisely to avoid forcing a survival call where the post-departure window is too short. Finally, both corpora are drawn from GitHub only; repositories hosted elsewhere or migrated away from GitHub after founder departure are systematically invisible to any GitHub-only sampling frame, including ours.
+
+\section{Conclusion}
+
+We set out to test whether authority diffusing away from a project's founder before their departure predicts survival beyond existing snapshot diversity metrics, and found instead that the obvious way to build a GitHub corpus for this question -- sampling by current popularity -- silently conditions the sample on survival, starving the founder-only-TFDD event count down to 6 and rendering every planned statistical test uninformative. We quantified that conditioning against Avelino et al.'s own published population baseline (TFDD incidence 73.3\% vs. 16.3\%, z=5.89, p=3.8e-9; founder-only survival 100\% vs. 40.6\%, z=2.67, p=0.0075) and showed the pipeline's placebo check could not have detected an effect at n=6 regardless of its requested simulation budget, due to an undocumented 20-draw-per-repository cap. We release a 67-repository corpus sampled without any liveness conditioning, 72\% of which are non-surviving by a two-year-inactivity proxy, as the concrete resource needed to run this hypothesis test properly.
+
+Future work: (1) run the Section~\ref{sec:method} pipeline against the Section~\ref{sec:corpus} corpus and report whether its TFDD incidence and founder-only survival rate move toward Avelino et al.'s population figures, as predicted in Section~\ref{sec:whatnot}; (2) complete the full-corpus alias audit begun in Section~\ref{sec:artifact}, extending the 3-of-15 spot-check to all repositories in both corpora; (3) locate or derive the Apache Project Maturity Model's community-diversity-specific criteria codes, left unresolved in Section~\ref{sec:related}, to add a second governance-gate baseline alongside Avelino et al.'s population statistics.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

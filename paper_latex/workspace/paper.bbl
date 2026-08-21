@@ -1,0 +1,114 @@
+\begin{thebibliography}{18}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[bot()]{botcommit_mapping}
+A mapping between bot commit, projects, files, and blobs.
+\newblock Zenodo. \url{https://zenodo.org/records/3699665}.
+
+\bibitem[gha({\natexlab{a}})]{gharchive}
+{GH Archive}.
+\newblock \url{https://www.gharchive.org/}, {\natexlab{a}}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[gha({\natexlab{b}})]{gharchive_payload}
+{GH Archive} payload field documentation.
+\newblock \url{https://www.gharchive.org/}, {\natexlab{b}}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[ght({\natexlab{a}})]{ghtorrent_downloads}
+{GHTorrent} downloads page, {\natexlab{a}}.
+\newblock Dead domain. \url{https://ghtorrent.org/downloads.html}.
+
+\bibitem[ght({\natexlab{b}})]{ghtorrent_github}
+ghtorrent/ghtorrent.org.
+\newblock \url{https://github.com/ghtorrent/ghtorrent.org}, {\natexlab{b}}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[lib()]{librariesio_dump}
+Libraries.io open source repository and dependency metadata.
+\newblock Zenodo. \url{https://zenodo.org/records/3626071}.
+
+\bibitem[woc()]{woc_hack_tutorial}
+woc-hack/tutorial.
+\newblock \url{https://github.com/woc-hack/tutorial}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[wor()]{worldofcode}
+World of code.
+\newblock \url{https://worldofcode.org/docs/}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[woc(2026)]{woc_identity_disambiguation}
+Scaling author identity disambiguation to the world of code: A methodology.
+\newblock arXiv:2607.06920. \url{https://arxiv.org/abs/2607.06920}, 2026.
+
+\bibitem[{Apache Incubator}()]{apache_incubator_graduation}
+{Apache Incubator}.
+\newblock Guide to successful graduation.
+\newblock \url{https://incubator.apache.org/guides/graduation.html}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[{Apache Software Foundation}()]{apache_maturity_model}
+{Apache Software Foundation}.
+\newblock Apache project maturity model.
+\newblock
+  \url{https://community.apache.org/apache-way/apache-project-maturity-model.html}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[Avelino et~al.(2019)Avelino, Constantinou, Valente, and
+  Serebrenik]{avelino2019abandonment}
+Gu\'{i}lherme Avelino, Eleni Constantinou, Marco~Tulio Valente, and Alexander
+  Serebrenik.
+\newblock On the abandonment and survival of open source projects: An empirical
+  investigation.
+\newblock In \emph{2019 ACM/IEEE International Symposium on Empirical Software
+  Engineering and Measurement (ESEM)}, 2019.
+
+\bibitem[{CHAOSS}({\natexlab{a}})]{chaoss_absence_factor}
+{CHAOSS}.
+\newblock Metric: Contributor absence factor.
+\newblock
+  \url{https://www.chaoss.community/kb/metric-contributor-absence-factor/},
+  {\natexlab{a}}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[{CHAOSS}({\natexlab{b}})]{chaoss_elephant_factor}
+{CHAOSS}.
+\newblock Metric: Elephant factor.
+\newblock \url{https://www.chaoss.community/kb/metric-elephant-factor/},
+  {\natexlab{b}}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[{GitHub Docs}()]{github_events_api}
+{GitHub Docs}.
+\newblock {REST API} endpoints for events.
+\newblock \url{https://docs.github.com/en/rest/activity/events}.
+\newblock Accessed 2026-08-21.
+
+\bibitem[Hoffa()]{hoffa_bigquery}
+Felipe Hoffa.
+\newblock Analyzing {GitHub} with {BigQuery} and other tools.
+\newblock \url{https://github.com/fhoffa/analyzing_github}.
+
+\bibitem[Jergensen et~al.(2011)Jergensen, Sarma, and
+  Wagstrom]{jergensen2011onion}
+Christian Jergensen, Anita Sarma, and Patrick Wagstrom.
+\newblock The onion patch: Migration in open source ecosystems.
+\newblock In \emph{Proceedings of the 7th International Symposium on Open
+  Collaboration (OpenSym)}, 2011.
+\newblock \doi{10.1145/2025113.2025127}.
+
+\bibitem[Steinmacher et~al.(2015)Steinmacher, Silva, Gerosa, and
+  Redmiles]{steinmacher2015barriers}
+Igor Steinmacher, Marco Aurelio~Graciotto Silva, Marco~Aurelio Gerosa, and
+  David~F. Redmiles.
+\newblock A systematic literature review on the barriers faced by newcomers to
+  open source software projects.
+\newblock \emph{Information and Software Technology}, 59:\penalty0 67--85,
+  2015.
+
+\end{thebibliography}

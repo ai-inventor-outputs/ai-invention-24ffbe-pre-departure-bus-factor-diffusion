@@ -1,0 +1,32 @@
+{
+  "type": "panel",
+  "panel_labels": true,
+  "title": "The New Corpus Actually Contains Dead Projects",
+  "aspect": "16:9",
+  "width_in": 12,
+  "ncols": 2,
+  "panels": [
+    {
+      "type": "funnel",
+      "title": "Screening funnel",
+      "xlabel": "Repositories (count)",
+      "categories": [
+        "Candidates screened",
+        "Accepted into corpus"
+      ],
+      "series": [
+        {"values": [450, 67]}
+      ]
+    },
+    {
+      "type": "treemap",
+      "title": "67 accepted repositories, sampled with no liveness filter",
+      "pct": true,
+      "items": [
+        {"label": "Archived by GitHub", "value": 7},
+        {"label": "Inactive ≥ 2yr, not archived", "value": 41},
+        {"label": "Active / recently maintained", "value": 19}
+      ]
+    }
+  ]
+}

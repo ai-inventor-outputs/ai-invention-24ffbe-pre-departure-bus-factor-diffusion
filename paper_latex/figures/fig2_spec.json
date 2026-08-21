@@ -1,0 +1,20 @@
+{
+  "type": "bar",
+  "title": "Where 3,427 Candidate Repositories Went",
+  "ylabel": "Number of repositories",
+  "aspect": "4:3",
+  "annotate": true,
+  "categories": [
+    "Total candidate\nrepositories",
+    "No minable\ncommit history",
+    "TFDD event not\nfounder-only",
+    "Right-censored\n(no 18-mo window)",
+    "Founder-only TFDD\nevents (usable)"
+  ],
+  "series": [
+    {
+      "label": "Repository count",
+      "values": [3427, 3409, 4, 2, 6]
+    }
+  ]
+}

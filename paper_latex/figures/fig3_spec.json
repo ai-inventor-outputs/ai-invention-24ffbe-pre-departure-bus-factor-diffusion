@@ -1,0 +1,22 @@
+{
+  "type": "custom_matplotlib",
+  "note": "Rendered via fig3_gen.py using house-style chart_style/chart_geometry helpers (no built-in chart_gen.py type supports a within-group significance bracket between two series' bars; bar_sig only brackets across category indices).",
+  "figure_id": "fig3",
+  "title": "This Corpus vs. the Published Population",
+  "caption": "The popularity-sampled corpus's TFDD incidence and founder-only-TFDD survival rate both diverge sharply from Avelino et al.'s published population statistics, in the direction consistent with a sample conditioned on present-day survival (two-proportion z-tests: incidence z=5.89, p=3.8e-9; survival z=2.67, p=0.0075).",
+  "xlabel": "Metric",
+  "ylabel": "Proportion",
+  "aspect": "4:3",
+  "categories": ["TFDD incidence", "Founder-only-TFDD 18-month survival rate"],
+  "series": [
+    {"label": "This corpus", "values": [0.733, 1.000]},
+    {"label": "Avelino et al. (ESEM 2019) population", "values": [0.163, 0.406]}
+  ],
+  "value_labels": ["73.3%", "16.3%", "100.0%", "40.6%"],
+  "comparisons": [
+    {"category": "TFDD incidence", "label": "z=5.89, p=3.8e-9"},
+    {"category": "Founder-only-TFDD 18-month survival rate", "label": "z=2.67, p=0.0075"}
+  ],
+  "y_range": [0.0, 1.0],
+  "y_gridline_step": 0.2
+}

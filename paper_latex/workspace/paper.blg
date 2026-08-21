@@ -1,0 +1,70 @@
+This is BibTeX, Version 0.99d (TeX Live 2022/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--to sort, need author or key in gharchive
+Warning--to sort, need author or key in gharchive_payload
+Warning--to sort, need author or key in worldofcode
+Warning--to sort, need author or key in woc_identity_disambiguation
+Warning--to sort, need author or key in woc_hack_tutorial
+Warning--to sort, need author or key in botcommit_mapping
+Warning--to sort, need author or key in ghtorrent_github
+Warning--to sort, need author or key in ghtorrent_downloads
+Warning--to sort, need author or key in librariesio_dump
+Warning--empty year in botcommit_mapping
+Warning--empty year in gharchive
+Warning--empty year in gharchive_payload
+Warning--empty year in ghtorrent_downloads
+Warning--empty year in ghtorrent_github
+Warning--empty year in librariesio_dump
+Warning--empty year in woc_hack_tutorial
+Warning--empty year in worldofcode
+Warning--empty year in apache_incubator_graduation
+Warning--empty year in apache_maturity_model
+Warning--empty year in chaoss_absence_factor
+Warning--empty year in chaoss_elephant_factor
+Warning--empty year in github_events_api
+Warning--empty year in hoffa_bigquery
+You've used 18 entries,
+            2773 wiz_defined-function locations,
+            663 strings with 7390 characters,
+and the built_in function-call counts, 5532 in all, are:
+= -- 504
+> -- 168
+< -- 6
++ -- 72
+- -- 51
+* -- 351
+:= -- 701
+add.period$ -- 56
+call.type$ -- 18
+change.case$ -- 71
+chr.to.int$ -- 15
+cite$ -- 68
+duplicate$ -- 294
+empty$ -- 628
+format.name$ -- 60
+if$ -- 1244
+int.to.chr$ -- 4
+int.to.str$ -- 1
+missing$ -- 3
+newline$ -- 100
+num.names$ -- 36
+pop$ -- 279
+preamble$ -- 1
+purify$ -- 53
+quote$ -- 0
+skip$ -- 188
+stack$ -- 0
+substring$ -- 64
+swap$ -- 26
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 198
+warning$ -- 23
+while$ -- 29
+width$ -- 0
+write$ -- 220
+(There were 23 warnings)
