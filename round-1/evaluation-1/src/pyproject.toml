@@ -1,13 +1,16 @@
 [project]
-name = "founder-departure-diffusion-eval"
+name = "gen-art-evaluation-1"
 version = "0.1.0"
-requires-python = ">=3.12"
+description = "Placebo-window falsification and robustness audit for the founder-exit authority-diffusion OSS survival experiment"
+requires-python = "==3.12.*"
 dependencies = [
+    "loguru==0.7.3",
     "numpy==2.5.2",
     "pandas==3.0.5",
+    "python-dateutil==2.9.0.post0",
     "scipy==1.18.0",
-    "scikit-learn==1.9.0",
-    "statsmodels==0.14.6",
-    "loguru==0.7.3",
-    "psutil==7.2.2",
+    "six==1.17.0",
 ]
+
+[tool.uv]
+package = false
