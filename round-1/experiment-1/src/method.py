@@ -1,898 +1,925 @@
 #!/usr/bin/env python3
-"""Founder-departure authority-diffusion vs. post-TFDD survival pipeline.
+"""Founder-only Truck-Factor Development Departure (TFDD) survival study.
 
-Reimplements Avelino et al. (ESEM 2019) DOA / Truck-Factor / TFDD pipeline on a
-GitHub commit-history corpus, adds a NEW pre-departure authority-diffusion
-trajectory covariate, and tests whether it predicts 18-month post-TFDD survival
-beyond Avelino et al.'s own at-TFDD snapshot covariates (size/popularity), via
-(1) matched-pairs comparison, (2) BH-corrected logistic + ordinal regression,
-(3) a window-shuffle placebo check.
+Re-implements the DOA / Truck-Factor / TFDD / Active-Inactive pipeline of
+Avelino et al. (ESEM 2019, "The Truck Factor of Popular GitHub Applications")
+from real GitHub commit histories, detects founder-only TFDD events, and adds
+a NEW pre-departure "authority diffusion" measurement (founder commit-share
+and count of independent non-founder DOA file-owners in the 6-12 months
+before TFDD) that the published Avelino et al. pipeline does not compute.
+Tests whether this pre-departure trajectory predicts 18-month post-TFDD
+survival better than size/popularity covariates alone, via a BH-corrected
+logistic regression and a matched-pairs bootstrap risk-ratio, with a
+within-repo placebo (random-window) falsification check.
+
+Method (our contribution): pre-departure authority-diffusion trajectory
+  (founder_share, n_diffused_owners) computed in the window 12-6 months
+  before a founder-only TFDD event.
+Baseline (Avelino et al.'s own approach): snapshot size/popularity
+  covariates AT the TFDD event (devs, commits, files, stars, forks) with no
+  temporal trajectory information.
 """
 
 from __future__ import annotations
 
-import argparse
 import gc
-import glob
 import json
-import multiprocessing as mp
+import math
 import random
-import resource
+import subprocess
 import sys
 import time
-from collections import defaultdict
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from dataclasses import dataclass, field
+from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
-import psutil
+import requests
 import statsmodels.api as sm
 from loguru import logger
 from scipy import stats
-from sklearn.neighbors import NearestNeighbors
-from statsmodels.stats.multitest import multipletests
-
-try:
-    from statsmodels.miscmodels.ordinal_model import OrderedModel
-except Exception:  # pragma: no cover
-    OrderedModel = None
 
 WORKSPACE = Path(__file__).resolve().parent
+REPOS_DIR = WORKSPACE / "repos_scratch"
+LOGS_DIR = WORKSPACE / "logs"
+RESULTS_DIR = WORKSPACE / "results"
+for d in (REPOS_DIR, LOGS_DIR, RESULTS_DIR):
+    d.mkdir(parents=True, exist_ok=True)
+
 logger.remove()
 logger.add(sys.stdout, level="INFO", format="{time:HH:mm:ss}|{level:<7}|{message}")
-(WORKSPACE / "logs").mkdir(exist_ok=True)
-logger.add(WORKSPACE / "logs" / "run.log", rotation="30 MB", level="DEBUG")
+logger.add(LOGS_DIR / "run.log", rotation="30 MB", level="DEBUG")
+
+RNG_SEED = 20260821
+random.seed(RNG_SEED)
+np.random.seed(RNG_SEED)
+
+import os
+
+GITHUB_API = "https://api.github.com"
+GITHUB_TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")  # read-only search/clone use only
+HEADERS = {"Accept": "application/vnd.github+json"}
+if GITHUB_TOKEN:
+    HEADERS["Authorization"] = f"Bearer {GITHUB_TOKEN}"
 
 # ---------------------------------------------------------------------------
-# Resource limits (aii-use-hardware): container cap is 57GB, cap ourselves at
-# a conservative 20GB virtual address space budget for this CPU-bound job.
+# Config (scaled down from the plan's 240-repo target to fit unauthenticated
+# GitHub API rate limits: 10 search req/hr, 60 core req/hr -- see fallback_plan
+# item 1). We avoid all per-repo GET /repos calls entirely by reading every
+# metadata field we need straight off the /search/repositories response.
 # ---------------------------------------------------------------------------
-_avail = psutil.virtual_memory().available
-RAM_BUDGET = min(20 * 1024**3, int(_avail * 0.5))
-resource.setrlimit(resource.RLIMIT_AS, (RAM_BUDGET * 3, RAM_BUDGET * 3))
+LANGUAGES = ["Python", "JavaScript", "Go", "Java", "Ruby", "C++"]
+STAR_STRATA = ["stars:50..500", "stars:500..5000", "stars:5000..100000"]  # 3 popularity strata per language
+PER_QUERY = 15  # repos requested per (language, stratum) search call -> 6*3*15 = 270 candidates (authenticated GH_TOKEN in use, higher rate limit)
+MAX_REPO_SIZE_KB = 60_000  # exclude repos > ~60MB reported size (fallback_plan item 2, tightened after
+                            # dapr/dapr was observed to clone to 200MB+ despite passing a looser 300MB cap --
+                            # GitHub's `size` field underestimates actual .git size for some monorepos)
+MAX_CLONE_BYTES = 150_000_000  # hard cap enforced AFTER cloning starts, in case `size` metadata is stale
+MAX_COMMITS = 8000  # skip repos whose full history exceeds this -- DOA snapshotting is O(n_snapshots * n_commits)
+                     # and re-scans commits per (dev,file) pair, so very large histories are not worth the wall-clock
+MIN_AGE_DAYS = 3 * 365  # need TFDD + 18mo post-window, per our stricter requirement
+CLONE_TIMEOUT_S = 180
+GIT_LOG_TIMEOUT_S = 180
+SILENCE_THRESHOLD_DAYS = 365  # Avelino et al.'s TFDD silence threshold
+TF_COVERAGE_THRESHOLD = 0.5  # Avelino et al.'s truck-factor coverage cutoff
+POST_TFDD_WINDOW_DAYS = 548  # 18 months
+PRE_WINDOW_FAR_DAYS = 365  # 12 months before TFDD
+PRE_WINDOW_NEAR_DAYS = 180  # 6 months before TFDD
+N_BOOT = 5000
 
-NUM_CPUS = max(1, min(11, len(psutil.Process().cpu_affinity()) if hasattr(psutil.Process(), "cpu_affinity") else 8))
 
-# Fritz et al. DOA weights, as used by Avelino et al. (ESEM 2019)
-DOA_FA, DOA_LOG, DOA_AC = 3.293, 1.098, -1.017
-SILENCE_MONTHS = 12
-SURVIVAL_WINDOW_MONTHS = 18
-PRE_WINDOW_FAR_MONTHS = 12
-PRE_WINDOW_NEAR_MONTHS = 6
-N_PLACEBO_DRAWS = 500
-N_BOOTSTRAP = 10_000
-RNG_SEED = 20260820
-
-MONTH = timedelta(days=30.4375)
-
-
-def months(n: float) -> timedelta:
-    return n * MONTH
+def gh_get(url: str, params: Optional[dict] = None, retries: int = 3) -> Optional[dict]:
+    for attempt in range(retries):
+        try:
+            resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
+        except requests.RequestException as e:
+            logger.warning(f"GET {url} failed (attempt {attempt+1}): {e}")
+            time.sleep(3)
+            continue
+        if resp.status_code == 200:
+            return resp.json()
+        if resp.status_code in (403, 429):
+            remaining = resp.headers.get("X-RateLimit-Remaining")
+            reset = resp.headers.get("X-RateLimit-Reset")
+            wait = 5
+            if reset:
+                wait = max(5, min(90, int(reset) - int(time.time()) + 2))
+            logger.warning(
+                f"GET {url} rate-limited (remaining={remaining}), sleeping {wait}s"
+            )
+            time.sleep(wait)
+            continue
+        logger.warning(f"GET {url} returned {resp.status_code}: {resp.text[:200]}")
+        return None
+    return None
 
 
 # ---------------------------------------------------------------------------
-# STEP 0: data loading + alias resolution
+# STAGE 0: repo sampling via GitHub search API (metadata-only, no per-repo GET)
 # ---------------------------------------------------------------------------
+def stage0_sample_repos() -> list[dict]:
+    candidates: dict[str, dict] = {}
+    for lang in LANGUAGES:
+        for stratum in STAR_STRATA:
+            q = f"language:{lang} {stratum} archived:false"
+            logger.info(f"[stage0] search: {q}")
+            data = gh_get(
+                f"{GITHUB_API}/search/repositories",
+                params={"q": q, "sort": "updated", "order": "desc", "per_page": PER_QUERY},
+            )
+            time.sleep(2.5 if GITHUB_TOKEN else 6)  # authenticated: 30 search req/min; unauthenticated: 10/min
+            if data is None or "items" not in data:
+                logger.warning(f"[stage0] no results for query {q!r}")
+                continue
+            for item in data["items"]:
+                candidates[item["full_name"]] = item
+    logger.info(f"[stage0] {len(candidates)} unique candidate repos across {len(LANGUAGES)} languages")
+    return list(candidates.values())
 
 
-def _find_dataset_files(data_path: Optional[str]) -> list[Path]:
-    """Locate the DATASET dependency's output json(s). Robust to several
-    plausible layouts (single file, full_/mini_ split files, per-repo files
-    under a datasets/ directory)."""
-    candidates: list[Path] = []
-    if data_path:
-        p = Path(data_path)
+# ---------------------------------------------------------------------------
+# STAGE 1: filter mining artifacts using ONLY the metadata already in hand
+# (Avelino et al.'s exclusion criteria: forks, archives, insufficient history)
+# ---------------------------------------------------------------------------
+def stage1_filter(candidates: list[dict]) -> list[dict]:
+    now = datetime.now(timezone.utc)
+    filtered = []
+    reasons = Counter()
+    for repo in candidates:
+        if repo.get("fork"):
+            reasons["is_fork"] += 1
+            continue
+        if repo.get("archived"):
+            reasons["archived"] += 1
+            continue
+        if repo.get("disabled"):
+            reasons["disabled"] += 1
+            continue
+        created = datetime.fromisoformat(repo["created_at"].replace("Z", "+00:00"))
+        age_days = (now - created).days
+        if age_days < MIN_AGE_DAYS:
+            reasons["too_young"] += 1
+            continue
+        if repo.get("size", 0) > MAX_REPO_SIZE_KB:
+            reasons["too_large"] += 1
+            continue
+        pushed = datetime.fromisoformat(repo["pushed_at"].replace("Z", "+00:00"))
+        if (now - pushed).days > 4 * 365:
+            reasons["long_dead_before_study_window"] += 1
+            continue
+        filtered.append(repo)
+    logger.info(f"[stage1] {len(filtered)}/{len(candidates)} repos survive filtering; excluded={dict(reasons)}")
+    random.shuffle(filtered)
+    return filtered
+
+
+# ---------------------------------------------------------------------------
+# STAGE 2: clone bare + walk commit history via `git log --numstat`
+# (fallback_plan item 3: raw git log parsing, much faster than PyDriller for
+# repos with tens of thousands of commits, same information content)
+# ---------------------------------------------------------------------------
+RECORD_SEP = "\x1e"
+FIELD_SEP = "\x1f"
+
+
+def _dir_size_bytes(path: Path) -> int:
+    total = 0
+    for p in path.rglob("*"):
         if p.is_file():
-            return [p]
-        if p.is_dir():
-            candidates.extend(sorted(p.glob("**/*.json")))
-    if not candidates:
-        dep_root = WORKSPACE.parent / "gen_art_dataset_1"
-        patterns = [
-            "full_data_out*.json",
-            "data_out*.json",
-            "*data_out*.json",
-            "temp/datasets/**/*.json",
-        ]
-        for pat in patterns:
-            candidates.extend(sorted(dep_root.glob(pat)))
-    # de-dup, drop mini/preview variants when a full one exists
-    seen = set()
-    uniq = []
-    for c in candidates:
-        if c.resolve() not in seen and c.stat().st_size > 0:
-            seen.add(c.resolve())
-            uniq.append(c)
-    return uniq
+            try:
+                total += p.stat().st_size
+            except OSError:
+                pass
+    return total
 
 
-def _normalize_email(email: str) -> str:
-    email = (email or "").strip().lower()
-    if "@" in email:
-        local, domain = email.rsplit("@", 1)
-        local = local.split("+", 1)[0]
-        if domain == "users.noreply.github.com":
-            # e.g. 12345+login@users.noreply.github.com -> login
-            if "+" in local:
-                local = local.split("+", 1)[1]
-            return f"github:{local}"
-        return f"{local}@{domain}"
-    return email
+def clone_repo(clone_url: str, dest: Path) -> bool:
+    if dest.exists():
+        subprocess.run(["rm", "-rf", str(dest)], check=False)
+    try:
+        proc = subprocess.run(
+            ["git", "clone", "--bare", "-q", clone_url, str(dest)],
+            timeout=CLONE_TIMEOUT_S,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.TimeoutExpired:
+        logger.warning(f"[stage2] clone timeout: {clone_url}")
+        subprocess.run(["rm", "-rf", str(dest)], check=False)
+        return False
+    if proc.returncode != 0:
+        logger.warning(f"[stage2] clone failed: {clone_url}: {proc.stderr[:300]}")
+        return False
+    size = _dir_size_bytes(dest)
+    if size > MAX_CLONE_BYTES:
+        logger.warning(f"[stage2] clone of {clone_url} is {size/1e6:.0f}MB > cap, skipping")
+        subprocess.run(["rm", "-rf", str(dest)], check=False)
+        return False
+    return True
 
 
-def resolve_aliases(commits: pd.DataFrame) -> tuple[pd.Series, float]:
-    """Collapse (name, email) pairs onto a canonical author_id.
-
-    Primary key: normalized email (or github login where resolvable via the
-    noreply-email convention). Falls back to normalized display name when no
-    email is present. Returns (author_id series, collapse_rate)."""
-    email_norm = commits.get("author_email", pd.Series([""] * len(commits))).fillna("").map(_normalize_email)
-    name_norm = commits.get("author_name", pd.Series([""] * len(commits))).fillna("").str.strip().str.lower()
-    login = commits.get("author_login", pd.Series([None] * len(commits)))
-
-    author_id = login.where(login.notna() & (login.astype(str).str.len() > 0), None)
-    author_id = author_id.fillna(email_norm.where(email_norm.str.len() > 0, None))
-    author_id = author_id.fillna(name_norm)
-    author_id = author_id.replace("", "unknown")
-
-    n_raw = commits.get("author_email", email_norm).fillna(commits.get("author_name", name_norm)).nunique()
-    n_resolved = author_id.nunique()
-    collapse_rate = 0.0 if n_raw == 0 else max(0.0, (n_raw - n_resolved) / n_raw)
-    return author_id.astype(str), collapse_rate
-
-
-def _detect_import_artifact_files(commits: pd.DataFrame) -> pd.DataFrame:
-    """Flag and drop bulk-import first commits (Kalliamvakou et al. 2014):
-    a commit within the first 7 days touching >80% of the eventual repo's
-    file set is almost certainly a migrated-history import, not real
-    founder authorship."""
-    if commits.empty:
-        return commits
-    t0 = commits["ts"].min()
-    early = commits[commits["ts"] <= t0 + timedelta(days=7)]
-    total_files = commits["file"].nunique()
-    if total_files == 0:
-        return commits
-    bad_shas = set()
-    for sha, grp in early.groupby("sha"):
-        if grp["file"].nunique() / total_files > 0.80 and len(early["sha"].unique()) > 1:
-            bad_shas.add(sha)
-    if bad_shas:
-        commits = commits[~commits["sha"].isin(bad_shas)]
+def walk_commits(bare_dir: Path) -> list[dict]:
+    """Parse `git log --numstat` into a list of commit dicts with per-file diffs."""
+    fmt = f"{RECORD_SEP}%H{FIELD_SEP}%ae{FIELD_SEP}%cI"
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(bare_dir), "log", "--no-merges", "--numstat", f"--format={fmt}"],
+            capture_output=True,
+            text=True,
+            timeout=GIT_LOG_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        logger.warning(f"[stage2] git log timeout in {bare_dir}")
+        return []
+    if proc.returncode != 0:
+        logger.warning(f"[stage2] git log failed in {bare_dir}: {proc.stderr[:300]}")
+        return []
+    commits = []
+    cur = None
+    for line in proc.stdout.split(RECORD_SEP):
+        line = line.strip("\n")
+        if not line:
+            continue
+        parts = line.split("\n", 1)
+        header = parts[0]
+        h, ae, ci = header.split(FIELD_SEP)
+        try:
+            dt = datetime.fromisoformat(ci)
+        except ValueError:
+            continue
+        cur = {"hash": h, "author_email": ae.lower().strip(), "date": dt, "files": []}
+        if len(parts) > 1:
+            for fl in parts[1].strip("\n").split("\n"):
+                fl = fl.strip()
+                if not fl:
+                    continue
+                bits = fl.split("\t")
+                if len(bits) != 3:
+                    continue
+                added, deleted, path = bits
+                added_n = 0 if added == "-" else int(added)
+                deleted_n = 0 if deleted == "-" else int(deleted)
+                cur["files"].append((path, added_n, deleted_n))
+        commits.append(cur)
+    commits.sort(key=lambda c: c["date"])
     return commits
 
 
-def load_repo_commits(raw_repo: dict) -> Optional[dict]:
-    """Adapt one dataset-dependency repo record into a normalized dict with
-    a commits DataFrame (sha, author_id, ts, file) and repo metadata."""
-    meta = raw_repo.get("repo_metadata", raw_repo.get("metadata", raw_repo))
-    commit_records = raw_repo.get("commits", raw_repo.get("commit_log", []))
-    if not commit_records:
-        return None
-
-    rows = []
-    for c in commit_records:
-        ts_raw = c.get("timestamp") or c.get("committer_date") or c.get("date") or c.get("ts")
-        try:
-            ts = pd.to_datetime(ts_raw, utc=True)
-        except Exception:
-            continue
-        sha = c.get("sha") or c.get("commit_sha") or c.get("hash")
-        author_email = c.get("author_email") or c.get("email")
-        author_name = c.get("author_name") or c.get("name")
-        author_login = c.get("author_login") or c.get("login")
-        files = c.get("files_touched") or c.get("files") or c.get("files_changed") or []
-        if isinstance(files, dict):
-            files = list(files.keys())
-        if not files:
-            continue
-        for f in files:
-            fpath = f.get("path") if isinstance(f, dict) else f
-            if not fpath:
-                continue
-            rows.append(
-                dict(
-                    sha=sha,
-                    ts=ts,
-                    author_email=author_email,
-                    author_name=author_name,
-                    author_login=author_login,
-                    file=fpath,
-                )
-            )
-    if not rows:
-        return None
-    commits = pd.DataFrame(rows)
-    commits["author_id"], collapse_rate = resolve_aliases(commits)
-    commits = commits.sort_values("ts").reset_index(drop=True)
-    commits = _detect_import_artifact_files(commits)
-    if commits.empty:
-        return None
-
-    repo_id = meta.get("full_name") or meta.get("name") or raw_repo.get("repo") or raw_repo.get("id") or "unknown/unknown"
-    stars = float(meta.get("stars", meta.get("stargazers_count", 0)) or 0)
-    forks = float(meta.get("forks", meta.get("forks_count", 0)) or 0)
-    language = meta.get("language") or "unknown"
-    license_ = meta.get("license") or "unknown"
-    if isinstance(license_, dict):
-        license_ = license_.get("key", license_.get("name", "unknown"))
-
-    return dict(
-        repo_id=str(repo_id),
-        commits=commits,
-        stars=stars,
-        forks=forks,
-        language=str(language),
-        license=str(license_),
-        alias_collapse_rate=collapse_rate,
-    )
-
-
 # ---------------------------------------------------------------------------
-# STEP 1: yearly DOA table
+# STAGE 3: DOA computation (Fritz et al. 2010 formula, as used by
+# Avelino et al. ICPC 2016 / ESEM 2019)
+#   DOA(dev, file, t) = 3.293 + 1.098*FA - 0.164*sqrt(AC) + 0.230*ln(1+DL)
 # ---------------------------------------------------------------------------
+def doa_snapshot(commits: list[dict], cutoff: datetime) -> dict[tuple[str, str], float]:
+    """Returns {(dev, path): DOA} using only commits with date <= cutoff."""
+    file_dev_stats: dict[str, dict[str, dict]] = defaultdict(dict)
+    file_first_author: dict[str, str] = {}
+    for c in commits:
+        if c["date"] > cutoff:
+            break  # commits sorted ascending
+        for path, added, deleted in c["files"]:
+            if path not in file_first_author:
+                file_first_author[path] = c["author_email"]
+            dev_stats = file_dev_stats[path]
+            s = dev_stats.setdefault(c["author_email"], {"ac": 0, "dl": 0})
+            s["ac"] += 1
+            s["dl"] += deleted
+    doa: dict[tuple[str, str], float] = {}
+    for path, devs in file_dev_stats.items():
+        first_author = file_first_author[path]
+        for dev, s in devs.items():
+            fa = 1 if dev == first_author else 0
+            doa[(dev, path)] = 3.293 + 1.098 * fa - 0.164 * math.sqrt(s["ac"]) + 0.230 * math.log(1 + s["dl"])
+    return doa
 
 
-def compute_doa_owner_per_file(commits: pd.DataFrame, as_of: pd.Timestamp) -> dict[str, str]:
-    """Primary DOA owner per file, using all commits up to `as_of` (cumulative
-    window, matching Avelino et al.'s yearly-snapshot design)."""
-    window = commits[commits["ts"] <= as_of]
-    if window.empty:
-        return {}
-    owners: dict[str, str] = {}
-    for fpath, grp in window.groupby("file"):
-        grp_sorted = grp.sort_values("ts")
-        first_author = grp_sorted.iloc[0]["author_id"]
-        counts = grp["author_id"].value_counts()
-        total = counts.sum()
-        best_author, best_doa = None, -np.inf
-        for author, n in counts.items():
-            others = total - n
-            doa = DOA_FA * (author == first_author) + DOA_LOG * np.log1p(n) + DOA_AC * np.log1p(others)
-            if doa > best_doa:
-                best_doa, best_author = doa, author
-        if best_author is not None and best_doa > 0:
-            owners[fpath] = best_author
-    return owners
+def file_owners(doa: dict[tuple[str, str], float]) -> dict[str, tuple[str, float]]:
+    """Argmax-DOA owner per file (the dev with the highest DOA score for that file)."""
+    owner: dict[str, tuple[str, float]] = {}
+    for (dev, path), score in doa.items():
+        if path not in owner or score > owner[path][1]:
+            owner[path] = (dev, score)
+    return owner
 
 
-# ---------------------------------------------------------------------------
-# STEP 2: Truck Factor set (greedy, half-of-files criterion)
-# ---------------------------------------------------------------------------
-
-
-def truck_factor_set(file_owner: dict[str, str]) -> list[str]:
-    if not file_owner:
+def truck_factor_set(doa: dict[tuple[str, str], float]) -> list[str]:
+    """Greedy min set of devs whose combined owned-files coverage >= 50% (Avelino et al.)."""
+    owner = file_owners(doa)
+    total_files = len(owner)
+    if total_files == 0:
         return []
-    owned_files: dict[str, set] = defaultdict(set)
-    for f, a in file_owner.items():
-        owned_files[a].add(f)
-    total = len(file_owner)
-    remaining = set(file_owner.keys())
+    owned_counts = Counter(dev for dev, _ in owner.values())
     tf_set: list[str] = []
     covered = 0
-    while covered < 0.5 * total and owned_files:
-        top_author = max(owned_files, key=lambda a: len(owned_files[a] & remaining))
-        top_files = owned_files.pop(top_author) & remaining
-        if not top_files:
+    for dev, n in owned_counts.most_common():
+        tf_set.append(dev)
+        covered += n
+        if covered >= TF_COVERAGE_THRESHOLD * total_files:
             break
-        tf_set.append(top_author)
-        remaining -= top_files
-        covered = total - len(remaining)
     return tf_set
 
 
 # ---------------------------------------------------------------------------
-# STEP 3: TFDD detection (per-repo, worker function for multiprocessing)
+# STAGE 4: TFDD detection (founder-only, TF-set size 1, all silent >= 1yr)
 # ---------------------------------------------------------------------------
-
-
 @dataclass
-class RepoResult:
-    repo_id: str
+class TFDDEvent:
+    repo: str
+    founder: str
+    tfdd_date: datetime
+    repo_created_at: datetime
+    stars: int
+    forks: int
     language: str
-    license: str
-    stars: float
-    forks: float
-    alias_collapse_rate: float
-    has_founder_tfdd: bool = False
-    tfdd_date: Optional[str] = None
-    founder: Optional[str] = None
-    founder_share_pre: Optional[float] = None
-    n_diffuse_owners_pre: Optional[float] = None
-    diffusion_score: Optional[float] = None
-    developers_at_tfdd: Optional[int] = None
-    commits_at_tfdd: Optional[int] = None
-    files_at_tfdd: Optional[int] = None
-    contributor_count: Optional[int] = None
-    survival_label: Optional[str] = None
-    survived_binary: Optional[int] = None
-    placebo_founder_shares: list = field(default_factory=list)
-    placebo_n_diffuse_owners: list = field(default_factory=list)
-    error: Optional[str] = None
+    license_key: str
+    n_commits_total: int
+    tf_set_size_at_relaxed: int = 1  # strict=1 always here; relaxed variant computed separately
+    devs_at_tfdd: int = 0
+    commits_at_tfdd: int = 0
+    files_at_tfdd: int = 0
+    founder_share: float = float("nan")
+    n_diffused_owners: int = 0
+    placebo_founder_share: float = float("nan")
+    placebo_n_diffused_owners: int = 0
+    survived: Optional[bool] = None
+    grade: str = ""
+    censored: bool = False
+    devs_seen_up_to_tfdd: int = 0
 
 
-def _year_ends(commits: pd.DataFrame) -> list[pd.Timestamp]:
-    y0, y1 = commits["ts"].min().year, commits["ts"].max().year
-    return [pd.Timestamp(year=y, month=12, day=31, tz="UTC") for y in range(y0, y1 + 1)]
+def detect_founder_tfdd(commits: list[dict], snapshot_every_days: int = 90) -> Optional[tuple[datetime, str]]:
+    """Scan chronological snapshots; return the first date+founder at which the
+    truck-factor set is a single developer who has then been silent >= 1yr."""
+    if len(commits) < 20:
+        return None
+    start = commits[0]["date"]
+    end = commits[-1]["date"]
+    last_active: dict[str, datetime] = {}
+    for c in commits:
+        e = c["author_email"]
+        if e not in last_active or c["date"] > last_active[e]:
+            last_active[e] = c["date"]
+
+    cursor = start + timedelta(days=180)  # need some history before first snapshot
+    while cursor <= end:
+        doa = doa_snapshot(commits, cursor)
+        tf_set = truck_factor_set(doa)
+        if len(tf_set) == 1:
+            founder = tf_set[0]
+            silence = (cursor - last_active.get(founder, start)).days
+            if silence >= SILENCE_THRESHOLD_DAYS:
+                # TFDD date = the moment the founder crossed the silence threshold
+                tfdd_date = last_active[founder] + timedelta(days=SILENCE_THRESHOLD_DAYS)
+                return min(tfdd_date, cursor), founder
+        cursor += timedelta(days=snapshot_every_days)
+    return None
 
 
-def _first_commit_author(commits: pd.DataFrame) -> str:
-    first_ts = commits["ts"].min()
-    early = commits[commits["ts"] <= first_ts + timedelta(days=1)]
-    return early["author_id"].value_counts().idxmax()
-
-
-def classify_survival(commits: pd.DataFrame, tfdd_date: pd.Timestamp, departing_set: set) -> tuple[str, int]:
-    window_end = tfdd_date + months(SURVIVAL_WINDOW_MONTHS)
-    post = commits[(commits["ts"] > tfdd_date) & (commits["ts"] <= window_end)]
-    pre = commits[commits["ts"] <= tfdd_date]
-    if post.empty:
-        return "dead", 0
-    new_dev_commits = post[~post["author_id"].isin(departing_set)]
-    n_new_devs = new_dev_commits["author_id"].nunique()
-    if n_new_devs == 0:
-        return "dormant", 0
-    # regained TF set (post-window, using files touched only in the window)
-    owners_post = compute_doa_owner_per_file(post, window_end)
-    non_dep_owners = {a for a in owners_post.values() if a not in departing_set}
-    pre_year = pre[pre["ts"] > tfdd_date - months(12)]
-    pre_monthly = pre_year.groupby(pre_year["ts"].dt.to_period("M")).size()
-    pre_median = float(pre_monthly.median()) if len(pre_monthly) else 0.0
-    post_monthly = post.groupby(post["ts"].dt.to_period("M")).size()
-    post_rate = float(post_monthly.mean()) if len(post_monthly) else 0.0
-    if len(non_dep_owners) >= 2 and post_rate >= pre_median and pre_median > 0:
-        return "thriving", 1
-    if len(non_dep_owners) >= 1:
-        return "maintained", 1
-    return "dormant", 0
-
-
-def process_repo(raw_repo: dict, seed: int) -> RepoResult:
-    rng = random.Random(seed)
-    parsed = load_repo_commits(raw_repo)
-    if parsed is None:
-        return RepoResult(repo_id="unknown", language="unknown", license="unknown", stars=0, forks=0, alias_collapse_rate=0, error="no_commits")
-    repo_id, commits = parsed["repo_id"], parsed["commits"]
-    base = RepoResult(
-        repo_id=repo_id,
-        language=parsed["language"],
-        license=parsed["license"],
-        stars=parsed["stars"],
-        forks=parsed["forks"],
-        alias_collapse_rate=parsed["alias_collapse_rate"],
-    )
-    try:
-        year_ends = _year_ends(commits)
-        if len(year_ends) < 2:
-            base.error = "insufficient_history"
-            return base
-        founder = _first_commit_author(commits)
-
-        yearly_tf: dict[pd.Timestamp, list[str]] = {}
-        for ye in year_ends:
-            owners = compute_doa_owner_per_file(commits, ye)
-            yearly_tf[ye] = truck_factor_set(owners)
-
-        last_commit_by_author = commits.groupby("author_id")["ts"].max()
-
-        tfdd_year_end = None
-        departing_set: list[str] = []
-        sorted_years = sorted(year_ends)
-        for i, ye in enumerate(sorted_years):
-            tf_set = yearly_tf[ye]
-            if not tf_set:
-                continue
-            silent = all(
-                (ye - last_commit_by_author.get(a, commits["ts"].min())).days >= SILENCE_MONTHS * 30.4375
-                for a in tf_set
-            )
-            if silent:
-                tfdd_year_end = ye
-                departing_set = tf_set
-                break
-        if tfdd_year_end is None:
-            base.error = "no_tfdd"
-            return base
-        if len(departing_set) != 1 or departing_set[0] != founder:
-            base.error = "not_founder_only_tfdd"
-            return base
-
-        tfdd_date = last_commit_by_author[founder] + months(SILENCE_MONTHS)
-        min_post_needed = tfdd_date + months(SURVIVAL_WINDOW_MONTHS)
-        if commits["ts"].max() < min_post_needed - months(3):
-            base.error = "right_censored"
-            return base
-
-        base.has_founder_tfdd = True
-        base.tfdd_date = tfdd_date.isoformat()
-        base.founder = founder
-
-        # STEP 4: pre-departure diffusion trajectory
-        def diffusion_in_window(w_start: pd.Timestamp, w_end: pd.Timestamp) -> tuple[float, int]:
-            wc = commits[(commits["ts"] >= w_start) & (commits["ts"] < w_end)]
-            founder_share = float((wc["author_id"] == founder).sum() / max(len(wc), 1))
-            doa_pre = compute_doa_owner_per_file(commits[commits["ts"] < w_end], w_end)
-            owners_pre = set(doa_pre.values())
-            n_diffuse = len(owners_pre - {founder})
-            return founder_share, n_diffuse
-
-        w_start = tfdd_date - months(PRE_WINDOW_FAR_MONTHS)
-        w_end = tfdd_date - months(PRE_WINDOW_NEAR_MONTHS)
-        founder_share, n_diffuse = diffusion_in_window(w_start, w_end)
-        base.founder_share_pre = founder_share
-        base.n_diffuse_owners_pre = float(n_diffuse)
-        base.diffusion_score = float((1 - founder_share) * np.log1p(n_diffuse))
-
-        # STEP 5: at-TFDD snapshot covariates
-        at_tfdd = commits[commits["ts"] <= tfdd_date]
-        base.developers_at_tfdd = int(at_tfdd["author_id"].nunique())
-        base.commits_at_tfdd = int(at_tfdd["sha"].nunique())
-        base.files_at_tfdd = int(at_tfdd["file"].nunique())
-        base.contributor_count = int(commits["author_id"].nunique())
-
-        # STEP 6: survival outcome
-        label, surv_bin = classify_survival(commits, tfdd_date, set(departing_set))
-        base.survival_label = label
-        base.survived_binary = surv_bin
-
-        # STEP 9: placebo draws (window-shuffle)
-        earliest = commits["ts"].min()
-        latest_allowed_start = tfdd_date - months(18) - months(PRE_WINDOW_NEAR_MONTHS)
-        if latest_allowed_start > earliest:
-            span_days = (latest_allowed_start - earliest).days
-            n_draws = min(N_PLACEBO_DRAWS, 20)  # per-repo cap; aggregated across repos downstream
-            for _ in range(n_draws):
-                offset = rng.uniform(0, max(span_days, 1))
-                p_start = earliest + timedelta(days=offset)
-                p_end = p_start + months(PRE_WINDOW_FAR_MONTHS - PRE_WINDOW_NEAR_MONTHS)
-                if p_end >= w_start:
-                    continue
-                fs, nd = diffusion_in_window(p_start, p_end)
-                base.placebo_founder_shares.append(fs)
-                base.placebo_n_diffuse_owners.append(nd)
-
-        return base
-    except Exception as e:  # noqa: BLE001
-        base.error = f"exception: {e}"
-        logger.exception(f"repo {repo_id} failed")
-        return base
-
-
-def _process_repo_star(args):
-    return process_repo(*args)
+def detect_relaxed_tfdd(commits: list[dict], snapshot_every_days: int = 90) -> Optional[tuple[datetime, list[str]]]:
+    """Relaxed variant per fallback_plan item 5: TF-set size <= 2, all silent >= 1yr."""
+    if len(commits) < 20:
+        return None
+    start = commits[0]["date"]
+    end = commits[-1]["date"]
+    last_active: dict[str, datetime] = {}
+    for c in commits:
+        e = c["author_email"]
+        if e not in last_active or c["date"] > last_active[e]:
+            last_active[e] = c["date"]
+    cursor = start + timedelta(days=180)
+    while cursor <= end:
+        doa = doa_snapshot(commits, cursor)
+        tf_set = truck_factor_set(doa)
+        if 1 <= len(tf_set) <= 2 and all(
+            (cursor - last_active.get(d, start)).days >= SILENCE_THRESHOLD_DAYS for d in tf_set
+        ):
+            tfdd_date = max(last_active[d] for d in tf_set) + timedelta(days=SILENCE_THRESHOLD_DAYS)
+            return min(tfdd_date, cursor), tf_set
+        cursor += timedelta(days=snapshot_every_days)
+    return None
 
 
 # ---------------------------------------------------------------------------
-# Synthetic self-test data (smoke test per testing_plan step 1)
+# STAGE 5: pre-departure diffusion metrics (THE NEW MEASUREMENT) + STAGE 7 placebo
 # ---------------------------------------------------------------------------
+def window_metrics(commits: list[dict], window_start: datetime, window_end: datetime, founder: str) -> tuple[float, int]:
+    window_commits = [c for c in commits if window_start <= c["date"] < window_end]
+    if not window_commits:
+        return float("nan"), 0
+    founder_commits = sum(1 for c in window_commits if c["author_email"] == founder)
+    founder_share = founder_commits / len(window_commits)
+    doa_end = doa_snapshot(commits, window_end)
+    owner = file_owners(doa_end)
+    non_founder_owners = {dev for dev, (o, _s) in ((p, o) for p, o in owner.items())} if False else None
+    non_founder_owners = {o[0] for o in owner.values() if o[0] != founder}
+    return founder_share, len(non_founder_owners)
 
 
-def make_synthetic_repos(n: int, seed: int = RNG_SEED) -> list[dict]:
-    rng = random.Random(seed)
-    repos = []
-    t0 = datetime(2016, 1, 1, tzinfo=timezone.utc)
-    for i in range(n):
-        founder = f"founder{i}@example.com"
-        files = [f"src/file_{j}.py" for j in range(30)]
-        commits = []
-        # founder-dominant year 1-2
-        for d in range(0, 730, 3):
-            ts = t0 + timedelta(days=d)
-            commits.append({"sha": f"r{i}c{d}", "timestamp": ts.isoformat(), "author_email": founder, "author_name": f"Founder{i}", "files": [rng.choice(files)]})
-        diffuse = i % 2 == 0  # half the repos get a co-maintainer handoff before departure
-        if diffuse:
-            for k in range(3):
-                dev = f"dev{i}_{k}@example.com"
-                for d in range(600, 900, 5):
-                    ts = t0 + timedelta(days=d)
-                    commits.append({"sha": f"r{i}d{k}c{d}", "timestamp": ts.isoformat(), "author_email": dev, "author_name": f"Dev{i}_{k}", "files": [rng.choice(files)]})
-        # founder goes silent after day 900; survives if diffuse (new devs keep committing)
-        if diffuse:
-            for k in range(2):
-                dev = f"dev{i}_{k}@example.com"
-                for d in range(900, 1700, 4):
-                    ts = t0 + timedelta(days=d)
-                    commits.append({"sha": f"r{i}s{k}c{d}", "timestamp": ts.isoformat(), "author_email": dev, "author_name": f"Dev{i}_{k}", "files": [rng.choice(files)]})
-        else:
-            # single-founder repos die after founder goes silent (no new devs)
-            for d in range(900, 950, 5):
-                ts = t0 + timedelta(days=d)
-                commits.append({"sha": f"r{i}tail{d}", "timestamp": ts.isoformat(), "author_email": founder, "author_name": f"Founder{i}", "files": [rng.choice(files)]})
-        repos.append(
-            {
-                "repo": f"synthetic/repo{i}",
-                "repo_metadata": {
-                    "full_name": f"synthetic/repo{i}",
-                    "stars": 100 * (i + 1),
-                    "forks": 10 * (i + 1),
-                    "language": ["Python", "JavaScript", "Go"][i % 3],
-                    "license": "mit",
-                },
-                "commits": commits,
-            }
-        )
-    return repos
+def sample_placebo_window(commits: list[dict], exclude_start: datetime, exclude_end: datetime) -> Optional[tuple[datetime, datetime]]:
+    """Pick a random 6-month window at least 1yr away from the TFDD window, for the falsification check."""
+    start = commits[0]["date"]
+    end = commits[-1]["date"]
+    total_span_days = (end - start).days
+    if total_span_days < 800:
+        return None
+    for _ in range(20):
+        offset = random.uniform(0, total_span_days - 180)
+        w_start = start + timedelta(days=offset)
+        w_end = w_start + timedelta(days=180)
+        if w_end < exclude_start - timedelta(days=365) or w_start > exclude_end + timedelta(days=365):
+            return w_start, w_end
+    return None
 
 
 # ---------------------------------------------------------------------------
-# STEP 7-9: cross-repo analysis
+# STAGE 6: survival label (Avelino et al. Active/Inactive model, 18mo window)
 # ---------------------------------------------------------------------------
+def classify_grade(post_commits: list[dict], recovered_tf: list[str], founder: str) -> str:
+    if not post_commits:
+        return "dead"
+    n_devs = len({c["author_email"] for c in post_commits})
+    n_commits = len(post_commits)
+    non_founder_tf = [d for d in recovered_tf if d != founder]
+    if non_founder_tf and n_commits >= 20 and n_devs >= 2:
+        return "thriving"
+    if n_commits >= 5:
+        return "maintained"
+    if n_commits >= 1:
+        return "dormant"
+    return "dead"
 
 
-def matched_pairs_analysis(df: pd.DataFrame, rng: np.random.Generator) -> dict:
-    df = df.copy()
-    df["log_stars"] = np.log1p(df["stars"])
-    df["log_forks"] = np.log1p(df["forks"])
-    df["log_contrib"] = np.log1p(df["contributor_count"])
-    high = df[(df["founder_share_pre"] < 0.5) & (df["n_diffuse_owners_pre"] >= 2)]
-    low = df[df["founder_share_pre"] >= 0.8]
+def label_survival(commits: list[dict], event: TFDDEvent, last_commit_date: datetime) -> None:
+    window_end = event.tfdd_date + timedelta(days=POST_TFDD_WINDOW_DAYS)
+    if last_commit_date < window_end:
+        event.censored = True
+    post = [c for c in commits if event.tfdd_date <= c["date"] < window_end]
+    doa_post = doa_snapshot(commits, window_end)
+    recovered_tf = truck_factor_set(doa_post)
+    event.survived = bool(recovered_tf) and any(d != event.founder for d in recovered_tf)
+    event.grade = classify_grade(post, recovered_tf, event.founder)
+
+
+# ---------------------------------------------------------------------------
+# STAGE 8: matched pairs + regression
+# ---------------------------------------------------------------------------
+def log_decile_bucket(x: float, edges: np.ndarray) -> int:
+    return int(np.searchsorted(edges, x))
+
+
+def build_matched_pairs(df: pd.DataFrame, low_thresh: float = 0.50, hi_thresh: float = 0.80, n_diffused_min: int = 2):
+    lo = df[(df.founder_share < low_thresh) & (df.n_diffused_owners >= n_diffused_min)].copy()
+    hi = df[df.founder_share >= hi_thresh].copy()
     pairs = []
-    for lang, hgrp in high.groupby("language"):
-        lgrp = low[low["language"] == lang]
-        if lgrp.empty:
-            continue
-        feats_low = lgrp[["log_stars", "log_forks", "log_contrib"]].values
-        nn = NearestNeighbors(n_neighbors=1).fit(feats_low)
-        feats_high = hgrp[["log_stars", "log_forks", "log_contrib"]].values
-        dist, idx = nn.kneighbors(feats_high)
-        for hi, (d, j) in zip(hgrp.index, zip(dist.ravel(), idx.ravel())):
-            pairs.append((hi, lgrp.index[j], float(d)))
+    used_hi = set()
+    for _, lrow in lo.iterrows():
+        best_idx, best_dist = None, float("inf")
+        for hidx, hrow in hi.iterrows():
+            if hidx in used_hi:
+                continue
+            if hrow.language != lrow.language:
+                continue
+            dist = (
+                (math.log1p(hrow.stars) - math.log1p(lrow.stars)) ** 2
+                + (math.log1p(hrow.forks) - math.log1p(lrow.forks)) ** 2
+                + (math.log1p(hrow.devs_at_tfdd) - math.log1p(lrow.devs_at_tfdd)) ** 2
+            )
+            if dist < best_dist:
+                best_dist, best_idx = dist, hidx
+        if best_idx is not None and best_dist < 4.0:  # cap on match distance (~2 log-units per dim)
+            used_hi.add(best_idx)
+            pairs.append((lrow, hi.loc[best_idx]))
+    return pairs
+
+
+def bootstrap_survival_rate_ratio(pairs: list[tuple[pd.Series, pd.Series]], n_boot: int = N_BOOT):
     if not pairs:
-        return {"n_pairs": 0, "survival_lift": None, "ci_95": None, "p_value": None, "note": "no eligible matched pairs (relaxed matching not triggered: sample too small)"}
-    lifts = []
-    for hi, li, _ in pairs:
-        lifts.append(df.loc[hi, "survived_binary"] - df.loc[li, "survived_binary"])
-    lifts = np.array(lifts, dtype=float)
-    obs_lift = float(lifts.mean())
-    boot = rng.choice(lifts, size=(N_BOOTSTRAP, len(lifts)), replace=True).mean(axis=1)
-    ci = (float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5)))
-    # two-sided p-value from bootstrap null-shift (test lift != 0)
-    p = float(2 * min((boot <= 0).mean(), (boot >= 0).mean()))
-    p = min(p, 1.0)
-    return {"n_pairs": len(pairs), "survival_lift": obs_lift, "ci_95": ci, "p_value": p}
-
-
-def run_regressions(df: pd.DataFrame) -> dict:
-    d = df.dropna(subset=["founder_share_pre", "n_diffuse_owners_pre", "survived_binary"]).copy()
-    if len(d) < 10:
-        return {"logistic": {"error": "insufficient_n", "n": len(d)}, "ordinal": {"error": "insufficient_n", "n": len(d)}}
-    d["log_stars"] = np.log1p(d["stars"])
-    d["log_forks"] = np.log1p(d["forks"])
-    d["contributor_count_z"] = (d["contributor_count"] - d["contributor_count"].mean()) / (d["contributor_count"].std() or 1)
-    lang_dummies = pd.get_dummies(d["language"], prefix="lang", drop_first=True)
-    lic_dummies = pd.get_dummies(d["license"], prefix="lic", drop_first=True)
-    predictors = ["founder_share_pre", "n_diffuse_owners_pre", "log_stars", "log_forks", "contributor_count_z"]
-    X = pd.concat([d[predictors], lang_dummies, lic_dummies], axis=1).astype(float)
-    Xz = X.copy()
-    for c in predictors:
-        s = Xz[c].std()
-        Xz[c] = (Xz[c] - Xz[c].mean()) / s if s else 0.0
-    Xc = sm.add_constant(Xz, has_constant="add")
-    y = d["survived_binary"].astype(float)
-
-    logit_out: dict = {}
-    try:
-        model = sm.Logit(y, Xc.astype(float))
-        res = model.fit(disp=0, maxiter=200)
-        pvals = res.pvalues.drop("const", errors="ignore")
-        rej, p_bh, _, _ = multipletests(pvals.values, method="fdr_bh")
-        logit_out = {
-            "coeffs": {k: float(v) for k, v in res.params.items()},
-            "se": {k: float(v) for k, v in res.bse.items()},
-            "p_raw": {k: float(v) for k, v in res.pvalues.items()},
-            "p_bh": dict(zip(pvals.index, [float(p) for p in p_bh])),
-            "std_effect_founder_share_pre": float(res.params.get("founder_share_pre", np.nan)),
-            "std_effect_n_diffuse_owners_pre": float(res.params.get("n_diffuse_owners_pre", np.nan)),
-            "n": int(len(d)),
-            "converged": bool(res.mle_retvals.get("converged", False)),
-        }
-    except Exception as e:  # noqa: BLE001
-        logit_out = {"error": str(e), "n": int(len(d))}
-
-    ordinal_out: dict = {}
-    if OrderedModel is not None and d["survival_label"].nunique() >= 3:
-        try:
-            order = ["dead", "dormant", "maintained", "thriving"]
-            cats = pd.Categorical(d["survival_label"], categories=[c for c in order if c in d["survival_label"].unique()], ordered=True)
-            om = OrderedModel(cats.codes, Xz.astype(float), distr="logit")
-            ores = om.fit(method="bfgs", disp=0, maxiter=200)
-            ordinal_out = {
-                "coeffs": {k: float(v) for k, v in ores.params.items() if k in Xz.columns},
-                "p_raw": {k: float(v) for k, v in ores.pvalues.items() if k in Xz.columns},
-                "n": int(len(d)),
-            }
-        except Exception as e:  # noqa: BLE001
-            ordinal_out = {"error": str(e), "n": int(len(d))}
-    else:
-        ordinal_out = {"error": "insufficient_label_levels_or_no_ordered_model", "n": int(len(d))}
-
-    # snapshot-vs-diffusion standardized effect sizes (Cohen's d equivalents via logistic beta -> d approx)
-    def beta_to_d(beta):
-        return float(beta * (np.sqrt(3) / np.pi)) if beta == beta else None
-
-    snap_vs_diff = {}
-    if "coeffs" in logit_out:
-        for k in predictors:
-            b = logit_out["coeffs"].get(k)
-            snap_vs_diff[k] = {"beta": b, "cohens_d_equiv": beta_to_d(b) if b is not None else None}
-
-    return {"logistic": logit_out, "ordinal": ordinal_out, "snapshot_vs_diffusion_effect_sizes": snap_vs_diff}
-
-
-def placebo_check(df: pd.DataFrame, true_regression: dict) -> dict:
-    d = df.dropna(subset=["placebo_founder_shares", "placebo_n_diffuse_owners"])
-    d = d[d["placebo_founder_shares"].map(len) > 0]
-    if d.empty:
-        return {"error": "no_placebo_draws_available"}
-    true_beta = true_regression.get("logistic", {}).get("std_effect_founder_share_pre")
-    if true_beta is None or true_beta != true_beta:
-        return {"error": "true_effect_unavailable"}
-    n_draws = min(d["placebo_founder_shares"].map(len).min(), N_PLACEBO_DRAWS)
-    placebo_effects = []
-    rng = np.random.default_rng(RNG_SEED)
-    for draw_i in range(int(n_draws)):
-        pdf = d.copy()
-        pdf["founder_share_pre"] = pdf["placebo_founder_shares"].map(lambda lst, i=draw_i: lst[i] if i < len(lst) else np.nan)
-        pdf["n_diffuse_owners_pre"] = pdf["placebo_n_diffuse_owners"].map(lambda lst, i=draw_i: lst[i] if i < len(lst) else np.nan)
-        preg = run_regressions(pdf)
-        b = preg.get("logistic", {}).get("std_effect_founder_share_pre")
-        if b is not None and b == b:
-            placebo_effects.append(float(b))
-    if not placebo_effects:
-        return {"error": "placebo_regressions_all_failed"}
-    placebo_effects = np.array(placebo_effects)
-    frac_ge = float((np.abs(placebo_effects) >= abs(true_beta)).mean())
-    return {
-        "true_effect": float(true_beta),
-        "placebo_null_distribution_summary": {
-            "mean": float(placebo_effects.mean()),
-            "std": float(placebo_effects.std()),
-            "p5": float(np.percentile(placebo_effects, 5)),
-            "p95": float(np.percentile(placebo_effects, 95)),
-            "n_draws": int(len(placebo_effects)),
-        },
-        "fraction_placebo_ge_true": frac_ge,
-    }
-
-
-# ---------------------------------------------------------------------------
-# Baseline method: Avelino et al.'s original snapshot-only predictors (no
-# diffusion trajectory) -- used as predict_baseline vs. predict_ourmethod
-# ---------------------------------------------------------------------------
-
-
-def baseline_snapshot_predict(d: pd.DataFrame) -> pd.Series:
-    """Baseline = logistic regression on snapshot covariates only (developers,
-    commits, files at TFDD + size), no pre-departure diffusion trajectory."""
-    dd = d.dropna(subset=["survived_binary"]).copy()
-    if len(dd) < 10:
-        return pd.Series(index=d.index, dtype=float)
-    dd["log_stars"] = np.log1p(dd["stars"])
-    dd["log_forks"] = np.log1p(dd["forks"])
-    X = dd[["developers_at_tfdd", "commits_at_tfdd", "files_at_tfdd", "log_stars", "log_forks"]].astype(float)
-    Xc = sm.add_constant(X, has_constant="add")
-    y = dd["survived_binary"].astype(float)
-    try:
-        res = sm.Logit(y, Xc).fit(disp=0, maxiter=200)
-        pred = res.predict(Xc)
-        return pred.reindex(d.index)
-    except Exception:  # noqa: BLE001
-        return pd.Series(index=d.index, dtype=float)
-
-
-def ourmethod_predict(d: pd.DataFrame) -> pd.Series:
-    dd = d.dropna(subset=["survived_binary", "founder_share_pre", "n_diffuse_owners_pre"]).copy()
-    if len(dd) < 10:
-        return pd.Series(index=d.index, dtype=float)
-    dd["log_stars"] = np.log1p(dd["stars"])
-    dd["log_forks"] = np.log1p(dd["forks"])
-    X = dd[["founder_share_pre", "n_diffuse_owners_pre", "developers_at_tfdd", "commits_at_tfdd", "files_at_tfdd", "log_stars", "log_forks"]].astype(float)
-    Xc = sm.add_constant(X, has_constant="add")
-    y = dd["survived_binary"].astype(float)
-    try:
-        res = sm.Logit(y, Xc).fit(disp=0, maxiter=200)
-        pred = res.predict(Xc)
-        return pred.reindex(d.index)
-    except Exception:  # noqa: BLE001
-        return pd.Series(index=d.index, dtype=float)
-
-
-# ---------------------------------------------------------------------------
-# Orchestration
-# ---------------------------------------------------------------------------
-
-
-def load_raw_repos(files: list[Path], max_repos: Optional[int]) -> list[dict]:
-    repos: list[dict] = []
-    for f in files:
-        try:
-            obj = json.loads(f.read_text())
-        except Exception as e:  # noqa: BLE001
-            logger.warning(f"failed to parse {f}: {e}")
+        return float("nan"), (float("nan"), float("nan"))
+    lo_surv = np.array([1.0 if p[0].survived else 0.0 for p in pairs])
+    hi_surv = np.array([1.0 if p[1].survived else 0.0 for p in pairs])
+    n = len(pairs)
+    ratios = []
+    for _ in range(n_boot):
+        idx = np.random.randint(0, n, size=n)
+        lo_rate = lo_surv[idx].mean()
+        hi_rate = hi_surv[idx].mean()
+        if hi_rate == 0:
             continue
-        if isinstance(obj, dict):
-            if "datasets" in obj:
-                for ds in obj["datasets"]:
-                    for ex in ds.get("examples", ds.get("repos", [])):
-                        if isinstance(ex, dict) and "input" in ex and isinstance(ex["input"], str):
-                            try:
-                                repos.append(json.loads(ex["input"]))
-                                continue
-                            except (json.JSONDecodeError, TypeError):
-                                pass
-                        repos.append(ex)
-            elif "repos" in obj:
-                repos.extend(obj["repos"])
-            elif "examples" in obj:
-                repos.extend(obj["examples"])
-            else:
-                repos.append(obj)
-        elif isinstance(obj, list):
-            repos.extend(obj)
-        del obj
+        ratios.append((lo_rate + 1e-6) / (hi_rate + 1e-6))
+    if not ratios:
+        return float("nan"), (float("nan"), float("nan"))
+    ratios = np.array(ratios)
+    point = (lo_surv.mean() + 1e-6) / (hi_surv.mean() + 1e-6)
+    ci = (float(np.percentile(ratios, 2.5)), float(np.percentile(ratios, 97.5)))
+    return float(point), ci
+
+
+def benjamini_hochberg(pvals: dict[str, float]) -> dict[str, float]:
+    items = sorted(pvals.items(), key=lambda kv: kv[1])
+    m = len(items)
+    adj = {}
+    prev = 1.0
+    for rank, (k, p) in enumerate(reversed(items), start=1):
+        r = m - rank + 1
+        val = min(prev, p * m / r)
+        adj[k] = val
+        prev = val
+    return adj
+
+
+def cohens_d(a: np.ndarray, b: np.ndarray) -> float:
+    a, b = a[~np.isnan(a)], b[~np.isnan(b)]
+    if len(a) < 2 or len(b) < 2:
+        return float("nan")
+    pooled_sd = math.sqrt(((len(a) - 1) * a.var(ddof=1) + (len(b) - 1) * b.var(ddof=1)) / (len(a) + len(b) - 2))
+    if pooled_sd == 0:
+        return float("nan")
+    return float((a.mean() - b.mean()) / pooled_sd)
+
+
+# ---------------------------------------------------------------------------
+# main pipeline
+# ---------------------------------------------------------------------------
+def process_repo(repo_meta: dict) -> tuple[Optional[TFDDEvent], Optional[TFDDEvent], dict]:
+    """Returns (strict_event_or_None, relaxed_event_or_None, diag_dict)."""
+    full_name = repo_meta["full_name"]
+    dest = REPOS_DIR / full_name.replace("/", "__")
+    diag = {"repo": full_name, "stars": repo_meta.get("stargazers_count", 0), "language": repo_meta.get("language")}
+    ok = clone_repo(repo_meta["clone_url"], dest)
+    if not ok:
+        diag["status"] = "clone_failed"
+        return None, None, diag
+    try:
+        commits = walk_commits(dest)
+        if len(commits) < 20:
+            diag["status"] = "too_few_commits"
+            return None, None, diag
+        if len(commits) > MAX_COMMITS:
+            diag["status"] = "too_many_commits"
+            diag["n_commits"] = len(commits)
+            return None, None, diag
+        n_devs_total = len({c["author_email"] for c in commits})
+        if n_devs_total < 2:
+            diag["status"] = "single_dev_never_had_team"
+            return None, None, diag
+        last_commit_date = commits[-1]["date"]
+
+        strict = detect_founder_tfdd(commits)
+        relaxed = detect_relaxed_tfdd(commits)
+
+        license_key = (repo_meta.get("license") or {}).get("key", "none") if repo_meta.get("license") else "none"
+        created_at = datetime.fromisoformat(repo_meta["created_at"].replace("Z", "+00:00"))
+
+        def make_event(tfdd_date: datetime, founder: str) -> Optional[TFDDEvent]:
+            window_start = tfdd_date - timedelta(days=PRE_WINDOW_FAR_DAYS)
+            window_end = tfdd_date - timedelta(days=PRE_WINDOW_NEAR_DAYS)
+            if window_start < commits[0]["date"]:
+                return None  # insufficient pre-history for this event
+            founder_share, n_diffused = window_metrics(commits, window_start, window_end, founder)
+            if math.isnan(founder_share):
+                return None
+            doa_tfdd = doa_snapshot(commits, tfdd_date)
+            owners_tfdd = file_owners(doa_tfdd)
+            devs_before = {c["author_email"] for c in commits if c["date"] <= tfdd_date}
+            commits_before = [c for c in commits if c["date"] <= tfdd_date]
+            ev = TFDDEvent(
+                repo=full_name,
+                founder=founder,
+                tfdd_date=tfdd_date,
+                repo_created_at=created_at,
+                stars=repo_meta.get("stargazers_count", 0),
+                forks=repo_meta.get("forks_count", 0),
+                language=repo_meta.get("language") or "unknown",
+                license_key=license_key,
+                n_commits_total=len(commits),
+                devs_at_tfdd=len(devs_before),
+                commits_at_tfdd=len(commits_before),
+                files_at_tfdd=len(owners_tfdd),
+                founder_share=founder_share,
+                n_diffused_owners=n_diffused,
+                devs_seen_up_to_tfdd=len(devs_before),
+            )
+            placebo_window = sample_placebo_window(commits, window_start, window_end)
+            if placebo_window:
+                p_share, p_diff = window_metrics(commits, placebo_window[0], placebo_window[1], founder)
+                ev.placebo_founder_share = p_share
+                ev.placebo_n_diffused_owners = p_diff
+            label_survival(commits, ev, last_commit_date)
+            return ev
+
+        strict_event = make_event(strict[0], strict[1]) if strict else None
+        relaxed_event = None
+        if relaxed:
+            r_date, r_set = relaxed
+            # treat the "founder" as the tf-set member with the most total commits (dominant author)
+            counts = Counter(c["author_email"] for c in commits if c["author_email"] in r_set)
+            dominant = counts.most_common(1)[0][0] if counts else r_set[0]
+            relaxed_event = make_event(r_date, dominant)
+            if relaxed_event is not None:
+                relaxed_event.tf_set_size_at_relaxed = len(r_set)
+
+        diag["status"] = "ok"
+        diag["n_commits"] = len(commits)
+        diag["n_devs"] = n_devs_total
+        diag["strict_tfdd_found"] = strict_event is not None
+        diag["relaxed_tfdd_found"] = relaxed_event is not None
+        return strict_event, relaxed_event, diag
+    finally:
+        subprocess.run(["rm", "-rf", str(dest)], check=False)
         gc.collect()
-        if max_repos and len(repos) >= max_repos:
-            repos = repos[:max_repos]
-            break
-    return repos
-
-
-def _repo_to_example(r: RepoResult) -> dict:
-    inp = (
-        f"Repository {r.repo_id} ({r.language}, {r.stars:.0f} stars) reached its first "
-        f"founder-only Truck-Factor-Detachment-Departure (TFDD) on {r.tfdd_date}. "
-        f"Pre-departure (6-12mo before TFDD): founder commit-share={r.founder_share_pre}, "
-        f"distinct non-founder DOA file-owners={r.n_diffuse_owners_pre}. "
-        f"At-TFDD snapshot: developers={r.developers_at_tfdd}, commits={r.commits_at_tfdd}, files={r.files_at_tfdd}."
-    )
-    out = f"survival_label={r.survival_label}; survived_binary={r.survived_binary}"
-    return {
-        "input": inp,
-        "output": out,
-        "metadata_repo_id": r.repo_id,
-        "metadata_language": r.language,
-        "metadata_license": r.license,
-        "metadata_stars": r.stars,
-        "metadata_forks": r.forks,
-        "metadata_alias_collapse_rate": r.alias_collapse_rate,
-        "metadata_founder_share_pre": r.founder_share_pre,
-        "metadata_n_diffuse_owners_pre": r.n_diffuse_owners_pre,
-        "metadata_diffusion_score": r.diffusion_score,
-        "metadata_developers_at_tfdd": r.developers_at_tfdd,
-        "metadata_commits_at_tfdd": r.commits_at_tfdd,
-        "metadata_files_at_tfdd": r.files_at_tfdd,
-        "metadata_contributor_count": r.contributor_count,
-        "metadata_survival_label": r.survival_label,
-        "metadata_survived_binary": r.survived_binary,
-    }
 
 
 @logger.catch(reraise=True)
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data-path", default=None, help="Override path to dataset dependency output")
-    ap.add_argument("--max-repos", type=int, default=None)
-    ap.add_argument("--synthetic", action="store_true", help="Force synthetic smoke-test data")
-    ap.add_argument("--synthetic-n", type=int, default=40)
-    ap.add_argument("--output", default=str(WORKSPACE / "method_out.json"))
-    args = ap.parse_args()
+    t0 = time.time()
+    TIME_BUDGET_S = 2.5 * 3600  # keep margin inside the available run envelope (aii-long-running-tasks pattern)
 
-    t_start = time.time()
-    doa_approximation_used = False
+    logger.info("=== STAGE 0-1: sampling and filtering candidate repos ===")
+    candidates = stage0_sample_repos()
+    filtered = stage1_filter(candidates)
 
-    if args.synthetic:
-        logger.info(f"Using synthetic self-test data: {args.synthetic_n} repos")
-        raw_repos = make_synthetic_repos(args.synthetic_n)
-        dataset_name = "synthetic_smoke_test"
+    logger.info("=== GRADUAL SCALING: mini test (5 repos) -> pipeline-shape test (15) -> scale up ===")
+    scale_steps = [5, 15, 50, min(220, len(filtered))]
+    strict_events: list[TFDDEvent] = []
+    relaxed_events: list[TFDDEvent] = []
+    diagnostics: list[dict] = []
+    processed_names: set[str] = set()
+
+    for step_i, target_n in enumerate(scale_steps):
+        if time.time() - t0 > TIME_BUDGET_S:
+            logger.warning(f"[scaling] time budget reached before step {step_i}, stopping scale-up")
+            break
+        remaining = [r for r in filtered if r["full_name"] not in processed_names]
+        n_to_add = max(0, target_n - len(processed_names))
+        batch = remaining[:n_to_add]
+        logger.info(f"[scaling] step {step_i}: processing {len(batch)} more repos (target cumulative n={target_n})")
+        for repo_meta in batch:
+            if time.time() - t0 > TIME_BUDGET_S:
+                logger.warning("[scaling] time budget reached mid-batch, stopping")
+                break
+            processed_names.add(repo_meta["full_name"])
+            try:
+                s_ev, r_ev, diag = process_repo(repo_meta)
+            except Exception as e:
+                logger.error(f"[process_repo] {repo_meta['full_name']} failed: {e}")
+                diag = {"repo": repo_meta["full_name"], "status": f"exception:{e}"}
+                s_ev, r_ev = None, None
+            diagnostics.append(diag)
+            if s_ev is not None:
+                strict_events.append(s_ev)
+            if r_ev is not None:
+                relaxed_events.append(r_ev)
+        logger.info(
+            f"[scaling] after step {step_i}: {len(processed_names)} repos processed, "
+            f"{len(strict_events)} strict founder-TFDD events, {len(relaxed_events)} relaxed events"
+        )
+        if step_i == 0 and len(strict_events) == 0 and len(relaxed_events) == 0:
+            logger.warning(
+                "[scaling] mini test found ZERO TFDD events of either kind -- "
+                "continuing to pipeline-shape test but flagging for review"
+            )
+
+    logger.info(f"=== Finished repo processing: {len(processed_names)} repos, "
+                f"{len(strict_events)} strict events, {len(relaxed_events)} relaxed events ===")
+
+    diag_df = pd.DataFrame(diagnostics)
+    diag_df.to_csv(RESULTS_DIR / "repo_processing_diagnostics.csv", index=False)
+
+    # ---- unconditioned survival rates (cross-check vs Avelino et al.'s ~41%) ----
+    def rate_summary(events: list[TFDDEvent]) -> dict:
+        uncensored = [e for e in events if not e.censored]
+        if not uncensored:
+            return {"n_events": len(events), "n_uncensored": 0, "survival_rate": None, "n_censored_excluded": len(events)}
+        surv = np.array([1.0 if e.survived else 0.0 for e in uncensored])
+        return {
+            "n_events": len(events),
+            "n_uncensored": len(uncensored),
+            "n_censored_excluded": len(events) - len(uncensored),
+            "survival_rate": float(surv.mean()),
+            "survival_rate_se": float(surv.std(ddof=1) / math.sqrt(len(surv))) if len(surv) > 1 else None,
+        }
+
+    strict_rate = rate_summary(strict_events)
+    relaxed_rate = rate_summary(relaxed_events)
+    logger.info(f"[stage6] strict founder-only TFDD survival: {strict_rate}")
+    logger.info(f"[stage6] relaxed TF<=2 TFDD survival: {relaxed_rate}")
+
+    # ---- build the primary analysis dataframe (strict events, uncensored, complete metrics) ----
+    def events_to_df(events: list[TFDDEvent]) -> pd.DataFrame:
+        rows = [asdict(e) for e in events if not e.censored]
+        if not rows:
+            return pd.DataFrame()
+        df = pd.DataFrame(rows)
+        for col in ["tfdd_date", "repo_created_at"]:
+            df[col] = pd.to_datetime(df[col], utc=True)
+        df["log_stars"] = np.log1p(df["stars"])
+        df["log_forks"] = np.log1p(df["forks"])
+        df["log_devs_at_tfdd"] = np.log1p(df["devs_at_tfdd"])
+        df = df.dropna(subset=["founder_share", "n_diffused_owners", "log_stars", "log_forks", "devs_at_tfdd"])
+        return df
+
+    df = events_to_df(strict_events)
+    df_relaxed = events_to_df(relaxed_events)
+
+    results: dict = {
+        "n_repos_sampled": len(candidates),
+        "n_repos_filtered": len(filtered),
+        "n_repos_processed": len(processed_names),
+        "n_founder_tfdd_events_strict": len(strict_events),
+        "n_founder_tfdd_events_relaxed": len(relaxed_events),
+        "strict_unconditioned_survival": strict_rate,
+        "relaxed_unconditioned_survival": relaxed_rate,
+        "avelino_et_al_reference_survival_rate": 0.41,
+        "n_analysis_rows_strict": int(len(df)),
+        "n_analysis_rows_relaxed": int(len(df_relaxed)),
+    }
+
+    # ---- matched pairs + bootstrap risk ratio (strict events) ----
+    matched_pairs_result = {"n_pairs": 0}
+    if len(df) >= 6:
+        pairs = build_matched_pairs(df)
+        risk_ratio, ci95 = bootstrap_survival_rate_ratio(pairs, n_boot=N_BOOT)
+        matched_pairs_result = {
+            "n_pairs": len(pairs),
+            "risk_ratio_low_vs_high_diffusion": risk_ratio,
+            "risk_ratio_ci95": list(ci95),
+            "note": "risk_ratio = P(survival | low diffusion) / P(survival | high diffusion); >1 means low authority-diffusion (concentrated founder) survives MORE, <1 means diffusion helps survival",
+        }
     else:
-        files = _find_dataset_files(args.data_path)
-        logger.info(f"Found {len(files)} dataset file(s): {[str(f) for f in files]}")
-        if not files:
-            logger.warning("No real dataset found; falling back to synthetic smoke-test data.")
-            raw_repos = make_synthetic_repos(args.synthetic_n)
-            dataset_name = "synthetic_smoke_test_fallback"
-        else:
-            raw_repos = load_raw_repos(files, args.max_repos)
-            dataset_name = "github_founder_departure_corpus"
-            if raw_repos and not any((r.get("commits") or r.get("commit_log", [{}]))[0:1] and isinstance((r.get("commits") or r.get("commit_log"))[0], dict) and "files" in (r.get("commits") or r.get("commit_log"))[0] or "files_touched" in (r.get("commits") or r.get("commit_log"))[0] for r in raw_repos[:1] if (r.get("commits") or r.get("commit_log"))):
-                doa_approximation_used = True
+        matched_pairs_result["note"] = "insufficient events for matched-pairs analysis (need >=6)"
+    results["matched_pairs"] = matched_pairs_result
 
-    if args.max_repos:
-        raw_repos = raw_repos[: args.max_repos]
-    logger.info(f"Loaded {len(raw_repos)} raw repo records")
+    # ---- regression: our method (diffusion trajectory) vs baseline (snapshot covariates only) ----
+    def fit_logit(df_in: pd.DataFrame, cols: list[str], label: str) -> dict:
+        if df_in.empty or df_in["survived"].nunique() < 2 or len(df_in) < len(cols) + 3:
+            return {"status": "insufficient_data", "n": int(len(df_in)), "n_classes": int(df_in["survived"].nunique()) if not df_in.empty else 0}
+        X = df_in[cols].astype(float)
+        y = df_in["survived"].astype(int)
+        X_const = sm.add_constant(X, has_constant="add")
+        try:
+            model = sm.Logit(y, X_const).fit(disp=0, maxiter=200)
+        except Exception as e:
+            logger.warning(f"[{label}] logit failed ({e}); falling back to parsimonious covariate set")
+            parsimonious = [c for c in ["founder_share", "n_diffused_owners", "log_stars", "log_devs_at_tfdd"] if c in cols]
+            if not parsimonious or parsimonious == cols:
+                return {"status": f"failed:{e}", "n": int(len(df_in))}
+            return fit_logit(df_in, parsimonious, label + "_parsimonious")
+        std_X = (X - X.mean()) / X.std(ddof=0).replace(0, 1)
+        std_X_const = sm.add_constant(std_X, has_constant="add")
+        try:
+            std_model = sm.Logit(y, std_X_const).fit(disp=0, maxiter=200)
+            std_effects = std_model.params.drop("const").to_dict()
+        except Exception:
+            std_effects = {}
+        return {
+            "status": "ok",
+            "n": int(len(df_in)),
+            "covariates": cols,
+            "coefs": model.params.to_dict(),
+            "pvalues": model.pvalues.to_dict(),
+            "pvalues_bh": benjamini_hochberg(model.pvalues.drop("const").to_dict()),
+            "standardized_effect_sizes": std_effects,
+            "pseudo_r2": float(model.prsquared),
+            "converged": bool(model.mle_retvals.get("converged", True)),
+        }
 
-    # NOTE: this environment has very high per-process import latency (cold
-    # disk cache: pandas/sklearn/statsmodels imports alone take ~90s wall
-    # time), which makes ProcessPoolExecutor with spawn repay that cost on
-    # EVERY worker and lose badly to sequential execution for corpora of the
-    # size this pipeline targets (150-250 repos, cheap per-repo compute).
-    # Process sequentially in this one warm interpreter instead.
-    results: list[RepoResult] = []
-    n_workers = 1
-    for i, rr in enumerate(raw_repos):
-        results.append(process_repo(rr, RNG_SEED + i))
-        if (i + 1) % 25 == 0:
-            logger.info(f"processed {i + 1}/{len(raw_repos)} repos")
+    our_cols = ["founder_share", "n_diffused_owners", "log_stars", "log_forks", "log_devs_at_tfdd"]
+    baseline_cols = ["log_stars", "log_forks", "log_devs_at_tfdd"]  # Avelino-et-al-style snapshot covariates only, no diffusion trajectory
+    results["regression_our_method"] = fit_logit(df, our_cols, "our_method")
+    results["regression_baseline_snapshot_only"] = fit_logit(df, baseline_cols, "baseline")
 
-    n_repos_total = len(results)
-    founder_events = [r for r in results if r.has_founder_tfdd]
-    logger.info(f"n_repos_total={n_repos_total}, n_founder_tfdd_events={len(founder_events)}")
-
-    error_counts = defaultdict(int)
-    for r in results:
-        if r.error:
-            error_counts[r.error] += 1
-    logger.info(f"error breakdown: {dict(error_counts)}")
-
-    alias_rates = [r.alias_collapse_rate for r in results if r.alias_collapse_rate is not None]
-    alias_qa = {
-        "median_collapse_rate": float(np.median(alias_rates)) if alias_rates else None,
-        "n_repos_over_40pct_collapse": int(sum(1 for a in alias_rates if a > 0.4)),
+    # ---- placebo comparison (Stage 7 falsification check) ----
+    placebo_df = df.dropna(subset=["placebo_founder_share", "placebo_n_diffused_owners"]).copy()
+    placebo_cols = ["placebo_founder_share", "placebo_n_diffused_owners", "log_stars", "log_forks", "log_devs_at_tfdd"]
+    results["placebo_check"] = {
+        "n_events_with_placebo_window": int(len(placebo_df)),
+        "regression_placebo_window": fit_logit(placebo_df, placebo_cols, "placebo") if len(placebo_df) >= 8 else {"status": "insufficient_data", "n": int(len(placebo_df))},
     }
 
-    extended_sample_used = False
-    if len(founder_events) < 40 and not args.synthetic:
-        logger.warning(f"Only {len(founder_events)} founder-only TFDD events (<40); headline restricted to strict TF=1, "
-                        f"per fallback_plan this is reported as-is (extended TF<=2 sample not separately mined in this pass).")
-        extended_sample_used = False  # extension would require re-mining TF<=2 events; documented as limitation instead
+    # ---- snapshot covariate effect sizes (Cohen's d), for comparability with Avelino et al.'s d=0.13-0.26 ----
+    if not df.empty and df["survived"].nunique() == 2:
+        surv_mask = df["survived"].astype(bool)
+        results["snapshot_covariate_effect_sizes_d"] = {
+            "devs_at_tfdd": cohens_d(df.loc[surv_mask, "devs_at_tfdd"].to_numpy(), df.loc[~surv_mask, "devs_at_tfdd"].to_numpy()),
+            "commits_at_tfdd": cohens_d(df.loc[surv_mask, "commits_at_tfdd"].to_numpy(), df.loc[~surv_mask, "commits_at_tfdd"].to_numpy()),
+            "files_at_tfdd": cohens_d(df.loc[surv_mask, "files_at_tfdd"].to_numpy(), df.loc[~surv_mask, "files_at_tfdd"].to_numpy()),
+            "founder_share_pre_departure": cohens_d(df.loc[surv_mask, "founder_share"].to_numpy(), df.loc[~surv_mask, "founder_share"].to_numpy()),
+            "n_diffused_owners_pre_departure": cohens_d(df.loc[surv_mask, "n_diffused_owners"].to_numpy(), df.loc[~surv_mask, "n_diffused_owners"].to_numpy()),
+        }
+        # simple two-group nonparametric tests as a minimally-complete fallback result (fallback_plan item 8)
+        results["mann_whitney_diffusion_vs_survival"] = {
+            "founder_share": {
+                "u_stat": float(stats.mannwhitneyu(df.loc[surv_mask, "founder_share"], df.loc[~surv_mask, "founder_share"], alternative="two-sided").statistic),
+                "p": float(stats.mannwhitneyu(df.loc[surv_mask, "founder_share"], df.loc[~surv_mask, "founder_share"], alternative="two-sided").pvalue),
+            },
+            "n_diffused_owners": {
+                "u_stat": float(stats.mannwhitneyu(df.loc[surv_mask, "n_diffused_owners"], df.loc[~surv_mask, "n_diffused_owners"], alternative="two-sided").statistic),
+                "p": float(stats.mannwhitneyu(df.loc[surv_mask, "n_diffused_owners"], df.loc[~surv_mask, "n_diffused_owners"], alternative="two-sided").pvalue),
+            },
+        }
+    else:
+        results["snapshot_covariate_effect_sizes_d"] = {"status": "insufficient_class_variation"}
+        results["mann_whitney_diffusion_vs_survival"] = {"status": "insufficient_class_variation"}
 
-    df = pd.DataFrame([r.__dict__ for r in founder_events]) if founder_events else pd.DataFrame(
-        columns=["repo_id", "language", "license", "stars", "forks", "founder_share_pre", "n_diffuse_owners_pre",
-                 "developers_at_tfdd", "commits_at_tfdd", "files_at_tfdd", "contributor_count", "survived_binary", "survival_label"])
+    # ---- relaxed (TF<=2) sensitivity analysis, reported separately per fallback_plan item 5 ----
+    if len(df_relaxed) >= 6 and df_relaxed["survived"].nunique() == 2:
+        results["relaxed_sensitivity_regression"] = fit_logit(df_relaxed, our_cols, "relaxed_our_method")
+    else:
+        results["relaxed_sensitivity_regression"] = {"status": "insufficient_data", "n": int(len(df_relaxed))}
 
-    rng = np.random.default_rng(RNG_SEED)
-    matched_pairs = matched_pairs_analysis(df, rng) if not df.empty else {"n_pairs": 0, "error": "no_founder_tfdd_events"}
-    regression = run_regressions(df) if not df.empty else {"logistic": {"error": "no_founder_tfdd_events"}, "ordinal": {"error": "no_founder_tfdd_events"}}
-    placebo = placebo_check(df, regression) if not df.empty else {"error": "no_founder_tfdd_events"}
+    results["runtime_seconds"] = time.time() - t0
+    results["config"] = {
+        "languages": LANGUAGES,
+        "star_strata": STAR_STRATA,
+        "min_age_days": MIN_AGE_DAYS,
+        "silence_threshold_days": SILENCE_THRESHOLD_DAYS,
+        "tf_coverage_threshold": TF_COVERAGE_THRESHOLD,
+        "post_tfdd_window_days": POST_TFDD_WINDOW_DAYS,
+        "pre_window_far_days": PRE_WINDOW_FAR_DAYS,
+        "pre_window_near_days": PRE_WINDOW_NEAR_DAYS,
+        "n_boot": N_BOOT,
+        "rng_seed": RNG_SEED,
+    }
 
-    if not df.empty:
-        df["predict_baseline_prob"] = baseline_snapshot_predict(df)
-        df["predict_ourmethod_prob"] = ourmethod_predict(df)
+    Path(RESULTS_DIR / "method_summary.json").write_text(json.dumps(results, indent=2, default=str))
+    logger.info(f"[main] wrote {RESULTS_DIR / 'method_summary.json'}")
 
-    examples = [_repo_to_example(r) for r in founder_events]
-    if not examples:
-        examples = [
+    # ---- exp_gen_sol_out.json-schema-compliant output (per-event rows, input/output as strings,
+    #      predict_our_method / predict_baseline as required by aii-json exp_gen_sol_out schema) ----
+    examples = []
+    all_events_for_df = strict_events  # strict is the primary registered analysis; relaxed reported in metadata
+    for e in all_events_for_df:
+        input_text = (
+            f"Repo {e.repo} ({e.language}): founder-only TFDD detected at {e.tfdd_date.isoformat()}. "
+            f"Predict whether the project survives (attracts a non-founder truck-factor owner) over the "
+            f"following 18 months, given pre-departure trajectory founder_share={e.founder_share:.3f}, "
+            f"n_diffused_owners={e.n_diffused_owners}, and snapshot covariates stars={e.stars}, forks={e.forks}, "
+            f"devs_at_tfdd={e.devs_at_tfdd}, commits_at_tfdd={e.commits_at_tfdd}, files_at_tfdd={e.files_at_tfdd}."
+        )
+        output_text = "survived" if e.survived else "did_not_survive"
+        our_pred = "survived" if (e.founder_share < 0.65 and e.n_diffused_owners >= 2) else "did_not_survive"
+        baseline_pred = "survived" if (e.stars >= 1000 and e.devs_at_tfdd >= 5) else "did_not_survive"
+        examples.append(
             {
-                "input": "No founder-only TFDD events were detected in this run.",
-                "output": "n_founder_tfdd_events=0",
-                "metadata_note": "pipeline ran end-to-end but found zero qualifying events; see error_breakdown in metadata",
+                "input": input_text,
+                "output": output_text,
+                "metadata_repo": e.repo,
+                "metadata_founder": e.founder,
+                "metadata_tfdd_date": e.tfdd_date.isoformat(),
+                "metadata_language": e.language,
+                "metadata_stars": e.stars,
+                "metadata_forks": e.forks,
+                "metadata_devs_at_tfdd": e.devs_at_tfdd,
+                "metadata_commits_at_tfdd": e.commits_at_tfdd,
+                "metadata_files_at_tfdd": e.files_at_tfdd,
+                "metadata_founder_share_pre_departure": e.founder_share,
+                "metadata_n_diffused_owners_pre_departure": e.n_diffused_owners,
+                "metadata_placebo_founder_share": e.placebo_founder_share,
+                "metadata_placebo_n_diffused_owners": e.placebo_n_diffused_owners,
+                "metadata_grade": e.grade,
+                "metadata_censored": e.censored,
+                "predict_our_method": our_pred,
+                "predict_baseline": baseline_pred,
             }
-        ]
-    for ex, r in zip(examples, founder_events):
-        idx = df.index[df["repo_id"] == r.repo_id]
-        if len(idx):
-            i0 = idx[0]
-            ex["predict_baseline"] = json.dumps({"survived_prob": None if pd.isna(df.loc[i0, "predict_baseline_prob"]) else float(df.loc[i0, "predict_baseline_prob"])})
-            ex["predict_ourmethod"] = json.dumps({"survived_prob": None if pd.isna(df.loc[i0, "predict_ourmethod_prob"]) else float(df.loc[i0, "predict_ourmethod_prob"])})
+        )
 
-    output = {
+    if not examples:
+        # schema requires >=1 example per dataset; emit a placeholder diagnostic row so the file is
+        # still valid and downstream steps can see exactly what happened, rather than crashing.
+        examples.append(
+            {
+                "input": "No founder-only TFDD events survived filtering within the sampled repos and time budget.",
+                "output": "no_events",
+                "metadata_note": "see repo_processing_diagnostics.csv and method_summary.json for full diagnosis",
+                "predict_our_method": "no_events",
+                "predict_baseline": "no_events",
+            }
+        )
+
+    method_out = {
         "metadata": {
-            "method_name": "founder_departure_authority_diffusion_vs_survival",
-            "description": "Reimplements Avelino et al. (ESEM 2019) DOA/TF/TFDD pipeline; tests whether pre-departure authority diffusion predicts 18mo post-TFDD survival beyond snapshot covariates.",
-            "n_repos_total": n_repos_total,
-            "n_founder_tfdd_events": len(founder_events),
-            "error_breakdown": dict(error_counts),
-            "alias_qa": alias_qa,
-            "doa_approximation_used": doa_approximation_used,
-            "extended_sample_used_TFle2": extended_sample_used,
-            "matched_pairs": matched_pairs,
-            "regression": regression,
-            "placebo_check": placebo,
-            "runtime_seconds": time.time() - t_start,
-            "dataset_source": dataset_name,
-            "num_cpus_used": n_workers,
+            "method_name": "founder_authority_diffusion_tfdd_survival",
+            "description": (
+                "Founder-only TFDD survival prediction from GitHub commit histories. "
+                "our_method uses pre-departure authority-diffusion trajectory "
+                "(founder_share, n_diffused_owners in the 12-6mo pre-TFDD window); "
+                "baseline uses only snapshot size/popularity covariates at TFDD (Avelino et al. style)."
+            ),
+            "n_founder_tfdd_events_strict": len(strict_events),
+            "n_founder_tfdd_events_relaxed": len(relaxed_events),
+            "strict_unconditioned_survival_rate": strict_rate.get("survival_rate"),
+            "avelino_et_al_reference_survival_rate": 0.41,
+            "summary_results_file": "results/method_summary.json",
+            "diagnostics_file": "results/repo_processing_diagnostics.csv",
         },
-        "datasets": [{"dataset": dataset_name, "examples": examples}],
+        "datasets": [{"dataset": "github_founder_tfdd_events", "examples": examples}],
     }
-
-    out_path = Path(args.output)
-    out_path.write_text(json.dumps(output, indent=2, default=str))
-    logger.info(f"Wrote {out_path} ({out_path.stat().st_size/1e6:.2f} MB) in {time.time()-t_start:.1f}s")
+    Path(WORKSPACE / "method_out.json").write_text(json.dumps(method_out, indent=2, default=str))
+    logger.info(f"[main] wrote {WORKSPACE / 'method_out.json'} with {len(examples)} example rows")
+    logger.info(f"[main] DONE in {time.time() - t0:.1f}s")
 
 
 if __name__ == "__main__":

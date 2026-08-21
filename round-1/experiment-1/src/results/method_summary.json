@@ -1,0 +1,234 @@
+{
+  "n_repos_sampled": 270,
+  "n_repos_filtered": 69,
+  "n_repos_processed": 69,
+  "n_founder_tfdd_events_strict": 16,
+  "n_founder_tfdd_events_relaxed": 20,
+  "strict_unconditioned_survival": {
+    "n_events": 16,
+    "n_uncensored": 16,
+    "n_censored_excluded": 0,
+    "survival_rate": 0.3125,
+    "survival_rate_se": 0.11967838846954226
+  },
+  "relaxed_unconditioned_survival": {
+    "n_events": 20,
+    "n_uncensored": 20,
+    "n_censored_excluded": 0,
+    "survival_rate": 0.45,
+    "survival_rate_se": 0.11413288653790232
+  },
+  "avelino_et_al_reference_survival_rate": 0.41,
+  "n_analysis_rows_strict": 16,
+  "n_analysis_rows_relaxed": 20,
+  "matched_pairs": {
+    "n_pairs": 0,
+    "risk_ratio_low_vs_high_diffusion": NaN,
+    "risk_ratio_ci95": [
+      NaN,
+      NaN
+    ],
+    "note": "risk_ratio = P(survival | low diffusion) / P(survival | high diffusion); >1 means low authority-diffusion (concentrated founder) survives MORE, <1 means diffusion helps survival"
+  },
+  "regression_our_method": {
+    "status": "ok",
+    "n": 16,
+    "covariates": [
+      "founder_share",
+      "n_diffused_owners",
+      "log_stars",
+      "log_devs_at_tfdd"
+    ],
+    "coefs": {
+      "const": -4.475696556891135,
+      "founder_share": -5.557883893499619,
+      "n_diffused_owners": -0.17424518327751867,
+      "log_stars": 0.483117879817099,
+      "log_devs_at_tfdd": 0.824365581708137
+    },
+    "pvalues": {
+      "const": 0.218303341933911,
+      "founder_share": 0.42564837629682595,
+      "n_diffused_owners": 0.33959626313122593,
+      "log_stars": 0.4500889951416408,
+      "log_devs_at_tfdd": 0.634888137249151
+    },
+    "pvalues_bh": {
+      "log_devs_at_tfdd": 0.634888137249151,
+      "log_stars": 0.6001186601888544,
+      "founder_share": 0.6001186601888544,
+      "n_diffused_owners": 0.6001186601888544
+    },
+    "standardized_effect_sizes": {
+      "founder_share": -1.3214918000399904,
+      "n_diffused_owners": -1.3885056274134877,
+      "log_stars": 0.6451848689526228,
+      "log_devs_at_tfdd": 0.6766707272074415
+    },
+    "pseudo_r2": 0.17476537432367667,
+    "converged": true
+  },
+  "regression_baseline_snapshot_only": {
+    "status": "ok",
+    "n": 16,
+    "covariates": [
+      "log_stars",
+      "log_forks",
+      "log_devs_at_tfdd"
+    ],
+    "coefs": {
+      "const": -1.8952032516186004,
+      "log_stars": 1.3975084264153437,
+      "log_forks": -1.8646226615694212,
+      "log_devs_at_tfdd": 0.4021586010596022
+    },
+    "pvalues": {
+      "const": 0.5867567760651673,
+      "log_stars": 0.08043521853747629,
+      "log_forks": 0.17997701801104704,
+      "log_devs_at_tfdd": 0.7347455217911859
+    },
+    "pvalues_bh": {
+      "log_devs_at_tfdd": 0.7347455217911859,
+      "log_forks": 0.26996552701657056,
+      "log_stars": 0.24130565561242887
+    },
+    "standardized_effect_sizes": {
+      "log_stars": 1.8663173702002531,
+      "log_forks": -1.7499681093835084,
+      "log_devs_at_tfdd": 0.33010712609793785
+    },
+    "pseudo_r2": 0.21078560979385985,
+    "converged": true
+  },
+  "placebo_check": {
+    "n_events_with_placebo_window": 15,
+    "regression_placebo_window": {
+      "status": "ok",
+      "n": 15,
+      "covariates": [
+        "placebo_founder_share",
+        "placebo_n_diffused_owners",
+        "log_stars",
+        "log_forks",
+        "log_devs_at_tfdd"
+      ],
+      "coefs": {
+        "const": -4.860059175074998,
+        "placebo_founder_share": -164.52094063102254,
+        "placebo_n_diffused_owners": -0.1961443232173844,
+        "log_stars": 3.9190820804624806,
+        "log_forks": -6.952094287499903,
+        "log_devs_at_tfdd": 5.381608652578246
+      },
+      "pvalues": {
+        "const": 0.31556585136041926,
+        "placebo_founder_share": 0.9999999999999999,
+        "placebo_n_diffused_owners": 0.3942777169865641,
+        "log_stars": 0.1536966384758695,
+        "log_forks": 0.19529751007001184,
+        "log_devs_at_tfdd": 0.28576212126021716
+      },
+      "pvalues_bh": {
+        "placebo_founder_share": 0.9999999999999998,
+        "placebo_n_diffused_owners": 0.49284714623320514,
+        "log_devs_at_tfdd": 0.4762702021003619,
+        "log_forks": 0.4762702021003619,
+        "log_stars": 0.4762702021003619
+      },
+      "standardized_effect_sizes": {
+        "placebo_founder_share": -14.482644956421586,
+        "placebo_n_diffused_owners": -2.1268171756160914,
+        "log_stars": 5.081133703298029,
+        "log_forks": -6.729075275344808,
+        "log_devs_at_tfdd": 4.481123484322704
+      },
+      "pseudo_r2": 0.522187465905931,
+      "converged": true
+    }
+  },
+  "snapshot_covariate_effect_sizes_d": {
+    "devs_at_tfdd": 0.05317653025333219,
+    "commits_at_tfdd": -0.3705419489991742,
+    "files_at_tfdd": -0.7735741758295781,
+    "founder_share_pre_departure": -0.3875249289614023,
+    "n_diffused_owners_pre_departure": -0.2933139134279301
+  },
+  "mann_whitney_diffusion_vs_survival": {
+    "founder_share": {
+      "u_stat": 23.0,
+      "p": 0.6611721611721613
+    },
+    "n_diffused_owners": {
+      "u_stat": 17.5,
+      "p": 0.27933214039986387
+    }
+  },
+  "relaxed_sensitivity_regression": {
+    "status": "ok",
+    "n": 20,
+    "covariates": [
+      "founder_share",
+      "n_diffused_owners",
+      "log_stars",
+      "log_forks",
+      "log_devs_at_tfdd"
+    ],
+    "coefs": {
+      "const": -0.8358607146815485,
+      "founder_share": -27.935304990192687,
+      "n_diffused_owners": -0.10369094867670073,
+      "log_stars": 3.1992241877293286,
+      "log_forks": -5.909337052552301,
+      "log_devs_at_tfdd": 4.173574169105441
+    },
+    "pvalues": {
+      "const": 0.8400477225836889,
+      "founder_share": 0.15044864089261123,
+      "n_diffused_owners": 0.2817026580231512,
+      "log_stars": 0.07748330928319183,
+      "log_forks": 0.16378004815999836,
+      "log_devs_at_tfdd": 0.2640003080149985
+    },
+    "pvalues_bh": {
+      "n_diffused_owners": 0.2817026580231512,
+      "log_devs_at_tfdd": 0.2817026580231512,
+      "log_forks": 0.2729667469333306,
+      "founder_share": 0.2729667469333306,
+      "log_stars": 0.2729667469333306
+    },
+    "standardized_effect_sizes": {
+      "founder_share": -6.1312463718906045,
+      "n_diffused_owners": -2.152155536260207,
+      "log_stars": 5.484213849038403,
+      "log_forks": -8.201329108623494,
+      "log_devs_at_tfdd": 4.488813892008304
+    },
+    "pseudo_r2": 0.49953354961157637,
+    "converged": true
+  },
+  "runtime_seconds": 906.6296381950378,
+  "config": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "Go",
+      "Java",
+      "Ruby",
+      "C++"
+    ],
+    "star_strata": [
+      "stars:50..500",
+      "stars:500..5000",
+      "stars:5000..100000"
+    ],
+    "min_age_days": 1095,
+    "silence_threshold_days": 365,
+    "tf_coverage_threshold": 0.5,
+    "post_tfdd_window_days": 548,
+    "pre_window_far_days": 365,
+    "pre_window_near_days": 180,
+    "n_boot": 5000,
+    "rng_seed": 20260821
+  }
+}
