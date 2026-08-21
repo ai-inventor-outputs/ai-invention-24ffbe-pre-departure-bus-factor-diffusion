@@ -1,0 +1,235 @@
+{
+  "metadata": {
+    "evaluation_name": "bootstrap_cis_and_identity_spotcheck",
+    "description": "Adds bootstrap 95% CIs to the founder-exit/survival experiment's Cohen's d snapshot-covariate effect sizes and (attempted) placebo percentile, plus a 12-repo manual GitHub identity-resolution spot-che...",
+    "input_missing_metadata_keys": [],
+    "corpus_stats": {
+      "n_repos_input": 62,
+      "n_repos_after_filters": 47,
+      "n_founder_only_tfdds": 30,
+      "exclusion_table": {
+        "ok": 47,
+        "not_mostly_source": 1,
+        "no_commits_extracted": 14,
+        "no_founder_only_tfdd": 13,
+        "insufficient_pre_history": 2,
+        "insufficient_post_history": 2
+      },
+      "n_founder_only_tfdd_counted_in_this_eval": 30
+    },
+    "covariate_ci_table": {
+      "method": "nonparametric bootstrap, B=10000, resample survivor/nonsurvivor groups independently with replacement at original sizes; Cohen's d recomputed per resample with pooled SD; 95% CI = 2.5th/97.5th percent...",
+      "seed_base": 20260821,
+      "b": 10000,
+      "table": [
+        {
+          "covariate": "developers_at_tfdd",
+          "n_survivor": 11,
+          "n_nonsurvivor": 19,
+          "point_d": -0.22551330140122758,
+          "bootstrap_95ci_lo": -1.0519947307722977,
+          "bootstrap_95ci_hi": 0.531537565940679,
+          "avelino_reference_value": [
+            0.25,
+            0.26
+          ],
+          "avelino_ref_inside_ci": true,
+          "resolution_flag": "adequate",
+          "note": "Avelino range [0.25,0.26] vs bootstrap CI [-1.0520,0.5315]"
+        },
+        {
+          "covariate": "commits_at_tfdd",
+          "n_survivor": 11,
+          "n_nonsurvivor": 19,
+          "point_d": -0.5578222337569441,
+          "bootstrap_95ci_lo": -1.368881947953089,
+          "bootstrap_95ci_hi": 0.147030680461281,
+          "avelino_reference_value": [
+            0.25,
+            0.26
+          ],
+          "avelino_ref_inside_ci": false,
+          "resolution_flag": "adequate",
+          "note": "Avelino range [0.25,0.26] vs bootstrap CI [-1.3689,0.1470]"
+        },
+        {
+          "covariate": "files_at_tfdd",
+          "n_survivor": 11,
+          "n_nonsurvivor": 19,
+          "point_d": -0.6247642156370242,
+          "bootstrap_95ci_lo": -1.0706752840719218,
+          "bootstrap_95ci_hi": -0.14055281450801546,
+          "avelino_reference_value": [
+            0.13,
+            0.13
+          ],
+          "avelino_ref_inside_ci": false,
+          "resolution_flag": "adequate",
+          "note": "Avelino range [0.13,0.13] vs bootstrap CI [-1.0707,-0.1406]"
+        }
+      ]
+    },
+    "placebo_ci": {
+      "status": "NOT_RECONSTRUCTABLE_FROM_ARTIFACT",
+      "reported_percentile_point_estimate": 40.0,
+      "reported_empirical_p_value": 0.6153846153846154,
+      "reported_n_null_draws": 25,
+      "reported_target_n_null_draws": 200,
+      "bootstrap_95ci_lo": null,
+      "bootstrap_95ci_hi": null,
+      "gap_statement": "A proper bootstrap CI on the placebo percentile is NOT reconstructable from method_out.json as saved: the artifact persists only the scalar percentile/p-value, not the raw within-repo null-window draw...",
+      "point_estimate_caveat": "At face value the point estimate (40.0th percentile, p=0.6153846153846154) sits close to the 50th-percentile 'no signal' region. Given only n_null_draws=25 null draws were achieved (vs the pre-registe..."
+    },
+    "identity_spotcheck_results": {
+      "seed": 42,
+      "n_sampled": 12,
+      "n_total_records": 12,
+      "per_repo_results": [
+        {
+          "repo": "gin-gonic/gin",
+          "founder_token": "em:manu.valladolid@gmail.com",
+          "founder_email": "manu.valladolid@gmail.com",
+          "earliest_commit_sha": "15216a0883d113fadc33198d24850974eae0f841",
+          "earliest_commit_author_name": "Manu Mtz-Almeida",
+          "earliest_commit_author_email": "manu.valladolid@gmail.com",
+          "earliest_commit_gh_login": "manucorporat",
+          "verdict": "PASS",
+          "reason": "earliest reachable commit's author email exactly matches the pipeline's founder identity",
+          "binary_survival": 1
+        },
+        {
+          "repo": "gevent/gevent",
+          "founder_token": "em:denis.bilenko@gmail.com",
+          "founder_email": "denis.bilenko@gmail.com",
+          "earliest_commit_sha": "002ae35061beef02453b7fb1045a50fa2f7f30f8",
+          "earliest_commit_author_name": "Denis Bilenko",
+          "earliest_commit_author_email": "denis.bilenko@gmail.com",
+          "earliest_commit_gh_login": "denik",
+          "verdict": "PASS",
+          "reason": "earliest reachable commit's author email exactly matches the pipeline's founder identity",
+          "binary_survival": 1
+        },
+        {
+          "repo": "square/retrofit",
+          "founder_token": "em:eric@squareup.com",
+          "founder_email": "eric@squareup.com",
+          "earliest_commit_sha": "17886a10eecccada75e736cb2ffb30b8b8a58b55",
+          "earliest_commit_author_name": "Bob Lee",
+          "earliest_commit_author_email": "crazybob@crazybob.org",
+          "earliest_commit_gh_login": "crazybob",
+          "verdict": "ALIAS_MERGE_ERROR",
+          "reason": "earliest reachable commit's author email/login ('crazybob@crazybob.org'/'crazybob') does not match the pipeline's inferred founder identity ('eric@squareup.com'); could reflect a squashed/rewritten hi...",
+          "binary_survival": 1
+        }
+      ],
+      "n_pass": 11,
+      "n_alias_merge_error": 1,
+      "n_ambiguous": 0,
+      "error_rate_denominator": 12,
+      "observed_error_rate": 0.08333333333333333,
+      "wilson_95ci_lo": 0.014865094400000889,
+      "wilson_95ci_hi": 0.3538799112178778,
+      "method_note": "Ground truth = the earliest commit reachable from the repo's default branch via the unauthenticated GitHub REST API (no token, no aii-web-tools authenticated calls), located by binary-searching the co...",
+      "serious_finding_note": "1 of 12 decidable repos showed the earliest-commit author not matching the pipeline's founder identity. Whether this would change TF=1/founder-only-TFDD qualification for those events requires manuall..."
+    },
+    "success_criteria_reclassification": {
+      "original_success_criteria_verdict": {
+        "criterion_1_diffusion_significant_bh_p_lt_0.10": false,
+        "criterion_2_diffusion_coef_exceeds_snapshot_coef": false,
+        "criterion_3_survives_placebo_p_lt_0.10": false,
+        "n_founder_only_tfdd_repos": 30,
+        "notes": "Corpus of 62 curated GitHub repos (dataset artifact dependency was empty at run time, see corpus_stats/notes). 47 passed prefilters, 30 yielded a founder-only TFDD with sufficient pre/post history. Sn..."
+      },
+      "original_all_criteria_false": true,
+      "criteria_reclassification": [
+        {
+          "criterion": "matched-pairs survival-rate-ratio CI excludes 1x",
+          "classification": "UNTESTABLE_AT_SCALE",
+          "reason": "matched_pairs_results.status='insufficient_group_sizes' (n_high=0, n_low=0); the matching procedure never produced usable high/low-diffusion groups at n=30, so no ratio or CI exists to evaluate for lo...",
+          "implication": "A future iteration needs a substantially larger founder-only-TFDD corpus (more than 30) before matched-pairs group sizes clear the >=3-per-arm minimum."
+        },
+        {
+          "criterion": "BH-FDR-significant diffusion coefficient exceeding snapshot-covariate coefficient",
+          "classification": "UNTESTABLE_AT_SCALE",
+          "reason": "regression_results.status='insufficient_data_or_no_outcome_variance', n_used=0 (< the 12-observation minimum the pipeline itself requires for the standardized logit); no coefficients or BH-adjusted p-...",
+          "implication": "Needs a larger corpus with non-null log_stars/log_forks (this run's stars/forks were entirely NULL, see Step 1) and >=12 usable TFDD repos with outcome variance."
+        },
+        {
+          "criterion": "placebo/shuffle check shows weaker effect at randomly relocated windows",
+          "classification": "TESTED_LOW_RESOLUTION",
+          "reason": "point estimate: 40.0th percentile, empirical p=0.6153846153846154, but built from only n_null_draws=25 (target 200, itself reduced from 1000 for CPU budget), and Step 2 of this evaluation could not re...",
+          "implication": "Persist the raw null-window draws (see Step 2 gap_statement) and restore the target of 200-1000 null draws so a genuine bootstrap CI on the percentile is computable without a full method.py rerun."
+        }
+      ],
+      "covariate_ci_resolution_summary": {
+        "n_adequate": 3,
+        "n_low_resolution": 0,
+        "n_not_computable": 2,
+        "low_resolution_covariates": []
+      },
+      "overall_statement": "Two of three pre-registered success criteria (matched-pairs, regression) never ran to completion -- they are UNTESTABLE_AT_SCALE, not TESTED_NULL, because the founder-only-TFDD corpus (n=30) never cle..."
+    }
+  },
+  "metrics_agg": {
+    "n_founder_only_tfdd_repos": 30,
+    "n_survivors": 11,
+    "n_nonsurvivors": 19,
+    "developers_at_tfdd_point_d": -0.22551330140122758,
+    "developers_at_tfdd_ci_lo": -1.0519947307722977,
+    "developers_at_tfdd_ci_hi": 0.531537565940679,
+    "commits_at_tfdd_point_d": -0.5578222337569441,
+    "commits_at_tfdd_ci_lo": -1.368881947953089,
+    "commits_at_tfdd_ci_hi": 0.147030680461281,
+    "files_at_tfdd_point_d": -0.6247642156370242,
+    "files_at_tfdd_ci_lo": -1.0706752840719218,
+    "files_at_tfdd_ci_hi": -0.14055281450801546,
+    "n_stars_forks_not_computable": 2,
+    "placebo_reported_percentile": 40.0,
+    "placebo_reported_p": 0.6153846153846154,
+    "placebo_reported_n_null_draws": 25,
+    "placebo_ci_reconstructable": 0.0,
+    "identity_spotcheck_n_pass": 11,
+    "identity_spotcheck_n_alias_merge_error": 1,
+    "identity_spotcheck_n_ambiguous": 0,
+    "identity_spotcheck_observed_error_rate": 0.08333333333333333,
+    "identity_spotcheck_wilson_ci_lo": 0.014865094400000889,
+    "identity_spotcheck_wilson_ci_hi": 0.3538799112178778,
+    "n_criteria_tested_null": 0,
+    "n_criteria_tested_low_resolution": 1,
+    "n_criteria_untestable_at_scale": 2
+  },
+  "datasets": [
+    {
+      "dataset": "github_repos_curated_corpus_tfdd_subset",
+      "examples": [
+        {
+          "input": "Repo: tj/commander.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"repo\": \"tj/commander.js\", \"founder\": \"em:tj@vision-media.ca\", \"binary_survival\": 0}",
+          "metadata_repo": "tj/commander.js",
+          "predict_our_method": "{\"founder_share\": 0.5294117647058824, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 41, \"commits_at_tfdd\": 206, \"files_at_tfdd\": 55}",
+          "eval_our_method_correct": 1.0,
+          "eval_baseline_correct": 0.0
+        },
+        {
+          "input": "Repo: visionmedia/superagent. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"repo\": \"visionmedia/superagent\", \"founder\": \"em:tj@vision-media.ca\", \"binary_survival\": 0}",
+          "metadata_repo": "visionmedia/superagent",
+          "predict_our_method": "{\"founder_share\": 0.7045454545454546, \"n_doa_owners\": 4, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 38, \"commits_at_tfdd\": 496, \"files_at_tfdd\": 79}",
+          "eval_our_method_correct": 1.0,
+          "eval_baseline_correct": 0.0
+        },
+        {
+          "input": "Repo: caolan/async. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"repo\": \"caolan/async\", \"founder\": \"em:caolan@caolanmcmahon.com\", \"binary_survival\": 1}",
+          "metadata_repo": "caolan/async",
+          "predict_our_method": "{\"founder_share\": 0.041666666666666664, \"n_doa_owners\": 0, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 104, \"commits_at_tfdd\": 332, \"files_at_tfdd\": 22}",
+          "eval_our_method_correct": 1.0,
+          "eval_baseline_correct": 0.0
+        }
+      ]
+    }
+  ]
+}
