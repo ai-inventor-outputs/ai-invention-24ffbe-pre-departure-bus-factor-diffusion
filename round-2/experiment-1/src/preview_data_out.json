@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "source": "Local git clone (git log --numstat) over GitHub repos sampled via the GitHub REST search/repositories API across JavaScript/Python/Java/Go and 3 popularity strata (100-1k, 1k-10k, 10k+ stars); repo-le...",
+    "description": "Per-(commit,file) rows for GitHub repos passing founder-only-start filters (>=100 commits, no history-loss/squash artifact, a single author holding >=70% share of commits in the first ~50-commit / 6-m...",
+    "n_examples": 70260,
+    "n_repos": 34
+  },
+  "datasets": [
+    {
+      "dataset": "github_founder_departure_corpus",
+      "examples": [
+        {
+          "input": "{\"commit_index\": 0, \"n_commits_total\": 3796, \"days_since_repo_created\": -2233, \"file_path\": \"Building.txt\", \"file_ext\": \"txt\", \"lines_added\": 1, \"lines_removed\": 0, \"is_creation\": true, \"repo_stars\": ...",
+          "output": "founder",
+          "metadata_repo_id": 46464011,
+          "metadata_full_name": "ClouGence/hasor",
+          "metadata_license": "Apache-2.0",
+          "metadata_repo_created_at": "2015-11-19T03:10:00Z",
+          "metadata_commit_sha": "fc58d3c2f477cef90b7d172823a56a75a2495bdf",
+          "metadata_commit_timestamp": "2009-10-08T07:54:21+00:00",
+          "metadata_author_alias_key": "email:zyc@hasor.net",
+          "metadata_author_email": "zyc@hasor.net",
+          "metadata_author_name": "zyc",
+          "metadata_dominant_founder_share_first_window": 1.0,
+          "metadata_alias_ambiguous_repo": false,
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2
+        },
+        {
+          "input": "{\"commit_index\": 2, \"n_commits_total\": 3796, \"days_since_repo_created\": -2233, \"file_path\": \"Release branches/more_1.x/src/src/org/more/core/asm/MethodWriter.java\", \"file_ext\": \"java\", \"lines_added\": ...",
+          "output": "founder",
+          "metadata_repo_id": 46464011,
+          "metadata_full_name": "ClouGence/hasor",
+          "metadata_license": "Apache-2.0",
+          "metadata_repo_created_at": "2015-11-19T03:10:00Z",
+          "metadata_commit_sha": "dcaf92602ccef9ba976180c51bbb8d6e96e2112a",
+          "metadata_commit_timestamp": "2009-10-08T08:33:24+00:00",
+          "metadata_author_alias_key": "email:zyc@hasor.net",
+          "metadata_author_email": "zyc@hasor.net",
+          "metadata_author_name": "zyc",
+          "metadata_dominant_founder_share_first_window": 1.0,
+          "metadata_alias_ambiguous_repo": false,
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2
+        },
+        {
+          "input": "{\"commit_index\": 2, \"n_commits_total\": 3796, \"days_since_repo_created\": -2233, \"file_path\": \"Release branches/more_1.x/src/src/org/more/core/serialization/ArrayType.java\", \"file_ext\": \"java\", \"lines_a...",
+          "output": "founder",
+          "metadata_repo_id": 46464011,
+          "metadata_full_name": "ClouGence/hasor",
+          "metadata_license": "Apache-2.0",
+          "metadata_repo_created_at": "2015-11-19T03:10:00Z",
+          "metadata_commit_sha": "dcaf92602ccef9ba976180c51bbb8d6e96e2112a",
+          "metadata_commit_timestamp": "2009-10-08T08:33:24+00:00",
+          "metadata_author_alias_key": "email:zyc@hasor.net",
+          "metadata_author_email": "zyc@hasor.net",
+          "metadata_author_name": "zyc",
+          "metadata_dominant_founder_share_first_window": 1.0,
+          "metadata_alias_ambiguous_repo": false,
+          "metadata_task_type": "classification",
+          "metadata_n_classes": 2
+        }
+      ]
+    }
+  ]
+}
