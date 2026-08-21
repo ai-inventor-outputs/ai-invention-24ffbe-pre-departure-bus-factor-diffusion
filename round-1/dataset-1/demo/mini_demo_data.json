@@ -1,0 +1,2759 @@
+{
+  "0xAX__go-algorithms.json": {
+    "full_name": "0xAX/go-algorithms",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 1950,
+      "forks": 346,
+      "language": "Go",
+      "license": null,
+      "created_at": "2014-06-21T17:01:08Z",
+      "html_url": "https://github.com/0xAX/go-algorithms"
+    },
+    "n_commits": 116,
+    "n_developers": 22,
+    "n_files": 83,
+    "repo_first_commit": "2014-06-21T16:59:23+00:00",
+    "repo_last_commit": "2022-02-20T10:24:31+00:00",
+    "history_span_years": 7.67,
+    "founder": "mail:testtest.89@mail.ru",
+    "founder_early_authorship_share": 0.68,
+    "yearly_tables": [
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 38,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 40,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:kuleshovmail@gmail.com",
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 60,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:kuleshovmail@gmail.com",
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 65,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:kuleshovmail@gmail.com",
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 83,
+        "n_active_authors_in_doa": 12
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:kuleshovmail@gmail.com",
+          "mail:testtest.89@mail.ru"
+        ],
+        "n_files": 83,
+        "n_active_authors_in_doa": 12
+      }
+    ],
+    "tfdd": {
+      "year": 2015,
+      "date": "2015-12-31T00:00:00+00:00",
+      "developer": "mail:testtest.89@mail.ru",
+      "last_commit_date": "2014-08-12T18:08:36+00:00",
+      "silence_years": 1.38
+    },
+    "pre_tfdd_window": {
+      "window_start": "2014-12-31T00:00:00+00:00",
+      "window_end": "2015-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 4,
+      "n_distinct_new_primary_owners": 2
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 1950,
+      "forks": 346,
+      "total_contributors": 22,
+      "language": "Go",
+      "license": null,
+      "project_age_days": 557
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      3,
+      1,
+      0,
+      1
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 6.14,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  "BetterErrors__better_errors.json": {
+    "full_name": "BetterErrors/better_errors",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 6862,
+      "forks": 431,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2012-12-08T11:02:18Z",
+      "html_url": "https://github.com/BetterErrors/better_errors"
+    },
+    "n_commits": 743,
+    "n_developers": 98,
+    "n_files": 105,
+    "repo_first_commit": "2012-12-08T12:13:34+00:00",
+    "repo_last_commit": "2023-06-14T16:47:15+00:00",
+    "history_span_years": 10.51,
+    "founder": "mail:charlie@charliesomerville.com",
+    "founder_early_authorship_share": 0.92,
+    "yearly_tables": [
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 34,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 43,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 47,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 47,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 47,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 72,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:charlie@charliesomerville.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:robin@robindaugherty.net"
+        ],
+        "n_files": 98,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:robin@robindaugherty.net"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:robin@robindaugherty.net"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 6
+      }
+    ],
+    "tfdd": {
+      "year": 2017,
+      "date": "2017-12-31T00:00:00+00:00",
+      "developer": "mail:charlie@charliesomerville.com",
+      "last_commit_date": "2016-06-24T08:56:47+00:00",
+      "silence_years": 1.52
+    },
+    "pre_tfdd_window": {
+      "window_start": "2016-12-31T00:00:00+00:00",
+      "window_end": "2017-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 86,
+      "n_distinct_new_primary_owners": 5
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 6862,
+      "forks": 431,
+      "total_contributors": 98,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 1848
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      1,
+      1,
+      0,
+      4,
+      2,
+      17,
+      0,
+      1,
+      1,
+      0,
+      3,
+      0,
+      0,
+      17,
+      0,
+      1,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.45,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  "Rob--W__cors-anywhere.json": {
+    "full_name": "Rob--W/cors-anywhere",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 9376,
+      "forks": 6525,
+      "language": "JavaScript",
+      "license": "MIT",
+      "created_at": "2013-01-03T22:08:24Z",
+      "html_url": "https://github.com/Rob--W/cors-anywhere"
+    },
+    "n_commits": 146,
+    "n_developers": 9,
+    "n_files": 29,
+    "repo_first_commit": "2013-01-03T17:37:26+00:00",
+    "repo_last_commit": "2021-09-04T20:42:08+00:00",
+    "history_span_years": 8.67,
+    "founder": "mail:gwnrob@gmail.com",
+    "founder_early_authorship_share": 0.88,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gwnrob@gmail.com"
+        ],
+        "n_files": 12,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gwnrob@gmail.com"
+        ],
+        "n_files": 12,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gwnrob@gmail.com"
+        ],
+        "n_files": 20,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2016,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:rob@robwu.nl",
+          "mail:gwnrob@gmail.com"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:rob@robwu.nl"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:rob@robwu.nl"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:rob@robwu.nl"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:rob@robwu.nl"
+        ],
+        "n_files": 28,
+        "n_active_authors_in_doa": 3
+      }
+    ],
+    "tfdd": {
+      "year": 2015,
+      "date": "2015-12-31T00:00:00+00:00",
+      "developer": "mail:gwnrob@gmail.com",
+      "last_commit_date": "2014-03-12T17:18:08+00:00",
+      "silence_years": 1.8
+    },
+    "pre_tfdd_window": {
+      "window_start": "2014-12-31T00:00:00+00:00",
+      "window_end": "2015-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 23,
+      "n_distinct_new_primary_owners": 1
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 9376,
+      "forks": 6525,
+      "total_contributors": 9,
+      "language": "JavaScript",
+      "license": "MIT",
+      "project_age_days": 1091
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      18,
+      2,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.68,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  "Shopify__liquid.json": {
+    "full_name": "Shopify/liquid",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 11867,
+      "forks": 1538,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2008-05-08T15:27:26Z",
+      "html_url": "https://github.com/Shopify/liquid"
+    },
+    "n_commits": 3241,
+    "n_developers": 294,
+    "n_files": 3134,
+    "repo_first_commit": "2008-05-08T15:28:13+00:00",
+    "repo_last_commit": "2026-08-07T14:40:39+00:00",
+    "history_span_years": 18.25,
+    "founder": "mail:tobi@jadedpixel.com",
+    "founder_early_authorship_share": 0.296,
+    "yearly_tables": [
+      {
+        "year": 2008,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 70,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2009,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 134,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 169,
+        "n_active_authors_in_doa": 6
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 207,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 228,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 239,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2014,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:tetsuro@jadedpixel.com",
+          "mail:tobi@jadedpixel.com"
+        ],
+        "n_files": 498,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2811,
+        "n_active_authors_in_doa": 30
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2901,
+        "n_active_authors_in_doa": 31
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2907,
+        "n_active_authors_in_doa": 34
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2915,
+        "n_active_authors_in_doa": 38
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2965,
+        "n_active_authors_in_doa": 45
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2983,
+        "n_active_authors_in_doa": 49
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 2990,
+        "n_active_authors_in_doa": 50
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 3012,
+        "n_active_authors_in_doa": 54
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 3014,
+        "n_active_authors_in_doa": 56
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 3037,
+        "n_active_authors_in_doa": 61
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:me@tetchi.ca"
+        ],
+        "n_files": 3069,
+        "n_active_authors_in_doa": 63
+      }
+    ],
+    "tfdd": {
+      "year": 2012,
+      "date": "2012-12-31T00:00:00+00:00",
+      "developer": "mail:tobi@jadedpixel.com",
+      "last_commit_date": "2011-12-20T21:58:05+00:00",
+      "silence_years": 1.03
+    },
+    "pre_tfdd_window": {
+      "window_start": "2011-12-31T00:00:00+00:00",
+      "window_end": "2012-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 84,
+      "n_distinct_new_primary_owners": 12
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 11867,
+      "forks": 1538,
+      "total_contributors": 294,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 1697
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      4,
+      5,
+      11,
+      2,
+      19,
+      52,
+      63,
+      58,
+      18,
+      26,
+      22,
+      4,
+      27,
+      47,
+      35,
+      14,
+      10
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 13.6,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  "SteveLTN__https-portal.json": {
+    "full_name": "SteveLTN/https-portal",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 4692,
+      "forks": 296,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2015-12-14T20:09:04Z",
+      "html_url": "https://github.com/SteveLTN/https-portal"
+    },
+    "n_commits": 452,
+    "n_developers": 51,
+    "n_files": 171,
+    "repo_first_commit": "2015-12-14T20:09:04+00:00",
+    "repo_last_commit": "2026-05-26T12:55:44+00:00",
+    "history_span_years": 10.44,
+    "founder": "mail:lighteningman@gmail.com",
+    "founder_early_authorship_share": 0.98,
+    "yearly_tables": [
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 70,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 139,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 142,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 150,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 154,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 158,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 163,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 163,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 163,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 168,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:lighteningman@gmail.com"
+        ],
+        "n_files": 168,
+        "n_active_authors_in_doa": 9
+      }
+    ],
+    "tfdd": {
+      "year": 2022,
+      "date": "2022-12-31T00:00:00+00:00",
+      "developer": "mail:lighteningman@gmail.com",
+      "last_commit_date": "2021-02-16T20:36:45+00:00",
+      "silence_years": 1.87
+    },
+    "pre_tfdd_window": {
+      "window_start": "2021-12-31T00:00:00+00:00",
+      "window_end": "2022-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 21,
+      "n_distinct_new_primary_owners": 6
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 4692,
+      "forks": 296,
+      "total_contributors": 51,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 2573
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 3.4,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  "activeadmin__activeadmin.json": {
+    "full_name": "activeadmin/activeadmin",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 9703,
+      "forks": 3324,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2010-04-15T14:26:03Z",
+      "html_url": "https://github.com/activeadmin/activeadmin"
+    },
+    "n_commits": 9534,
+    "n_developers": 833,
+    "n_files": 1830,
+    "repo_first_commit": "2010-04-15T13:23:16+00:00",
+    "repo_last_commit": "2026-08-19T13:30:52+00:00",
+    "history_span_years": 16.34,
+    "founder": "mail:gregdbell@gmail.com",
+    "founder_early_authorship_share": 0.857,
+    "yearly_tables": [
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 355,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 926,
+        "n_active_authors_in_doa": 32
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1051,
+        "n_active_authors_in_doa": 51
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1169,
+        "n_active_authors_in_doa": 71
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1261,
+        "n_active_authors_in_doa": 90
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1283,
+        "n_active_authors_in_doa": 99
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1296,
+        "n_active_authors_in_doa": 102
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1402,
+        "n_active_authors_in_doa": 114
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com"
+        ],
+        "n_files": 1440,
+        "n_active_authors_in_doa": 114
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:deivid.rodriguez@riseup.net"
+        ],
+        "n_files": 1560,
+        "n_active_authors_in_doa": 120
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:deivid.rodriguez@riseup.net"
+        ],
+        "n_files": 1584,
+        "n_active_authors_in_doa": 122
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:deivid.rodriguez@riseup.net"
+        ],
+        "n_files": 1588,
+        "n_active_authors_in_doa": 123
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:deivid.rodriguez@riseup.net"
+        ],
+        "n_files": 1593,
+        "n_active_authors_in_doa": 127
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:deivid.rodriguez@riseup.net"
+        ],
+        "n_files": 1700,
+        "n_active_authors_in_doa": 126
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:jjfutbol@gmail.com"
+        ],
+        "n_files": 1743,
+        "n_active_authors_in_doa": 124
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gregdbell@gmail.com",
+          "mail:jjfutbol@gmail.com"
+        ],
+        "n_files": 1756,
+        "n_active_authors_in_doa": 127
+      }
+    ],
+    "tfdd": {
+      "year": 2015,
+      "date": "2015-12-31T00:00:00+00:00",
+      "developer": "mail:gregdbell@gmail.com",
+      "last_commit_date": "2014-08-12T03:26:12+00:00",
+      "silence_years": 1.38
+    },
+    "pre_tfdd_window": {
+      "window_start": "2014-12-31T00:00:00+00:00",
+      "window_end": "2015-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 437,
+      "n_distinct_new_primary_owners": 98
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 9703,
+      "forks": 3324,
+      "total_contributors": 833,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 2085
+    },
+    "post_tfdd_monthly_commits": [
+      1,
+      16,
+      60,
+      25,
+      5,
+      9,
+      22,
+      32,
+      31,
+      45,
+      5,
+      8,
+      8,
+      109,
+      126,
+      87,
+      78,
+      36
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 10.63,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  "airbnb__lottie-android.json": {
+    "full_name": "airbnb/lottie-android",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 35703,
+      "forks": 5428,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "created_at": "2016-10-06T22:42:42Z",
+      "html_url": "https://github.com/airbnb/lottie-android"
+    },
+    "n_commits": 1971,
+    "n_developers": 178,
+    "n_files": 4476,
+    "repo_first_commit": "2016-08-12T20:43:54+00:00",
+    "repo_last_commit": "2026-02-15T22:03:57+00:00",
+    "history_span_years": 9.51,
+    "founder": "mail:gabriel.peal@airbnb.com",
+    "founder_early_authorship_share": 1.0,
+    "yearly_tables": [
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com"
+        ],
+        "n_files": 1082,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com"
+        ],
+        "n_files": 2313,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com"
+        ],
+        "n_files": 2714,
+        "n_active_authors_in_doa": 17
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com"
+        ],
+        "n_files": 2838,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com"
+        ],
+        "n_files": 3694,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com",
+          "name:gabriel peal"
+        ],
+        "n_files": 4237,
+        "n_active_authors_in_doa": 29
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com",
+          "name:gabriel peal"
+        ],
+        "n_files": 4309,
+        "n_active_authors_in_doa": 33
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com",
+          "name:gabriel peal"
+        ],
+        "n_files": 4422,
+        "n_active_authors_in_doa": 38
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com",
+          "name:gabriel peal"
+        ],
+        "n_files": 4463,
+        "n_active_authors_in_doa": 45
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:gabriel.peal@airbnb.com",
+          "name:gabriel peal"
+        ],
+        "n_files": 4476,
+        "n_active_authors_in_doa": 48
+      }
+    ],
+    "tfdd": {
+      "year": 2019,
+      "date": "2019-12-31T00:00:00+00:00",
+      "developer": "mail:gabriel.peal@airbnb.com",
+      "last_commit_date": "2018-08-29T14:37:00+00:00",
+      "silence_years": 1.34
+    },
+    "pre_tfdd_window": {
+      "window_start": "2018-12-31T00:00:00+00:00",
+      "window_end": "2019-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 140,
+      "n_distinct_new_primary_owners": 23
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 35703,
+      "forks": 5428,
+      "total_contributors": 178,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "project_age_days": 1180
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      4,
+      12,
+      1,
+      0,
+      2,
+      3,
+      1,
+      16,
+      14,
+      15,
+      17,
+      21,
+      3,
+      14,
+      10,
+      6,
+      31
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 6.13,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  "apache__dubbo.json": {
+    "full_name": "apache/dubbo",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 41555,
+      "forks": 26386,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "created_at": "2012-06-19T07:56:02Z",
+      "html_url": "https://github.com/apache/dubbo"
+    },
+    "n_commits": 10352,
+    "n_developers": 849,
+    "n_files": 15369,
+    "repo_first_commit": "2011-10-20T15:04:29+00:00",
+    "repo_last_commit": "2026-08-21T09:21:12+00:00",
+    "history_span_years": 14.83,
+    "founder": "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+    "founder_early_authorship_share": 0.704,
+    "yearly_tables": [
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 1221,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4052,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4062,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4140,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4140,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4142,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2"
+        ],
+        "n_files": 4334,
+        "n_active_authors_in_doa": 18
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:diecui1202@gmail.com"
+        ],
+        "n_files": 7224,
+        "n_active_authors_in_doa": 46
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com"
+        ],
+        "n_files": 9081,
+        "n_active_authors_in_doa": 79
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com"
+        ],
+        "n_files": 9470,
+        "n_active_authors_in_doa": 87
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com"
+        ],
+        "n_files": 10989,
+        "n_active_authors_in_doa": 129
+      },
+      {
+        "year": 2022,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com",
+          "mail:diecui1202@gmail.com"
+        ],
+        "n_files": 11595,
+        "n_active_authors_in_doa": 162
+      },
+      {
+        "year": 2023,
+        "truck_factor": 3,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com",
+          "mail:diecui1202@gmail.com"
+        ],
+        "n_files": 13888,
+        "n_active_authors_in_doa": 201
+      },
+      {
+        "year": 2024,
+        "truck_factor": 4,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com",
+          "mail:diecui1202@gmail.com",
+          "mail:jhq0812@gmail.com"
+        ],
+        "n_files": 15180,
+        "n_active_authors_in_doa": 217
+      },
+      {
+        "year": 2025,
+        "truck_factor": 4,
+        "tf_developers": [
+          "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+          "mail:ken.lj.hz@gmail.com",
+          "mail:diecui1202@gmail.com",
+          "mail:jhq0812@gmail.com"
+        ],
+        "n_files": 15323,
+        "n_active_authors_in_doa": 226
+      }
+    ],
+    "tfdd": {
+      "year": 2013,
+      "date": "2013-12-31T00:00:00+00:00",
+      "developer": "mail:william.liangf@1a56cb94-b969-4eaa-88fa-be21384802f2",
+      "last_commit_date": "2012-06-18T06:59:25+00:00",
+      "silence_years": 1.53
+    },
+    "pre_tfdd_window": {
+      "window_start": "2012-12-31T00:00:00+00:00",
+      "window_end": "2013-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 25,
+      "n_distinct_new_primary_owners": 9
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 41555,
+      "forks": 26386,
+      "total_contributors": 849,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "project_age_days": 559
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      1,
+      1,
+      7,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      3,
+      1,
+      4,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 12.64,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  "apolloconfig__apollo.json": {
+    "full_name": "apolloconfig/apollo",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 29798,
+      "forks": 10161,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "created_at": "2016-03-04T10:24:23Z",
+      "html_url": "https://github.com/apolloconfig/apollo"
+    },
+    "n_commits": 4365,
+    "n_developers": 230,
+    "n_files": 5683,
+    "repo_first_commit": "2016-03-04T10:24:23+00:00",
+    "repo_last_commit": "2026-08-20T07:01:46+00:00",
+    "history_span_years": 10.46,
+    "founder": "mail:liuyiming.vip@gmail.com",
+    "founder_early_authorship_share": 0.757,
+    "yearly_tables": [
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 3944,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 4278,
+        "n_active_authors_in_doa": 13
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 4583,
+        "n_active_authors_in_doa": 24
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 4729,
+        "n_active_authors_in_doa": 37
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 4849,
+        "n_active_authors_in_doa": 40
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com"
+        ],
+        "n_files": 5084,
+        "n_active_authors_in_doa": 52
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com",
+          "mail:nobodyiam@gmail.com"
+        ],
+        "n_files": 5197,
+        "n_active_authors_in_doa": 64
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com",
+          "mail:nobodyiam@gmail.com"
+        ],
+        "n_files": 5285,
+        "n_active_authors_in_doa": 68
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com",
+          "mail:nobodyiam@gmail.com"
+        ],
+        "n_files": 5459,
+        "n_active_authors_in_doa": 75
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:liuyiming.vip@gmail.com",
+          "mail:nobodyiam@gmail.com"
+        ],
+        "n_files": 5521,
+        "n_active_authors_in_doa": 83
+      }
+    ],
+    "tfdd": {
+      "year": 2017,
+      "date": "2017-12-31T00:00:00+00:00",
+      "developer": "mail:liuyiming.vip@gmail.com",
+      "last_commit_date": "2016-07-26T12:25:08+00:00",
+      "silence_years": 1.43
+    },
+    "pre_tfdd_window": {
+      "window_start": "2016-12-31T00:00:00+00:00",
+      "window_end": "2017-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 404,
+      "n_distinct_new_primary_owners": 12
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 29798,
+      "forks": 10161,
+      "total_contributors": 230,
+      "language": "Java",
+      "license": "Apache-2.0",
+      "project_age_days": 666
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      20,
+      35,
+      37,
+      25,
+      16,
+      33,
+      63,
+      87,
+      45,
+      62,
+      38,
+      36,
+      43,
+      28,
+      11,
+      17,
+      16
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 8.64,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  "bitnami__sealed-secrets.json": {
+    "full_name": "bitnami/sealed-secrets",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 9255,
+      "forks": 772,
+      "language": "Go",
+      "license": "Apache-2.0",
+      "created_at": "2017-05-29T03:09:47Z",
+      "html_url": "https://github.com/bitnami/sealed-secrets"
+    },
+    "n_commits": 1778,
+    "n_developers": 210,
+    "n_files": 4698,
+    "repo_first_commit": "2017-05-29T02:50:50+00:00",
+    "repo_last_commit": "2026-08-20T08:57:35+00:00",
+    "history_span_years": 9.23,
+    "founder": "mail:gus@inodes.org",
+    "founder_early_authorship_share": 0.909,
+    "yearly_tables": [
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 2348,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 2795,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 3859,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4211,
+        "n_active_authors_in_doa": 15
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4468,
+        "n_active_authors_in_doa": 21
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4660,
+        "n_active_authors_in_doa": 27
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4688,
+        "n_active_authors_in_doa": 30
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4695,
+        "n_active_authors_in_doa": 30
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:gus@inodes.org"
+        ],
+        "n_files": 4696,
+        "n_active_authors_in_doa": 31
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:gus@inodes.org",
+      "last_commit_date": "2019-04-28T23:35:04+00:00",
+      "silence_years": 1.68
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 203,
+      "n_distinct_new_primary_owners": 14
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 9255,
+      "forks": 772,
+      "total_contributors": 210,
+      "language": "Go",
+      "license": "Apache-2.0",
+      "project_age_days": 1311
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      17,
+      26,
+      29,
+      8,
+      19,
+      0,
+      0,
+      0,
+      0,
+      0,
+      10,
+      19,
+      26,
+      15,
+      27,
+      20,
+      12
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.63,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  "dessant__buster.json": {
+    "full_name": "dessant/buster",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 9261,
+      "forks": 688,
+      "language": "JavaScript",
+      "license": "GPL-3.0",
+      "created_at": "2018-11-18T08:31:52Z",
+      "html_url": "https://github.com/dessant/buster"
+    },
+    "n_commits": 195,
+    "n_developers": 3,
+    "n_files": 125,
+    "repo_first_commit": "2018-12-04T00:15:57+00:00",
+    "repo_last_commit": "2026-06-27T11:48:16+00:00",
+    "history_span_years": 7.56,
+    "founder": "mail:git@rmn.space",
+    "founder_early_authorship_share": 0.98,
+    "yearly_tables": [
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 49,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 70,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 81,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 84,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 110,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 110,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 118,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2025,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:git@rmn.space"
+        ],
+        "n_files": 118,
+        "n_active_authors_in_doa": 2
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:git@rmn.space",
+      "last_commit_date": "2019-06-11T04:33:03+00:00",
+      "silence_years": 1.56
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 58,
+      "n_distinct_new_primary_owners": 1
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 9261,
+      "forks": 688,
+      "total_contributors": 3,
+      "language": "JavaScript",
+      "license": "GPL-3.0",
+      "project_age_days": 773
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      1,
+      0,
+      4,
+      3,
+      0,
+      2,
+      0,
+      7,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.49,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  "devopsgroup-io__vagrant-digitalocean.json": {
+    "full_name": "devopsgroup-io/vagrant-digitalocean",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 1709,
+      "forks": 177,
+      "language": "Ruby",
+      "license": "MPL-2.0",
+      "created_at": "2013-02-27T05:33:06Z",
+      "html_url": "https://github.com/devopsgroup-io/vagrant-digitalocean"
+    },
+    "n_commits": 306,
+    "n_developers": 57,
+    "n_files": 76,
+    "repo_first_commit": "2013-02-27T05:27:12+00:00",
+    "repo_last_commit": "2023-09-07T12:54:14+00:00",
+    "history_span_years": 10.52,
+    "founder": "mail:john.m.bender@gmail.com",
+    "founder_early_authorship_share": 0.9,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 73,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 75,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 75,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:john.m.bender@gmail.com"
+        ],
+        "n_files": 76,
+        "n_active_authors_in_doa": 5
+      }
+    ],
+    "tfdd": {
+      "year": 2014,
+      "date": "2014-12-31T00:00:00+00:00",
+      "developer": "mail:john.m.bender@gmail.com",
+      "last_commit_date": "2013-04-02T22:39:16+00:00",
+      "silence_years": 1.74
+    },
+    "pre_tfdd_window": {
+      "window_start": "2013-12-31T00:00:00+00:00",
+      "window_end": "2014-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 68,
+      "n_distinct_new_primary_owners": 3
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 1709,
+      "forks": 177,
+      "total_contributors": 57,
+      "language": "Ruby",
+      "license": "MPL-2.0",
+      "project_age_days": 671
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      3,
+      8,
+      0,
+      1,
+      2,
+      1,
+      23,
+      0,
+      1,
+      10,
+      0,
+      1,
+      8,
+      1,
+      5,
+      2,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 8.68,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  "freeCodeCamp__devdocs.json": {
+    "full_name": "freeCodeCamp/devdocs",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 39333,
+      "forks": 2626,
+      "language": "Ruby",
+      "license": "MPL-2.0",
+      "created_at": "2013-10-24T18:16:07Z",
+      "html_url": "https://github.com/freeCodeCamp/devdocs"
+    },
+    "n_commits": 6793,
+    "n_developers": 292,
+    "n_files": 2393,
+    "repo_first_commit": "2013-10-24T18:25:52+00:00",
+    "repo_last_commit": "2026-08-21T13:20:29+00:00",
+    "history_span_years": 12.82,
+    "founder": "mail:thibaut@me.com",
+    "founder_early_authorship_share": 0.938,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 402,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 655,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 926,
+        "n_active_authors_in_doa": 20
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1216,
+        "n_active_authors_in_doa": 34
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1385,
+        "n_active_authors_in_doa": 46
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1583,
+        "n_active_authors_in_doa": 57
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1682,
+        "n_active_authors_in_doa": 61
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1771,
+        "n_active_authors_in_doa": 67
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 1909,
+        "n_active_authors_in_doa": 72
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 2038,
+        "n_active_authors_in_doa": 82
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:thibaut@me.com"
+        ],
+        "n_files": 2092,
+        "n_active_authors_in_doa": 86
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:thibaut@me.com",
+          "mail:simon.legner@gmail.com"
+        ],
+        "n_files": 2235,
+        "n_active_authors_in_doa": 93
+      },
+      {
+        "year": 2025,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:thibaut@me.com",
+          "mail:simon.legner@gmail.com"
+        ],
+        "n_files": 2286,
+        "n_active_authors_in_doa": 98
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:thibaut@me.com",
+      "last_commit_date": "2019-01-27T21:48:37+00:00",
+      "silence_years": 1.92
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 459,
+      "n_distinct_new_primary_owners": 66
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 39333,
+      "forks": 2626,
+      "total_contributors": 292,
+      "language": "Ruby",
+      "license": "MPL-2.0",
+      "project_age_days": 2624
+    },
+    "post_tfdd_monthly_commits": [
+      2,
+      48,
+      49,
+      62,
+      46,
+      48,
+      51,
+      22,
+      18,
+      8,
+      68,
+      51,
+      58,
+      60,
+      52,
+      25,
+      53,
+      47
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 5.64,
+    "survival_label": "Active_survived",
+    "activity_bucket": "thriving"
+  },
+  "geekq__workflow.json": {
+    "full_name": "geekq/workflow",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 1799,
+      "forks": 206,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2009-01-23T11:52:34Z",
+      "html_url": "https://github.com/geekq/workflow"
+    },
+    "n_commits": 430,
+    "n_developers": 46,
+    "n_files": 84,
+    "repo_first_commit": "2007-11-17T02:28:31+00:00",
+    "repo_last_commit": "2025-10-16T07:39:23+00:00",
+    "history_span_years": 17.91,
+    "founder": "mail:ryan@yeahnah.org",
+    "founder_early_authorship_share": 0.98,
+    "yearly_tables": [
+      {
+        "year": 2007,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 21,
+        "n_active_authors_in_doa": 1
+      },
+      {
+        "year": 2008,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 32,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2009,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 39,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2010,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 47,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2011,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 48,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2012,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 49,
+        "n_active_authors_in_doa": 5
+      },
+      {
+        "year": 2013,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 68,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2014,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 71,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2015,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 71,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2016,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 72,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2017,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 72,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2018,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 72,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2019,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 80,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2020,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 80,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2021,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 80,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2022,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 81,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2023,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:ryan@yeahnah.org",
+          "mail:vladimir@geekq.net"
+        ],
+        "n_files": 81,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2024,
+        "truck_factor": 2,
+        "tf_developers": [
+          "mail:vladimir@geekq.net",
+          "mail:ryan@yeahnah.org"
+        ],
+        "n_files": 84,
+        "n_active_authors_in_doa": 10
+      }
+    ],
+    "tfdd": {
+      "year": 2009,
+      "date": "2009-12-31T00:00:00+00:00",
+      "developer": "mail:ryan@yeahnah.org",
+      "last_commit_date": "2008-12-29T05:51:43+00:00",
+      "silence_years": 1.0
+    },
+    "pre_tfdd_window": {
+      "window_start": "2008-12-31T00:00:00+00:00",
+      "window_end": "2009-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 44,
+      "n_distinct_new_primary_owners": 1
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 1799,
+      "forks": 206,
+      "total_contributors": 46,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 341
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      0,
+      15,
+      3,
+      1,
+      3,
+      11,
+      8,
+      8,
+      5,
+      3,
+      0,
+      2,
+      0,
+      0,
+      0,
+      2,
+      1
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 15.79,
+    "survival_label": "Active_survived",
+    "activity_bucket": "maintained"
+  },
+  "github__pages-gem.json": {
+    "full_name": "github/pages-gem",
+    "status": "qualified",
+    "discard_reason": null,
+    "meta": {
+      "stars": 1872,
+      "forks": 359,
+      "language": "Ruby",
+      "license": "MIT",
+      "created_at": "2013-08-08T16:09:08Z",
+      "html_url": "https://github.com/github/pages-gem"
+    },
+    "n_commits": 1662,
+    "n_developers": 93,
+    "n_files": 103,
+    "repo_first_commit": "2013-08-08T16:09:08+00:00",
+    "repo_last_commit": "2025-03-03T18:20:41+00:00",
+    "history_span_years": 11.57,
+    "founder": "mail:ben.balter@github.com",
+    "founder_early_authorship_share": 0.759,
+    "yearly_tables": [
+      {
+        "year": 2013,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 13,
+        "n_active_authors_in_doa": 2
+      },
+      {
+        "year": 2014,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 21,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2015,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 21,
+        "n_active_authors_in_doa": 3
+      },
+      {
+        "year": 2016,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 39,
+        "n_active_authors_in_doa": 4
+      },
+      {
+        "year": 2017,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 77,
+        "n_active_authors_in_doa": 7
+      },
+      {
+        "year": 2018,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 89,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2019,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 92,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2020,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 93,
+        "n_active_authors_in_doa": 8
+      },
+      {
+        "year": 2021,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 100,
+        "n_active_authors_in_doa": 9
+      },
+      {
+        "year": 2022,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 101,
+        "n_active_authors_in_doa": 10
+      },
+      {
+        "year": 2023,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 102,
+        "n_active_authors_in_doa": 11
+      },
+      {
+        "year": 2024,
+        "truck_factor": 1,
+        "tf_developers": [
+          "mail:ben.balter@github.com"
+        ],
+        "n_files": 103,
+        "n_active_authors_in_doa": 12
+      }
+    ],
+    "tfdd": {
+      "year": 2020,
+      "date": "2020-12-31T00:00:00+00:00",
+      "developer": "mail:ben.balter@github.com",
+      "last_commit_date": "2019-10-29T13:49:22+00:00",
+      "silence_years": 1.17
+    },
+    "pre_tfdd_window": {
+      "window_start": "2019-12-31T00:00:00+00:00",
+      "window_end": "2020-12-31T00:00:00+00:00",
+      "founder_commit_share": 0.0,
+      "n_pre_window_commits": 52,
+      "n_distinct_new_primary_owners": 7
+    },
+    "tfdd_snapshot_covariates": {
+      "stars": 1872,
+      "forks": 359,
+      "total_contributors": 93,
+      "language": "Ruby",
+      "license": "MIT",
+      "project_age_days": 2701
+    },
+    "post_tfdd_monthly_commits": [
+      0,
+      17,
+      7,
+      7,
+      4,
+      2,
+      2,
+      9,
+      3,
+      2,
+      7,
+      11,
+      4,
+      10,
+      2,
+      13,
+      6,
+      0
+    ],
+    "post_tfdd_months_available": 18,
+    "years_after_tfdd": 4.17,
+    "survival_label": "Inactive_did_not_survive",
+    "activity_bucket": "dormant"
+  },
+  "A9T9__RPA.json": {
+    "full_name": "A9T9/RPA",
+    "status": "discarded",
+    "discard_reason": "no_qualifying_founder_only_tfdd",
+    "yearly_tables_preview_years": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "ActiveState__code.json": {
+    "full_name": "ActiveState/code",
+    "status": "discarded",
+    "discard_reason": "too_few_commits"
+  },
+  "Belval__pdf2image.json": {
+    "full_name": "Belval/pdf2image",
+    "status": "discarded",
+    "discard_reason": "no_qualifying_founder_only_tfdd",
+    "yearly_tables_preview_years": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ]
+  },
+  "DerekYRC__mini-spring-cloud.json": {
+    "full_name": "DerekYRC/mini-spring-cloud",
+    "status": "discarded",
+    "discard_reason": "too_few_commits"
+  },
+  "Dogfalo__materialize.json": {
+    "full_name": "Dogfalo/materialize",
+    "status": "discarded",
+    "discard_reason": "non_software_repo_low_code_fraction"
+  },
+  "EndlessCheng__codeforces-go.json": {
+    "full_name": "EndlessCheng/codeforces-go",
+    "status": "discarded",
+    "discard_reason": "right_censored_insufficient_post_tfdd_history",
+    "years_after_tfdd": 0.64
+  },
+  "Hackplayers__evil-winrm.json": {
+    "full_name": "Hackplayers/evil-winrm",
+    "status": "discarded",
+    "discard_reason": "non_software_repo_low_code_fraction"
+  },
+  "HannahMitt__HomeMirror.json": {
+    "full_name": "HannahMitt/HomeMirror",
+    "status": "discarded",
+    "discard_reason": "mining_artifact_migration_squash"
+  },
+  "HobbitLong__PyContrast.json": {
+    "full_name": "HobbitLong/PyContrast",
+    "status": "discarded",
+    "discard_reason": "too_few_commits"
+  },
+  "JurajNyiri__HomeAssistant-Tapo-Control.json": {
+    "full_name": "JurajNyiri/HomeAssistant-Tapo-Control",
+    "status": "discarded",
+    "discard_reason": "no_qualifying_founder_only_tfdd",
+    "yearly_tables_preview_years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  }
+}
