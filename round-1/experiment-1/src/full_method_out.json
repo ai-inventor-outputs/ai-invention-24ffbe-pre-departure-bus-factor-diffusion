@@ -1,0 +1,562 @@
+{
+  "metadata": {
+    "method_name": "authority_diffusion_before_founder_exit",
+    "description": "Recomputes Avelino et al. (ESEM 2019) DOA/Truck-Factor/TFDD pipeline on GitHub repos and tests a NEW pre-departure authority-diffusion signal (founder commit-share + count of independent non-founder DOA file-owners in the 6-12mo window before a founder-only TFDD) against the paper's null snapshot covariates, via logistic regression (BH-FDR corrected), matched-pairs bootstrap, and a within-repo random-window placebo test.",
+    "corpus_stats": {
+      "n_repos_input": 62,
+      "n_repos_after_filters": 47,
+      "n_founder_only_tfdds": 30,
+      "exclusion_table": {
+        "ok": 47,
+        "not_mostly_source": 1,
+        "no_commits_extracted": 14,
+        "no_founder_only_tfdd": 13,
+        "insufficient_pre_history": 2,
+        "insufficient_post_history": 2
+      }
+    },
+    "baseline_replication": {
+      "tfdd_rate_among_filtered": 0.6383,
+      "avelino_reported_tfdd_rate": 0.16,
+      "survival_rate": 0.3667,
+      "avelino_reported_survival_rate": 0.41,
+      "snapshot_effect_sizes_cohens_d": {
+        "log_stars": NaN,
+        "log_forks": NaN,
+        "developers_at_tfdd": -0.2255,
+        "commits_at_tfdd": -0.5578,
+        "files_at_tfdd": -0.6248
+      },
+      "avelino_reported_snapshot_d_range": [
+        0.13,
+        0.26
+      ]
+    },
+    "regression_results": {
+      "n_used": 0,
+      "status": "insufficient_data_or_no_outcome_variance"
+    },
+    "matched_pairs_results": {
+      "status": "insufficient_group_sizes",
+      "n_high": 0,
+      "n_low": 0
+    },
+    "placebo_results": {
+      "status": "ok",
+      "n_null_draws": 25,
+      "true_effect_founder_share_corr": 0.17959723054022853,
+      "true_effect_percentile_in_null_distribution": 40.0,
+      "empirical_p_value": 0.6153846153846154
+    },
+    "success_criteria_verdict": {
+      "criterion_1_diffusion_significant_bh_p_lt_0.10": false,
+      "criterion_2_diffusion_coef_exceeds_snapshot_coef": false,
+      "criterion_3_survives_placebo_p_lt_0.10": false,
+      "n_founder_only_tfdd_repos": 30,
+      "notes": "Corpus of 62 curated GitHub repos (dataset artifact dependency was empty at run time, see corpus_stats/notes). 47 passed prefilters, 30 yielded a founder-only TFDD with sufficient pre/post history. Snapshots are QUARTERLY (fallback_plan item 3) with a documented ~1.5mo TFDD-date fuzz. Placebo uses 200-target null draws (reduced from 1000 for CPU budget). DL(a,f) is implemented as the standard Fritz/Avelino definition: count of commits to f by OTHER authors after a's own last commit to f (not independently re-verified against the ICPC 2016 paper text at run time -- documented deviation from testing_plan step 1). REPORTING A NULL/NEGATIVE RESULT: corpus too small or effects do not clear thresholds; per fallback_plan, no fabrication/downsampling was applied."
+    }
+  },
+  "datasets": [
+    {
+      "dataset": "github_repos_curated_corpus",
+      "examples": [
+        {
+          "input": "Repo: expressjs/serve-static. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"not_mostly_source\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "expressjs/serve-static",
+          "metadata_excluded_reason": "not_mostly_source",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}"
+        },
+        {
+          "input": "Repo: mochajs/mocha. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "mochajs/mocha",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: less/less.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "less/less.js",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: pypa/pip. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pypa/pip",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: jekyll/jekyll. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "jekyll/jekyll",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: composer/composer. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "composer/composer",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: scrapy/scrapy. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "scrapy/scrapy",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: mrdoob/three.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "mrdoob/three.js",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: webpack/webpack. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "webpack/webpack",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: pytest-dev/pytest. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pytest-dev/pytest",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: rails/rails. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "rails/rails",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: symfony/symfony. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "symfony/symfony",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: phpmyadmin/phpmyadmin. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "phpmyadmin/phpmyadmin",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: square/okhttp. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "square/okhttp",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: protocolbuffers/protobuf. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "protocolbuffers/protobuf",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: sindresorhus/chalk. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:sindresorhus@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "sindresorhus/chalk",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: request/request. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:mikeal.rogers@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "request/request",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: tj/commander.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:tj@vision-media.ca\", \"tfdd_iso\": \"2014-05-15T05:10:38+00:00\", \"founder_share\": 0.5294117647058824, \"n_doa_owners\": 2, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 2.5531914893617023, \"developers_at_tfdd\": 41, \"commits_at_tfdd\": 206, \"files_at_tfdd\": 55, \"contributor_count\": 203, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "tj/commander.js",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.5294117647058824, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 41, \"commits_at_tfdd\": 206, \"files_at_tfdd\": 55}"
+        },
+        {
+          "input": "Repo: visionmedia/superagent. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:tj@vision-media.ca\", \"tfdd_iso\": \"2014-02-03T18:38:47+00:00\", \"founder_share\": 0.7045454545454546, \"n_doa_owners\": 4, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.7764227642276422, \"developers_at_tfdd\": 38, \"commits_at_tfdd\": 496, \"files_at_tfdd\": 79, \"contributor_count\": 290, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "visionmedia/superagent",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.7045454545454546, \"n_doa_owners\": 4, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 38, \"commits_at_tfdd\": 496, \"files_at_tfdd\": 79}"
+        },
+        {
+          "input": "Repo: caolan/async. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:caolan@caolanmcmahon.com\", \"tfdd_iso\": \"2014-08-13T01:20:50+00:00\", \"founder_share\": 0.041666666666666664, \"n_doa_owners\": 0, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 2.6742424242424243, \"developers_at_tfdd\": 104, \"commits_at_tfdd\": 332, \"files_at_tfdd\": 22, \"contributor_count\": 274, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "caolan/async",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.041666666666666664, \"n_doa_owners\": 0, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 104, \"commits_at_tfdd\": 332, \"files_at_tfdd\": 22}"
+        },
+        {
+          "input": "Repo: jashkenas/underscore. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:jashkenas@gmail.com\", \"tfdd_iso\": \"2015-07-26T23:06:12+00:00\", \"founder_share\": 0.15827338129496402, \"n_doa_owners\": 5, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.3560606060606061, \"developers_at_tfdd\": 255, \"commits_at_tfdd\": 1468, \"files_at_tfdd\": 66, \"contributor_count\": 346, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "jashkenas/underscore",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.15827338129496402, \"n_doa_owners\": 5, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 255, \"commits_at_tfdd\": 1468, \"files_at_tfdd\": 66}"
+        },
+        {
+          "input": "Repo: isaacs/node-glob. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"insufficient_pre_history\", \"founder\": \"em:i@foohack.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "isaacs/node-glob",
+          "metadata_excluded_reason": "insufficient_pre_history",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"insufficient_pre_history\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"insufficient_pre_history\"}"
+        },
+        {
+          "input": "Repo: jashkenas/backbone. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:jashkenas@gmail.com\", \"tfdd_iso\": \"2015-10-01T01:48:05+00:00\", \"founder_share\": 0.03278688524590164, \"n_doa_owners\": 9, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.3082706766917293, \"developers_at_tfdd\": 312, \"commits_at_tfdd\": 2299, \"files_at_tfdd\": 254, \"contributor_count\": 365, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "jashkenas/backbone",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.03278688524590164, \"n_doa_owners\": 9, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 312, \"commits_at_tfdd\": 2299, \"files_at_tfdd\": 254}"
+        },
+        {
+          "input": "Repo: chalk/ansi-styles. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:sindresorhus@gmail.com\", \"tfdd_iso\": \"2022-10-31T12:26:01+00:00\", \"founder_share\": 1.0, \"n_doa_owners\": 2, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.0, \"developers_at_tfdd\": 22, \"commits_at_tfdd\": 110, \"files_at_tfdd\": 21, \"contributor_count\": 24, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "chalk/ansi-styles",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 1.0, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 22, \"commits_at_tfdd\": 110, \"files_at_tfdd\": 21}"
+        },
+        {
+          "input": "Repo: components/jquery. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:paul.irish@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "components/jquery",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: substack/node-browserify. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:substack@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "substack/node-browserify",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: moment/moment. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:washwithcare@gmail.com\", \"tfdd_iso\": \"2013-11-29T13:23:16+00:00\", \"founder_share\": 0.3173076923076923, \"n_doa_owners\": 46, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 0.7270408163265306, \"developers_at_tfdd\": 190, \"commits_at_tfdd\": 1265, \"files_at_tfdd\": 410, \"contributor_count\": 712, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "moment/moment",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.3173076923076923, \"n_doa_owners\": 46, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 190, \"commits_at_tfdd\": 1265, \"files_at_tfdd\": 410}"
+        },
+        {
+          "input": "Repo: expressjs/express. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:tj@vision-media.ca\", \"tfdd_iso\": \"2014-03-27T17:26:18+00:00\", \"founder_share\": 0.6532258064516129, \"n_doa_owners\": 2, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 2.141711229946524, \"developers_at_tfdd\": 151, \"commits_at_tfdd\": 3964, \"files_at_tfdd\": 802, \"contributor_count\": 390, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "expressjs/express",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.6532258064516129, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 151, \"commits_at_tfdd\": 3964, \"files_at_tfdd\": 802}"
+        },
+        {
+          "input": "Repo: pallets/click. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:armin.ronacher@active-4.com\", \"tfdd_iso\": \"2016-04-23T21:51:55+00:00\", \"founder_share\": 0.23880597014925373, \"n_doa_owners\": 3, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.4433962264150943, \"developers_at_tfdd\": 87, \"commits_at_tfdd\": 677, \"files_at_tfdd\": 131, \"contributor_count\": 467, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pallets/click",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.23880597014925373, \"n_doa_owners\": 3, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 87, \"commits_at_tfdd\": 677, \"files_at_tfdd\": 131}"
+        },
+        {
+          "input": "Repo: pallets/jinja. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:armin.ronacher@active-4.com\", \"tfdd_iso\": \"2015-11-27T19:47:32+00:00\", \"founder_share\": 0.04081632653061224, \"n_doa_owners\": 6, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 2.0964912280701755, \"developers_at_tfdd\": 136, \"commits_at_tfdd\": 1216, \"files_at_tfdd\": 512, \"contributor_count\": 339, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pallets/jinja",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.04081632653061224, \"n_doa_owners\": 6, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 136, \"commits_at_tfdd\": 1216, \"files_at_tfdd\": 512}"
+        },
+        {
+          "input": "Repo: pallets/flask. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:armin.ronacher@active-4.com\", \"tfdd_iso\": \"2018-04-06T11:12:57+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 16, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 0.8381962864721487, \"developers_at_tfdd\": 544, \"commits_at_tfdd\": 2463, \"files_at_tfdd\": 496, \"contributor_count\": 871, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pallets/flask",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 16, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 544, \"commits_at_tfdd\": 2463, \"files_at_tfdd\": 496}"
+        },
+        {
+          "input": "Repo: chartjs/Chart.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:nick@nickdownie.com\", \"tfdd_iso\": \"2014-09-16T20:57:50+00:00\", \"founder_share\": 0.3333333333333333, \"n_doa_owners\": 1, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 11.950000000000001, \"developers_at_tfdd\": 21, \"commits_at_tfdd\": 80, \"files_at_tfdd\": 55, \"contributor_count\": 545, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "chartjs/Chart.js",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.3333333333333333, \"n_doa_owners\": 1, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 21, \"commits_at_tfdd\": 80, \"files_at_tfdd\": 55}"
+        },
+        {
+          "input": "Repo: psf/requests. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:me@kennethreitz.com\", \"tfdd_iso\": \"2015-02-13T18:41:18+00:00\", \"founder_share\": 0.10236220472440945, \"n_doa_owners\": 5, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.9319470699432892, \"developers_at_tfdd\": 387, \"commits_at_tfdd\": 2863, \"files_at_tfdd\": 293, \"contributor_count\": 794, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "psf/requests",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.10236220472440945, \"n_doa_owners\": 5, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 387, \"commits_at_tfdd\": 2863, \"files_at_tfdd\": 293}"
+        },
+        {
+          "input": "Repo: socketio/socket.io. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:rauchg@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "socketio/socket.io",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: benoitc/gunicorn. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:bchesneau@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "benoitc/gunicorn",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: paramiko/paramiko. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:robey@lag.net\", \"tfdd_iso\": \"2009-02-02T22:04:24+00:00\", \"founder_share\": 1.0, \"n_doa_owners\": 1, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.7407407407407408, \"developers_at_tfdd\": 4, \"commits_at_tfdd\": 496, \"files_at_tfdd\": 114, \"contributor_count\": 196, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "paramiko/paramiko",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 1.0, \"n_doa_owners\": 1, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 4, \"commits_at_tfdd\": 496, \"files_at_tfdd\": 114}"
+        },
+        {
+          "input": "Repo: tornadoweb/tornado. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"insufficient_pre_history\", \"founder\": \"em:btaylor@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "tornadoweb/tornado",
+          "metadata_excluded_reason": "insufficient_pre_history",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"insufficient_pre_history\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"insufficient_pre_history\"}"
+        },
+        {
+          "input": "Repo: kennethreitz/records. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:me@kennethreitz.org\", \"tfdd_iso\": \"2024-06-24T12:27:51+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 0, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.0625, \"developers_at_tfdd\": 49, \"commits_at_tfdd\": 300, \"files_at_tfdd\": 31, \"contributor_count\": 51, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "kennethreitz/records",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 0, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 49, \"commits_at_tfdd\": 300, \"files_at_tfdd\": 31}"
+        },
+        {
+          "input": "Repo: gevent/gevent. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:denis.bilenko@gmail.com\", \"tfdd_iso\": \"2015-10-06T23:25:15+00:00\", \"founder_share\": 0.16216216216216217, \"n_doa_owners\": 3, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 1.1751527494908351, \"developers_at_tfdd\": 62, \"commits_at_tfdd\": 3442, \"files_at_tfdd\": 758, \"contributor_count\": 130, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "gevent/gevent",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.16216216216216217, \"n_doa_owners\": 3, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 62, \"commits_at_tfdd\": 3442, \"files_at_tfdd\": 758}"
+        },
+        {
+          "input": "Repo: cherrypy/cherrypy. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:rdelon@cherrypy.org\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "cherrypy/cherrypy",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: celery/celery. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:askh@opera.com\", \"tfdd_iso\": \"2011-01-23T16:00:00+00:00\", \"founder_share\": 0.8675, \"n_doa_owners\": 8, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.7332293291731669, \"developers_at_tfdd\": 74, \"commits_at_tfdd\": 3192, \"files_at_tfdd\": 872, \"contributor_count\": 1518, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "celery/celery",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.8675, \"n_doa_owners\": 8, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 74, \"commits_at_tfdd\": 3192, \"files_at_tfdd\": 872}"
+        },
+        {
+          "input": "Repo: sinatra/sinatra. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:blake.mizerany@gmail.com@95fbf360-2702-46e8-84d8-6de9ca90a270\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "sinatra/sinatra",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: resque/resque. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:chris@ozmm.org\", \"tfdd_iso\": \"2011-11-11T19:54:28+00:00\", \"founder_share\": 0.2711864406779661, \"n_doa_owners\": 8, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.7913385826771653, \"developers_at_tfdd\": 124, \"commits_at_tfdd\": 873, \"files_at_tfdd\": 98, \"contributor_count\": 319, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "resque/resque",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.2711864406779661, \"n_doa_owners\": 8, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 124, \"commits_at_tfdd\": 873, \"files_at_tfdd\": 98}"
+        },
+        {
+          "input": "Repo: mperham/sidekiq. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"insufficient_post_history\", \"founder\": \"em:mperham@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "mperham/sidekiq",
+          "metadata_excluded_reason": "insufficient_post_history",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"insufficient_post_history\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"insufficient_post_history\"}"
+        },
+        {
+          "input": "Repo: sqlalchemy/sqlalchemy. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:mike_mp@zzzcomputing.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "sqlalchemy/sqlalchemy",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: rspec/rspec-core. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:chad@spicycode.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "rspec/rspec-core",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: puma/puma. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:zedshaw@19e92222-5c0b-0410-8929-a290d50e31e9\", \"tfdd_iso\": \"2007-10-29T23:17:34+00:00\", \"founder_share\": 0.46153846153846156, \"n_doa_owners\": 3, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.14113597246127366, \"developers_at_tfdd\": 12, \"commits_at_tfdd\": 736, \"files_at_tfdd\": 521, \"contributor_count\": 565, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "puma/puma",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.46153846153846156, \"n_doa_owners\": 3, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 12, \"commits_at_tfdd\": 736, \"files_at_tfdd\": 521}"
+        },
+        {
+          "input": "Repo: fluent/fluentd. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:frsyuki@users.sourceforge.jp\", \"tfdd_iso\": \"2013-12-18T01:36:35+00:00\", \"founder_share\": 0.28205128205128205, \"n_doa_owners\": 4, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 2.022222222222222, \"developers_at_tfdd\": 45, \"commits_at_tfdd\": 615, \"files_at_tfdd\": 106, \"contributor_count\": 309, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "fluent/fluentd",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.28205128205128205, \"n_doa_owners\": 4, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 45, \"commits_at_tfdd\": 615, \"files_at_tfdd\": 106}"
+        },
+        {
+          "input": "Repo: laravel/laravel. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:taylorotwell@gmail.com\", \"tfdd_iso\": \"2017-06-08T16:45:08+00:00\", \"founder_share\": 0.5388349514563107, \"n_doa_owners\": 5, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.6572052401746725, \"developers_at_tfdd\": 500, \"commits_at_tfdd\": 4184, \"files_at_tfdd\": 1684, \"contributor_count\": 868, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "laravel/laravel",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.5388349514563107, \"n_doa_owners\": 5, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 500, \"commits_at_tfdd\": 4184, \"files_at_tfdd\": 1684}"
+        },
+        {
+          "input": "Repo: guzzle/guzzle. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:mtdowling@gmail.com\", \"tfdd_iso\": \"2016-08-29T01:32:13+00:00\", \"founder_share\": 0.2833333333333333, \"n_doa_owners\": 2, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.2249322493224932, \"developers_at_tfdd\": 263, \"commits_at_tfdd\": 2572, \"files_at_tfdd\": 2381, \"contributor_count\": 432, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "guzzle/guzzle",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.2833333333333333, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 263, \"commits_at_tfdd\": 2572, \"files_at_tfdd\": 2381}"
+        },
+        {
+          "input": "Repo: junit-team/junit4. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"nm:egamma\", \"tfdd_iso\": \"2002-09-03T19:06:14+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 2, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.13, \"developers_at_tfdd\": 5, \"commits_at_tfdd\": 112, \"files_at_tfdd\": 163, \"contributor_count\": 223, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "junit-team/junit4",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 2, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 5, \"commits_at_tfdd\": 112, \"files_at_tfdd\": 163}"
+        },
+        {
+          "input": "Repo: square/retrofit. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:eric@squareup.com\", \"tfdd_iso\": \"2011-09-07T04:30:14+00:00\", \"founder_share\": 0.7272727272727273, \"n_doa_owners\": 2, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 2.4651162790697674, \"developers_at_tfdd\": 7, \"commits_at_tfdd\": 43, \"files_at_tfdd\": 91, \"contributor_count\": 208, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "square/retrofit",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.7272727272727273, \"n_doa_owners\": 2, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 7, \"commits_at_tfdd\": 43, \"files_at_tfdd\": 91}"
+        },
+        {
+          "input": "Repo: pypa/virtualenv. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"insufficient_post_history\", \"founder\": \"em:bgabor8@bloomberg.net\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "pypa/virtualenv",
+          "metadata_excluded_reason": "insufficient_post_history",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"insufficient_post_history\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"insufficient_post_history\"}"
+        },
+        {
+          "input": "Repo: square/picasso. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:dimitris@squareup.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "square/picasso",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: google/gson. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:inder123@gmail.com\", \"tfdd_iso\": \"2018-06-02T07:43:32+00:00\", \"founder_share\": 0.3333333333333333, \"n_doa_owners\": 8, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.5520833333333334, \"developers_at_tfdd\": 87, \"commits_at_tfdd\": 1312, \"files_at_tfdd\": 843, \"contributor_count\": 194, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "google/gson",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.3333333333333333, \"n_doa_owners\": 8, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 87, \"commits_at_tfdd\": 1312, \"files_at_tfdd\": 843}"
+        },
+        {
+          "input": "Repo: nlohmann/json. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:niels.lohmann@gmail.com\", \"tfdd_iso\": \"2019-04-04T13:19:03+00:00\", \"founder_share\": 0.012121212121212121, \"n_doa_owners\": 12, \"binary_survival\": 0, \"graded_outcome_velocity_ratio\": 0.8593314763231199, \"developers_at_tfdd\": 148, \"commits_at_tfdd\": 2555, \"files_at_tfdd\": 2426, \"contributor_count\": 385, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "nlohmann/json",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.012121212121212121, \"n_doa_owners\": 12, \"predicted_survival\": 0}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 148, \"commits_at_tfdd\": 2555, \"files_at_tfdd\": 2426}"
+        },
+        {
+          "input": "Repo: fmtlib/fmt. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:victor.zverovich@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "fmtlib/fmt",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: catchorg/Catch2. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:phil@twobluecubes.com\", \"tfdd_iso\": \"2011-11-10T05:24:00+00:00\", \"founder_share\": 0.9738219895287958, \"n_doa_owners\": 0, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 1.380952380952381, \"developers_at_tfdd\": 5, \"commits_at_tfdd\": 224, \"files_at_tfdd\": 160, \"contributor_count\": 459, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "catchorg/Catch2",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.9738219895287958, \"n_doa_owners\": 0, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 5, \"commits_at_tfdd\": 224, \"files_at_tfdd\": 160}"
+        },
+        {
+          "input": "Repo: gin-gonic/gin. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:manu.valladolid@gmail.com\", \"tfdd_iso\": \"2017-06-17T17:42:34+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 6, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 1.9333333333333331, \"developers_at_tfdd\": 129, \"commits_at_tfdd\": 674, \"files_at_tfdd\": 116, \"contributor_count\": 542, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "gin-gonic/gin",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 6, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 129, \"commits_at_tfdd\": 674, \"files_at_tfdd\": 116}"
+        },
+        {
+          "input": "Repo: spf13/cobra. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_founder_only_tfdd\", \"founder\": \"em:steve.francia@gmail.com\", \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_tfdd\": null, \"commits_at_tfdd\": null, \"files_at_tfdd\": null, \"contributor_count\": null, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "spf13/cobra",
+          "metadata_excluded_reason": "no_founder_only_tfdd",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_founder_only_tfdd\"}"
+        },
+        {
+          "input": "Repo: spf13/viper. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:steve.francia@gmail.com\", \"tfdd_iso\": \"2016-04-02T02:33:33+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 2, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 0.5636363636363637, \"developers_at_tfdd\": 45, \"commits_at_tfdd\": 131, \"files_at_tfdd\": 10, \"contributor_count\": 194, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "spf13/viper",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 2, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 45, \"commits_at_tfdd\": 131, \"files_at_tfdd\": 10}"
+        },
+        {
+          "input": "Repo: urfave/cli. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": null, \"founder\": \"em:jeremy.saenz@gmail.com\", \"tfdd_iso\": \"2015-01-12T16:13:48+00:00\", \"founder_share\": 0.0, \"n_doa_owners\": 3, \"binary_survival\": 1, \"graded_outcome_velocity_ratio\": 1.734375, \"developers_at_tfdd\": 47, \"commits_at_tfdd\": 192, \"files_at_tfdd\": 20, \"contributor_count\": 371, \"stars\": null, \"forks\": null, \"language\": null, \"license\": null}",
+          "metadata_repo": "urfave/cli",
+          "metadata_excluded_reason": null,
+          "predict_our_method": "{\"founder_share\": 0.0, \"n_doa_owners\": 3, \"predicted_survival\": 1}",
+          "predict_baseline_snapshot": "{\"log_stars\": null, \"log_forks\": null, \"developers_at_tfdd\": 47, \"commits_at_tfdd\": 192, \"files_at_tfdd\": 20}"
+        }
+      ]
+    }
+  ]
+}

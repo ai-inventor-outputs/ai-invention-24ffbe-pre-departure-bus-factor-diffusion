@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "method_name": "authority_diffusion_before_founder_exit",
+    "description": "Recomputes Avelino et al. (ESEM 2019) DOA/Truck-Factor/TFDD pipeline on GitHub repos and tests a NEW pre-departure authority-diffusion signal (founder commit-share + count of independent non-founder D...",
+    "corpus_stats": {
+      "n_repos_input": 62,
+      "n_repos_after_filters": 47,
+      "n_founder_only_tfdds": 30,
+      "exclusion_table": {
+        "ok": 47,
+        "not_mostly_source": 1,
+        "no_commits_extracted": 14,
+        "no_founder_only_tfdd": 13,
+        "insufficient_pre_history": 2,
+        "insufficient_post_history": 2
+      }
+    },
+    "baseline_replication": {
+      "tfdd_rate_among_filtered": 0.6383,
+      "avelino_reported_tfdd_rate": 0.16,
+      "survival_rate": 0.3667,
+      "avelino_reported_survival_rate": 0.41,
+      "snapshot_effect_sizes_cohens_d": {
+        "log_stars": NaN,
+        "log_forks": NaN,
+        "developers_at_tfdd": -0.2255,
+        "commits_at_tfdd": -0.5578,
+        "files_at_tfdd": -0.6248
+      },
+      "avelino_reported_snapshot_d_range": [
+        0.13,
+        0.26
+      ]
+    },
+    "regression_results": {
+      "n_used": 0,
+      "status": "insufficient_data_or_no_outcome_variance"
+    },
+    "matched_pairs_results": {
+      "status": "insufficient_group_sizes",
+      "n_high": 0,
+      "n_low": 0
+    },
+    "placebo_results": {
+      "status": "ok",
+      "n_null_draws": 25,
+      "true_effect_founder_share_corr": 0.17959723054022853,
+      "true_effect_percentile_in_null_distribution": 40.0,
+      "empirical_p_value": 0.6153846153846154
+    },
+    "success_criteria_verdict": {
+      "criterion_1_diffusion_significant_bh_p_lt_0.10": false,
+      "criterion_2_diffusion_coef_exceeds_snapshot_coef": false,
+      "criterion_3_survives_placebo_p_lt_0.10": false,
+      "n_founder_only_tfdd_repos": 30,
+      "notes": "Corpus of 62 curated GitHub repos (dataset artifact dependency was empty at run time, see corpus_stats/notes). 47 passed prefilters, 30 yielded a founder-only TFDD with sufficient pre/post history. Sn..."
+    }
+  },
+  "datasets": [
+    {
+      "dataset": "github_repos_curated_corpus",
+      "examples": [
+        {
+          "input": "Repo: expressjs/serve-static. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"not_mostly_source\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_at_...",
+          "metadata_repo": "expressjs/serve-static",
+          "metadata_excluded_reason": "not_mostly_source",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"not_mostly_source\"}"
+        },
+        {
+          "input": "Repo: mochajs/mocha. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_...",
+          "metadata_repo": "mochajs/mocha",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        },
+        {
+          "input": "Repo: less/less.js. Does the pre-founder-exit authority-diffusion trajectory predict 18-month post-TFDD survival better than snapshot size/popularity covariates?",
+          "output": "{\"excluded_reason\": \"no_commits_extracted\", \"founder\": null, \"tfdd_iso\": null, \"founder_share\": null, \"n_doa_owners\": null, \"binary_survival\": null, \"graded_outcome_velocity_ratio\": null, \"developers_...",
+          "metadata_repo": "less/less.js",
+          "metadata_excluded_reason": "no_commits_extracted",
+          "predict_our_method": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}",
+          "predict_baseline_snapshot": "{\"predicted_survival\": null, \"reason\": \"no_commits_extracted\"}"
+        }
+      ]
+    }
+  ]
+}

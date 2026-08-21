@@ -1,0 +1,75 @@
+{
+  "title": "Recipe for Mining Founder Departure and Authority Handoff",
+  "summary": "Verified, against the two primary Avelino et al. papers [1, 2], the exact DOA/Truck-Factor/TFDD/Active-Inactive formulas and thresholds, corrected a key error in the plan's DL-as-recency hypothesis, confirmed survival is binary with no fixed post-TFDD window, recovered the full abandoner-threshold sensitivity table, specified a PyDriller extraction recipe and identity-resolution heuristic, pointed to the original authors' reference implementation [4] (whose DOA weights trace to Fritz et al. [3]), and produced a vetted seed list of real founder-handoff candidate repositories [5, 6, 7, 8, 9, 10] with explicit inclusion/exclusion reasoning for the downstream DATASET artifact.",
+  "answer": "Full recipe verified against primary sources; see research_report.md for complete detail. Summary of the load-bearing corrections and confirmations:\n\n(1) DOA FORMULA — CONFIRMED with one CORRECTION to the plan's working hypothesis: DOA(md,fp) = 3.293 + 1.098*FA + 0.164*DL - 0.321*ln(1+AC), where FA=1 iff md created f (else 0), DL = the RAW COUNT of md's own commits touching f (NOT a recency/days term as the plan's initial scan guessed), and AC = count of commits touching f by any developer OTHER than md [1]. The weights are reused verbatim from Fritz et al.'s prior Degree-of-Knowledge work [3], not refit by Avelino et al. [1]. Authorship threshold: normalized DOA > k=0.75 of the file's max, AND absolute DOA >= m=3.293 [1]. DOA is computed only at YEARLY full-history snapshots starting from repo creation, never on an arbitrary sub-year window [2] — a pre-departure 6-12 month DOA metric is therefore a genuine unvalidated extension, not a reproduction of Avelino et al.'s method, and its file-first-authorship (FA) definition needs explicit resolution at the window boundary.\n\n(2) TRUCK FACTOR ALGORITHM — CONFIRMED: greedy loop that checks file coverage by remaining authors BEFORE each removal; stops the instant coverage would drop below 50%; tf = number of authors actually removed while coverage stayed >=50% [1]. No stated minimum project-size floor; no stated tie-breaking rule for equal-coverage authors (flagged gap).\n\n(3) TFDD / ABANDONER / ACTIVE-INACTIVE — CONFIRMED, with ONE PLAN ASSUMPTION REFUTED: abandoner = last commit >=1 year before the repo's own most recent commit; the 1-year threshold's harmonic mean of precision(0.82) and improvement(0.55) is 0.66, beating 6mo(0.44), 1.5yr(0.64), and 2yr(0.62) [2] (all figures now fully recovered per Table II, not just the winning cell). Active/Inactive is a strictly BINARY state machine (all TF-devs abandoned = Inactive/TFDD; a new TF-developer arriving = Active again), and survival is defined relative to the LAST observed TFDD only [2] -- the hypothesis's reference to a graded thriving/maintained/dormant/dead framing has NO basis in either primary source and must be built as an independent extension if desired. There is no explicit fixed post-TFDD survival window (e.g. no '18 months' anywhere in the paper) -- survival is measured against yearly TF recomputation up through the dataset collection date [2]. Headline numbers re-confirmed exactly: 1,932 projects, 315 (16%) with a TFDD, 128/315 (41%) survived, median 32 vs 47 developers at TFDD for surviving vs non-surviving (p=2.2e-4), Cliff's d=0.64/0.79 for post-TFDD commit volume/share [2].\n\n(4) CORPUS SELECTION — CONFIRMED: top-500-starred repos per language across 6 languages (JS/Python/Ruby/C/C++/Java/PHP) = ~3,000 candidates, filtered to 1,932 by excluding VCS-migration-corrupted histories, insufficient history, and non-software projects [2]; per-language manual vendored-file ignore-lists excluded 10,450 file entries total [1].\n\n(5) TOOLING — Avelino et al. used a custom Java tool with an authoritative public reference implementation, aserg-ufmg/Truck-Factor (~240 stars, MIT) [4], explicitly cited in the ESEM2019 paper as validated and public [2] -- recommend consulting it directly rather than re-deriving DOA from prose. A concrete PyDriller-based local extraction recipe (no GitHub API needed) is specified in the report, computing FA/DL/AC per file per author from a full local clone; shallow clones are unusable since FA requires the file's true creation commit.\n\n(6) IDENTITY RESOLUTION — Avelino et al.'s OWN approach used the GitHub API's commit-email-to-account mapping (median 11% alias rate), NOT a local heuristic, and they note it explicitly fails to merge a developer's multiple GitHub accounts [2]. Since API access is unlikely to be available at scale, a local fallback (normalize name/email, special-case GitHub noreply numeric IDs, union-find on shared normalized email/name, exclude bot accounts, exclude repos showing VCS-migration commit-attribution artifacts) is specified, but is UNVALIDATED against the source papers and likely noisier than the ~11% reference rate.\n\n(7) CANDIDATE SEED REPOS — 10 founder-handoff candidates identified and vetted with explicit CAUTION/EXCLUDE flags: wlroots/sway's documented 2020 handoff from Drew DeVault to Simon Ser is a strong, cleanly-dated candidate [5]; Andreas Kling's 2024 SerenityOS BDFL departure is flagged as an atypical fork-out-a-new-project shape rather than a same-repo successor takeover [6]; node-sass is flagged for EXCLUSION since it was retired/killed rather than handed to a successor [7]; youtube-dl->yt-dlp is flagged as a community fork, not a same-repository TFDD-survival case [8]; Homebrew's 2018 lead-maintainer transition away from founder Max Howell is offered as a large-mature-project contrast case likely already TF>1 rather than a single-founder TF=1 positive [9]; and scikit-learn's 2007 multi-contributor GSoC origin is flagged as a probably-poor fit for a strict single-founder TF=1 construct [10]. See report Section 8 for the full table with URLs, approximate handoff years, and reasoning. This is explicitly a seeding list only; TF=1 TFDD status for any entry is unconfirmed until DOA/TF is recomputed from actual git history.\n\nAll findings are reported with citation to page-level PDF grep matches from the two primary papers (arXiv 1604.06766 and arXiv 1906.08058), not paraphrase or memory.",
+  "sources": [
+    {
+      "index": 1,
+      "url": "https://arxiv.org/pdf/1604.06766",
+      "title": "A Novel Approach for Estimating Truck Factors (Avelino, Passos, Hora, Valente; ICPC 2016)",
+      "summary": "Primary source for the DOA formula (3.293 + 1.098*FA + 0.164*DL - 0.321*ln(1+AC)), the exact meaning of FA/DL/AC, the k=0.75/m=3.293 authorship thresholds and how they were tuned, the greedy Truck Factor algorithm pseudocode, corpus construction (top-500-starred x 6 languages), and the vendored-file ignore-list methodology."
+    },
+    {
+      "index": 2,
+      "url": "https://arxiv.org/pdf/1906.08058",
+      "title": "On the Abandonment and Survival of Open Source Projects: An Empirical Investigation (Avelino, Constantinou, Valente, Serebrenik; ESEM 2019)",
+      "summary": "Primary source for TFDD definition, the yearly full-history DOA/TF snapshot cadence, the abandoner 1-year threshold and full 5-threshold sensitivity table (precision/improvement/harmonic mean), the binary Active/Inactive state machine and survival definition, corpus filtering to 1,932 projects, GitHub-API-based alias resolution (11% median alias rate), and headline statistics (315 TFDDs, 128/315=41% survived, effect sizes)."
+    },
+    {
+      "index": 3,
+      "url": "https://www.cs.ubc.ca/~fritz/papers/icse10_dok_web.pdf",
+      "title": "A Degree-of-Knowledge Model to Capture Source Code Familiarity (Fritz, Ou, Murphy, Murphy-Hill)",
+      "summary": "Original source of the degree-of-authorship/degree-of-knowledge regression weights that Avelino et al. reuse verbatim in the DOA formula without refitting; located via search to confirm provenance, not deep-read in this pass."
+    },
+    {
+      "index": 4,
+      "url": "https://github.com/aserg-ufmg/Truck-Factor",
+      "title": "aserg-ufmg/Truck-Factor (GitHub)",
+      "summary": "The original authors' own public Java reference implementation of the DOA/Truck-Factor algorithm, explicitly cited as validated and public in the ESEM2019 paper; recommended as a correctness check for any independent reimplementation."
+    },
+    {
+      "index": 5,
+      "url": "https://drewdevault.com/blog/Im-handing-wlroots-and-sway-to-Simon/",
+      "title": "I'm handing over maintenance of wlroots and sway to Simon Ser",
+      "summary": "Well-documented, dated, organic single-founder-to-successor handoff (Oct 2020) used as a strong candidate seed for the repo list."
+    },
+    {
+      "index": 6,
+      "url": "https://awesomekling.substack.com/p/forking-ladybird-and-stepping-down-serenityos",
+      "title": "I'm forking Ladybird and stepping down as SerenityOS BDFL",
+      "summary": "Documents Andreas Kling's 2024 departure from SerenityOS BDFL role; flagged as an atypical handoff shape (founder forks out a new project rather than a successor taking the same repo)."
+    },
+    {
+      "index": 7,
+      "url": "https://sass-lang.com/blog/node-sass-is-end-of-life/",
+      "title": "Node Sass is end-of-life",
+      "summary": "Confirms node-sass was retired/killed rather than handed to a successor; used to flag this candidate for EXCLUSION from a TFDD-survival positive-case list."
+    },
+    {
+      "index": 8,
+      "url": "https://github.com/ytdl-org/youtube-dl/issues/30568",
+      "title": "Under new management (youtube-dl GitHub issue)",
+      "summary": "Documents the youtube-dl -> yt-dlp transition as a community fork rather than a same-repository successor takeover; used to flag this candidate as NOT a clean TFDD-survival case."
+    },
+    {
+      "index": 9,
+      "url": "https://github.com/homebrew/brew/issues/4884",
+      "title": "docs/Maintainer-Guidelines: retire lead maintainer position (Homebrew/brew#4884)",
+      "summary": "Documents Homebrew's 2018 lead-maintainer transition away from founder Max Howell; used as a large-mature-project contrast case likely already TF>1."
+    },
+    {
+      "index": 10,
+      "url": "https://scikit-learn.org/stable/about.html",
+      "title": "About us - scikit-learn documentation (History)",
+      "summary": "Confirms scikit-learn originated as a 2007 multi-contributor GSoC project rather than a strict single founder, used to flag it as a probably-poor fit for a single-founder TF=1 construct."
+    }
+  ],
+  "follow_up_questions": [
+    "Can the DOA model's FA/DL/AC weights be legitimately re-fit or re-validated on a sub-year (pre-departure 6-12 month) window, or does the linear model's calibration only hold at the yearly full-history granularity Avelino et al. validated it on -- and if re-fitting is needed, what ground truth would validate it (git-blame ranking, as the original ICPC2016 paper used)?",
+      "Does the ~240-star aserg-ufmg/Truck-Factor Java reference implementation match the paper's prose exactly (including any undocumented tie-breaking rule in the greedy TF loop and exact merge-commit handling), and would porting/wrapping it directly (rather than reimplementing in PyDriller) reduce correctness risk for the DATASET artifact given the sandbox likely lacks a JVM by default?",
+    "What numeric threshold should replace the unstated 'insufficient historical data' and 'corrupted migration' exclusion criteria for a local-only (no GitHub API) corpus-selection pipeline, given Avelino et al. only describe these exclusions narratively without giving cutoffs?"
+  ],
+  "out_expected_files": {
+    "output": "research_out.json"
+  }
+}
