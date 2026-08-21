@@ -1,7 +1,0 @@
-[project]
-name = "gen-art-dataset-1-github-founder-departure-corpus"
-version = "0.1.0"
-requires-python = "==3.12.14"
-dependencies = [
-    "requests==2.34.2",
-]
